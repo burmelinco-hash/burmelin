@@ -1,0 +1,8 @@
+{
+  "name": "burmelin-web",
+  "version": "1.0.0",
+  "description": "BURMELIN men's luxury clothing — Bangkok",
+  "dependencies": {
+    "stripe": "^14.0.0"
+  }
+}

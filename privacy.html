@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Privacy Policy — BURMELIN</title>
+<meta name="description" content="BURMELIN Privacy Policy — how we collect, use, and protect your information."/>
+<link rel="icon" type="image/png" href="https://res.cloudinary.com/dtpvflgt1/image/upload/v1773996384/LOGO_q2howi.png"/>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;900&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Barlow+Condensed:wght@700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#0054A5;--navy-dark:#003d7a;--navy-light:#e8f0f9;
+  --cream:#F7F5F1;--cream-dark:#EEEBE5;
+  --ink:#111118;--muted:#6d6a65;--line:rgba(0,0,0,.1);
+  --white:#ffffff;--gold:#C9A96E;
+  --r-sm:8px;--r:16px;--r-lg:24px;
+  --shadow-sm:0 2px 12px rgba(0,0,0,.06);
+  --shadow:0 6px 28px rgba(0,0,0,.09);
+  --shadow-lg:0 16px 48px rgba(0,0,0,.12);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Archivo',sans-serif;background:var(--cream);color:var(--ink);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+img{max-width:100%;display:block}
+a{text-decoration:none;color:inherit}
+button{cursor:pointer;font-family:inherit}
+.container{max-width:1200px;margin:0 auto;padding:0 24px}
+
+/* ── HEADER ── */
+.site-header{position:fixed;top:0;left:0;right:0;z-index:100;height:72px;padding:0 32px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;background:rgba(255,255,255,.15);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,.15);transition:background .3s}
+.site-header:hover{background:rgba(255,255,255,.85)}
+.header-logo{display:flex;align-items:center;gap:10px;cursor:pointer}
+.header-actions{display:flex;align-items:center;gap:6px;justify-self:end}
+.icon-btn{width:40px;height:40px;border:none;background:none;display:flex;align-items:center;justify-content:center;color:var(--ink);border-radius:50%;transition:all .2s}
+.icon-btn:hover{background:var(--navy-light);color:var(--navy)}
+.cart-badge{position:relative}
+.cart-badge::after{content:attr(data-count);position:absolute;top:4px;right:4px;width:16px;height:16px;background:var(--white);color:var(--navy);font-size:9px;font-weight:700;border-radius:50%;display:flex;align-items:center;justify-content:center;line-height:1}
+.hamburger{width:40px;height:40px;border:none;background:none;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:5px;cursor:pointer;flex-shrink:0;border-radius:8px;transition:background .2s}
+.hamburger:hover{background:rgba(0,0,0,.05)}
+.hamburger span{display:block;width:22px;height:2px;background:var(--ink);border-radius:2px;transition:all .3s}
+
+/* ── SIDE MENU ── */
+.menu-overlay{position:fixed;inset:0;background:rgba(0,0,0,.3);z-index:98;opacity:0;pointer-events:none;transition:opacity .3s}
+.menu-overlay.open{opacity:1;pointer-events:all}
+.side-menu{position:fixed;top:0;left:0;bottom:0;width:280px;background:var(--white);z-index:99;transform:translateX(-100%);transition:transform .4s cubic-bezier(.22,.68,0,1.2);display:flex;flex-direction:column;padding:0;box-shadow:var(--shadow-lg);border-radius:0 var(--r-lg) var(--r-lg) 0}
+.side-menu.open{transform:translateX(0)}
+.side-menu-header{padding:20px 24px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between}
+.side-menu-close{width:32px;height:32px;border:1px solid var(--line);border-radius:50%;background:var(--cream);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--muted);transition:all .2s}
+.side-menu-close:hover{border-color:var(--ink);color:var(--ink)}
+.side-menu-links{display:flex;flex-direction:column;padding:16px 0;flex:1}
+.side-menu-link{padding:14px 28px;font-size:13px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);cursor:pointer;border:none;background:none;text-align:left;font-family:inherit;transition:all .2s;border-left:3px solid transparent}
+.side-menu-link:hover{color:var(--navy);background:var(--navy-light);border-left-color:var(--navy)}
+.side-menu-link.active{color:var(--navy);background:var(--navy-light);border-left-color:var(--navy)}
+.side-menu-footer{padding:20px 24px;border-top:1px solid var(--line)}
+
+/* ── BTN ── */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:13px 28px;border-radius:var(--r-sm);font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;border:1.5px solid transparent;transition:all .25s;cursor:pointer}
+.btn-navy{background:var(--navy);color:var(--white);border-color:var(--navy)}
+.btn-navy:hover{background:var(--navy-dark);transform:translateY(-1px)}
+
+/* ── PAGE HERO ── */
+.page-hero{margin-top:72px;background:linear-gradient(150deg,#003d7a 0%,#0054A5 100%);padding:64px 0 56px;text-align:center;position:relative;overflow:hidden}
+.page-hero::before{content:'BURMELIN';position:absolute;bottom:-20px;left:50%;transform:translateX(-50%);font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:clamp(80px,16vw,200px);color:rgba(255,255,255,.04);white-space:nowrap;pointer-events:none}
+.page-hero-eyebrow{font-size:10px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:rgba(255,255,255,.45);margin-bottom:12px;position:relative}
+.page-hero-title{font-family:'Cormorant Garamond',serif;font-size:clamp(32px,5vw,58px);font-weight:600;color:#fff;line-height:1.05;position:relative;margin-bottom:10px}
+.page-hero-date{font-size:12px;color:rgba(255,255,255,.4);position:relative;letter-spacing:.06em}
+
+/* ── CONTENT ── */
+.legal-content{background:var(--white);padding:72px 0 96px}
+.legal-inner{max-width:760px;margin:0 auto;padding:0 24px}
+
+.legal-intro{font-size:16px;color:var(--muted);line-height:1.85;margin-bottom:56px;padding-bottom:40px;border-bottom:1px solid var(--line)}
+
+.legal-section{margin-bottom:52px}
+.legal-section:last-child{margin-bottom:0}
+
+.section-label{display:flex;align-items:center;gap:16px;margin-bottom:20px}
+.section-num{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:13px;letter-spacing:.16em;color:var(--navy);background:var(--navy-light);padding:4px 10px;border-radius:4px;flex-shrink:0}
+.section-heading{font-family:'Cormorant Garamond',serif;font-size:clamp(22px,2.5vw,28px);font-weight:600;color:var(--ink);line-height:1.1}
+
+.legal-body{font-size:15px;color:var(--muted);line-height:1.85}
+.legal-body p{margin-bottom:16px}
+.legal-body p:last-child{margin-bottom:0}
+
+.legal-list{list-style:none;display:flex;flex-direction:column;gap:14px;margin-top:4px}
+.legal-list li{display:flex;gap:14px;font-size:15px;color:var(--muted);line-height:1.75}
+.legal-list li::before{content:'';width:6px;height:6px;background:var(--navy);border-radius:50%;flex-shrink:0;margin-top:9px}
+.legal-list li strong{color:var(--ink);font-weight:600}
+
+.legal-divider{border:none;border-top:1px solid var(--line);margin:52px 0}
+
+.legal-contact{background:var(--cream);border-radius:var(--r);padding:32px 36px;margin-top:52px;display:flex;align-items:flex-start;gap:20px}
+.legal-contact-icon{width:44px;height:44px;background:var(--navy-light);border-radius:12px;display:flex;align-items:center;justify-content:center;color:var(--navy);flex-shrink:0;margin-top:2px}
+.legal-contact-title{font-size:15px;font-weight:700;color:var(--ink);margin-bottom:6px}
+.legal-contact-text{font-size:14px;color:var(--muted);line-height:1.7}
+.legal-contact-link{color:var(--navy);font-weight:600;text-decoration:underline;text-underline-offset:3px}
+
+/* ── FOOTER ── */
+.site-footer{background:linear-gradient(160deg,#1C1A17 0%,#2E2A24 100%);color:rgba(255,255,255,.55);padding:48px 0 28px}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:32px;margin-bottom:32px}
+.footer-tagline{font-family:'Cormorant Garamond',serif;font-size:14px;font-style:italic;color:rgba(255,255,255,.35);line-height:1.7;max-width:240px;margin-top:14px}
+.footer-socials{display:flex;gap:8px;margin-top:22px}
+.social-btn{width:36px;height:36px;border:1px solid rgba(255,255,255,.12);border-radius:50%;background:none;color:rgba(255,255,255,.4);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s}
+.social-btn:hover{border-color:var(--navy);color:white;background:var(--navy)}
+.footer-heading{font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.65);margin-bottom:18px}
+.footer-links{display:flex;flex-direction:column;gap:10px}
+.footer-link{font-size:13px;color:rgba(255,255,255,.4);transition:color .2s;cursor:pointer;border:none;background:none;text-align:left;font-family:inherit;text-decoration:none}
+.footer-link:hover{color:white}
+.footer-bottom{padding-top:24px;border-top:1px solid rgba(255,255,255,.07);display:flex;justify-content:space-between;align-items:center}
+.footer-copy{font-size:11px;color:rgba(255,255,255,.25)}
+.footer-legal{display:flex;gap:20px}
+
+/* ── SEARCH ── */
+.search-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:400;display:flex;align-items:flex-start;justify-content:center;padding-top:120px;opacity:0;pointer-events:none;transition:opacity .3s}
+.search-overlay.open{opacity:1;pointer-events:all}
+.search-box{background:var(--white);border-radius:var(--r-lg);padding:32px;width:100%;max-width:600px;margin:0 24px;box-shadow:var(--shadow-lg)}
+.search-box-inner{display:flex;align-items:center;gap:12px;border-bottom:2px solid var(--navy);padding-bottom:12px;margin-bottom:20px}
+.search-box-input{flex:1;border:none;outline:none;font-size:20px;font-family:inherit;color:var(--ink);background:transparent}
+.search-box-input::placeholder{color:var(--muted)}
+.search-box-close{width:32px;height:32px;border:1px solid var(--line);border-radius:50%;background:var(--cream);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--muted);flex-shrink:0}
+.search-results{display:flex;flex-direction:column;gap:10px;max-height:320px;overflow-y:auto}
+.search-result-item{display:flex;align-items:center;gap:14px;padding:10px;border-radius:var(--r-sm);cursor:pointer;transition:background .2s}
+.search-result-item:hover{background:var(--cream)}
+.search-result-img{width:48px;height:60px;object-fit:cover;border-radius:6px;flex-shrink:0;background:var(--cream-dark)}
+.search-result-name{font-size:14px;font-weight:600;color:var(--ink)}
+.search-result-cat{font-size:11px;color:var(--muted);margin-top:2px}
+.search-result-price{font-size:14px;font-weight:700;color:var(--navy);margin-left:auto}
+.search-empty{text-align:center;padding:24px;color:var(--muted);font-size:14px}
+.search-tip{font-size:11px;color:var(--muted);text-align:center;margin-top:8px}
+
+/* ── CART ── */
+.cart-overlay{position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:200;opacity:0;pointer-events:none;transition:opacity .3s}
+.cart-overlay.open{opacity:1;pointer-events:all}
+.cart-sidebar{position:fixed;top:0;right:0;bottom:0;width:390px;background:var(--white);border-radius:var(--r-lg) 0 0 var(--r-lg);z-index:201;transform:translateX(100%);transition:transform .4s cubic-bezier(.22,.68,0,1.2);display:flex;flex-direction:column;box-shadow:var(--shadow-lg)}
+.cart-sidebar.open{transform:translateX(0)}
+.cart-header{padding:24px 28px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between}
+.cart-title{font-size:16px;font-weight:700;color:var(--ink)}
+.cart-close{width:34px;height:34px;border:1px solid var(--line);border-radius:50%;background:var(--cream);display:flex;align-items:center;justify-content:center;color:var(--muted);cursor:pointer;transition:all .2s}
+.cart-close:hover{border-color:var(--ink);color:var(--ink)}
+.cart-items{flex:1;overflow-y:auto;padding:20px 28px}
+.cart-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:10px;color:var(--muted);text-align:center}
+
+/* ── RESPONSIVE ── */
+@media(max-width:900px){.footer-grid{grid-template-columns:1fr 1fr;gap:24px}}
+@media(max-width:480px){.footer-grid{grid-template-columns:1fr}.legal-contact{flex-direction:column;gap:14px}}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="site-header">
+  <button class="hamburger" onclick="openMenu()" title="Menu">
+    <span></span><span></span><span></span>
+  </button>
+  <div class="header-logo" onclick="window.location.href='index.html'">
+    <img src="https://res.cloudinary.com/dtpvflgt1/image/upload/v1773996384/LOGO_q2howi.png" alt="BURMELIN logo" style="height:36px;width:auto;display:block;filter:brightness(0) saturate(100%) invert(23%) sepia(89%) saturate(1500%) hue-rotate(191deg) brightness(93%)"/>
+    <span style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:22px;letter-spacing:.12em;color:#0054A5;text-transform:uppercase">BURMELIN</span>
+  </div>
+  <div class="header-actions">
+    <button class="icon-btn" title="Search" onclick="openSearch()"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></button>
+    <button class="icon-btn cart-badge" id="cartBtn" data-count="0" onclick="openCart()"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg></button>
+  </div>
+</header>
+
+<!-- SIDE MENU -->
+<div class="menu-overlay" id="menuOverlay" onclick="closeMenu()"></div>
+<div class="side-menu" id="sideMenu">
+  <div class="side-menu-header">
+    <img src="https://res.cloudinary.com/dtpvflgt1/image/upload/v1773996384/LOGO_q2howi.png" alt="BURMELIN" style="height:30px;width:auto"/>
+    <button class="side-menu-close" onclick="closeMenu()">
+      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="side-menu-links">
+    <button class="side-menu-link" onclick="window.location.href='index.html'">Home</button>
+    <button class="side-menu-link" onclick="window.location.href='products.html'">Products</button>
+    <button class="side-menu-link" onclick="window.location.href='stores.html'">Stores</button>
+    <button class="side-menu-link" onclick="window.location.href='about.html'">About Us</button>
+  </div>
+  <div class="side-menu-footer">
+    <a href="https://wa.me/66835398811" class="btn btn-navy" style="width:100%;justify-content:center;font-size:11px">WhatsApp Us</a>
+  </div>
+</div>
+
+<!-- PAGE HERO -->
+<div class="page-hero">
+  <div class="page-hero-eyebrow">Legal</div>
+  <h1 class="page-hero-title">Privacy Policy</h1>
+  <p class="page-hero-date">Last Updated: April 2026</p>
+</div>
+
+<!-- CONTENT -->
+<section class="legal-content">
+  <div class="legal-inner">
+
+    <p class="legal-intro">This Privacy Policy outlines how BURMELIN ("we," "our," or "us") collects, uses, and protects your information when you visit our website, shop at our Bangkok locations, or place orders via our official social media and messaging channels. By engaging with our brand across any platform, you agree to the practices described below.</p>
+
+    <!-- Section 1 -->
+    <div class="legal-section">
+      <div class="section-label">
+        <span class="section-num">01</span>
+        <h2 class="section-heading">Information We Collect</h2>
+      </div>
+      <div class="legal-body">
+        <p>To provide you with a seamless luxury shopping experience, we collect only the information necessary to fulfill your orders and keep you informed across all platforms.</p>
+      </div>
+      <ul class="legal-list" style="margin-top:20px">
+        <li><div><strong>Order Information</strong> — When ordering via our website or official social media channels (LINE, WhatsApp, Instagram, TikTok, or Facebook), we collect your name, phone number, and delivery address to process your transaction.</div></li>
+        <li><div><strong>Contact Details</strong> — Your email address is collected if you choose to subscribe for first access to new arrivals and exclusive drops. Subscription is entirely voluntary.</div></li>
+        <li><div><strong>In-Store Information</strong> — Information you provide during visits to our Bangkok store locations for exchange or membership purposes.</div></li>
+        <li><div><strong>Technical Data</strong> — Basic usage data such as page visits may be collected automatically via our website host to help us improve your browsing experience. No personally identifiable information is collected without your direct input.</div></li>
+      </ul>
+    </div>
+
+    <hr class="legal-divider"/>
+
+    <!-- Section 2 -->
+    <div class="legal-section">
+      <div class="section-label">
+        <span class="section-num">02</span>
+        <h2 class="section-heading">How We Use Your Data</h2>
+      </div>
+      <ul class="legal-list">
+        <li><div><strong>Order Fulfillment</strong> — To process your payment and deliver your apparel to Bangkok and beyond.</div></li>
+        <li><div><strong>Customer Support</strong> — To assist you with product inquiries, sizing guidance, or our 7-day exchange policy through whichever channel you contact us.</div></li>
+        <li><div><strong>Marketing Communication</strong> — To send you updates on new collections and exclusive drops, only if you have opted in. You may opt out at any time by messaging us directly on any of our official channels.</div></li>
+        <li><div><strong>Service Improvement</strong> — To better understand how customers interact with our website and improve your overall experience.</div></li>
+      </ul>
+    </div>
+
+    <hr class="legal-divider"/>
+
+    <!-- Section 3 -->
+    <div class="legal-section">
+      <div class="section-label">
+        <span class="section-num">03</span>
+        <h2 class="section-heading">Data Sharing &amp; Third Parties</h2>
+      </div>
+      <div class="legal-body">
+        <p>We do not sell, trade, or rent your personal information to any third parties. Your data is only shared in the following limited circumstances:</p>
+      </div>
+      <ul class="legal-list" style="margin-top:20px">
+        <li><div><strong>Logistics Partners</strong> — Trusted delivery partners receive only the information required to fulfill and ship your order.</div></li>
+        <li><div><strong>Third-Party Services</strong> — Our website uses external services including Cloudinary (image hosting) and Google Maps (store locations). These services operate under their own privacy policies.</div></li>
+        <li><div><strong>Legal Requirements</strong> — We may disclose information if required to do so by law or in response to valid legal requests by public authorities.</div></li>
+      </ul>
+    </div>
+
+    <hr class="legal-divider"/>
+
+    <!-- Section 4 -->
+    <div class="legal-section">
+      <div class="section-label">
+        <span class="section-num">04</span>
+        <h2 class="section-heading">Data Security</h2>
+      </div>
+      <div class="legal-body">
+        <p>We take reasonable and appropriate steps to protect your personal data from unauthorised access, disclosure, alteration, or destruction across all digital interactions. While we strive to use commercially acceptable means to protect your information, please be aware that no method of transmission over the internet is 100% secure.</p>
+        <p>We retain your personal data only for as long as necessary to fulfill the purposes outlined in this policy, or as required by applicable law.</p>
+      </div>
+    </div>
+
+    <hr class="legal-divider"/>
+
+    <!-- Section 5 -->
+    <div class="legal-section">
+      <div class="section-label">
+        <span class="section-num">05</span>
+        <h2 class="section-heading">Your Rights</h2>
+      </div>
+      <div class="legal-body">
+        <p>You have the right to request access to, correction of, or deletion of any personal data we hold about you. You may also withdraw consent to marketing communications at any time. To exercise any of these rights, please contact us through any of the official channels listed below.</p>
+      </div>
+    </div>
+
+    <hr class="legal-divider"/>
+
+    <!-- Section 6 -->
+    <div class="legal-section">
+      <div class="section-label">
+        <span class="section-num">06</span>
+        <h2 class="section-heading">Changes to This Policy</h2>
+      </div>
+      <div class="legal-body">
+        <p>We may update this Privacy Policy from time to time to reflect changes in our practices or for legal, operational, or regulatory reasons. When we do, we will revise the "Last Updated" date at the top of this page. We encourage you to review this policy periodically.</p>
+      </div>
+    </div>
+
+    <!-- Contact Block -->
+    <div class="legal-contact">
+      <div class="legal-contact-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      </div>
+      <div>
+        <div class="legal-contact-title">Questions about this policy?</div>
+        <p class="legal-contact-text">If you have any questions or concerns regarding this Privacy Policy or how your data is handled, please reach out to us via any of our official social media channels or via WhatsApp at <a href="https://wa.me/66835398811" class="legal-contact-link" target="_blank">+66 83 539 8811</a>. We are happy to help.</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- SEARCH OVERLAY -->
+<div class="search-overlay" id="searchOverlay" onclick="handleSearchOverlayClick(event)">
+  <div class="search-box" id="searchBox">
+    <div class="search-box-inner">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0054A5" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input class="search-box-input" id="searchBoxInput" type="text" placeholder="Search products, categories..." oninput="runSearch(this.value)"/>
+      <button class="search-box-close" onclick="closeSearch()"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="search-results" id="searchResults"><div class="search-tip">Try "polo", "linen pants", "jacket"...</div></div>
+  </div>
+</div>
+
+<!-- CART SIDEBAR -->
+<div class="cart-overlay" id="cartOverlay" onclick="closeCart()"></div>
+<div class="cart-sidebar" id="cartSidebar">
+  <div class="cart-header"><div class="cart-title">Your Cart</div><button class="cart-close" onclick="closeCart()"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
+  <div class="cart-items"><div class="cart-empty"><svg xmlns="http://www.w3.org/2000/svg" width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="#c5c5cc" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg><div style="font-weight:700;font-size:15px">Your cart is empty</div><div style="font-size:12px;color:var(--muted)">Browse our collection to start shopping</div><a href="products.html" class="btn btn-navy" style="margin-top:8px;text-decoration:none">Shop Now</a></div></div>
+</div>
+
+<!-- FOOTER -->
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div style="display:flex;align-items:center;gap:10px"><img src="https://res.cloudinary.com/dtpvflgt1/image/upload/v1773996384/LOGO_q2howi.png" alt="BURMELIN logo" style="height:32px;width:auto;display:block;"/><span style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:22px;color:white;letter-spacing:.12em">BURMELIN</span></div>
+        <p class="footer-tagline">Natural fabrics. Refined cuts. Made for Bangkok and beyond.</p>
+        <div class="footer-socials">
+          <button class="social-btn"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></button>
+          <button class="social-btn"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"/></svg></button>
+          <button class="social-btn"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></button>
+          <button class="social-btn"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></button>
+        </div>
+      </div>
+      <div><div class="footer-heading">Shop</div><div class="footer-links"><button class="footer-link" onclick="window.location.href='products.html'">Polo Shirts</button><button class="footer-link" onclick="window.location.href='products.html'">T-Shirts</button><button class="footer-link" onclick="window.location.href='products.html'">Linen Pants</button><button class="footer-link" onclick="window.location.href='products.html'">Jeans</button><button class="footer-link" onclick="window.location.href='products.html'">Jackets</button></div></div>
+      <div><div class="footer-heading">Company</div><div class="footer-links"><button class="footer-link" onclick="window.location.href='about.html'">About Us</button><button class="footer-link" onclick="window.location.href='stores.html'">Store Locations</button><a href="#" class="footer-link">Wholesale</a></div></div>
+      <div><div class="footer-heading">Help</div><div class="footer-links"><a href="javascript:void(0)" class="footer-link" onclick="openSizeGuide()">Size Guide</a><a href="terms.html" class="footer-link">Exchange Policy</a><a href="javascript:void(0)" class="footer-link" onclick="openSizeGuide()">Care Instructions</a><a href="https://wa.me/66835398811" class="footer-link">Contact Us</a><a href="#" class="footer-link">FAQ</a></div></div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-copy">© <span id="year"></span> BURMELIN. All rights reserved. Bangkok, Thailand.</div>
+      <div class="footer-legal"><a href="privacy.html" class="footer-link" style="font-size:11px">Privacy</a><a href="terms.html" class="footer-link" style="font-size:11px">Terms</a></div>
+    </div>
+  </div>
+</footer>
+
+<script>
+function openMenu(){
+  const menu=document.getElementById('sideMenu'),overlay=document.getElementById('menuOverlay');
+  if(menu.classList.contains('open')){menu.classList.remove('open');overlay.classList.remove('open')}
+  else{menu.classList.add('open');overlay.classList.add('open')}
+}
+function closeMenu(){document.getElementById('menuOverlay').classList.remove('open');document.getElementById('sideMenu').classList.remove('open')}
+document.getElementById('year').textContent=new Date().getFullYear();
+const PRODUCTS=[
+  {name:"Classic Linen Polo",cat:"Polo Shirt",price:1190,img:"https://images.unsplash.com/photo-1621072156002-e2fccdc0b176?q=80&w=800&auto=format&fit=crop"},
+  {name:"Essential Linen Tee",cat:"T-Shirt",price:890,img:"https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?q=80&w=800&auto=format&fit=crop"},
+  {name:"Relaxed Linen Pants",cat:"Linen Pants",price:1590,img:"https://images.unsplash.com/photo-1593030761757-71fae45fa0e7?q=80&w=800&auto=format&fit=crop"},
+  {name:"Straight Cut Jeans",cat:"Jeans",price:1490,img:"https://images.unsplash.com/photo-1542272604-787c3835535d?q=80&w=800&auto=format&fit=crop"},
+  {name:"Linen Overshirt",cat:"Jacket",price:1890,img:"https://images.unsplash.com/photo-1591047139829-d91aecb6caea?q=80&w=800&auto=format&fit=crop"},
+  {name:"Navy Resort Polo",cat:"Polo Shirt",price:990,img:"https://images.unsplash.com/photo-1589992896912-f40acba26c74?q=80&w=800&auto=format&fit=crop"},
+  {name:"Graphic Print Tee",cat:"T-Shirt",price:790,img:"https://images.unsplash.com/photo-1562157873-818bc0726f68?q=80&w=800&auto=format&fit=crop"},
+  {name:"Tapered Linen Trousers",cat:"Linen Pants",price:1750,img:"https://images.unsplash.com/photo-1548883354-7622d03aca27?q=80&w=800&auto=format&fit=crop"}
+];
+function openSearch(){document.getElementById('searchOverlay').classList.add('open');setTimeout(()=>document.getElementById('searchBoxInput').focus(),100)}
+function closeSearch(){document.getElementById('searchOverlay').classList.remove('open');document.getElementById('searchBoxInput').value='';document.getElementById('searchResults').innerHTML='<div class="search-tip">Try "polo", "linen pants", "jacket"...</div>'}
+function handleSearchOverlayClick(e){if(e.target===document.getElementById('searchOverlay'))closeSearch()}
+function runSearch(query){
+  const results=document.getElementById('searchResults');
+  if(!query.trim()){results.innerHTML='<div class="search-tip">Try "polo", "linen pants", "jacket"...</div>';return}
+  const q=query.toLowerCase();
+  const matches=PRODUCTS.filter(p=>p.name.toLowerCase().includes(q)||p.cat.toLowerCase().includes(q));
+  if(!matches.length){results.innerHTML='<div class="search-empty">No products found for "<strong>'+query+'</strong>"</div>';return}
+  results.innerHTML=matches.map(p=>'<div class="search-result-item" onclick="window.location.href=\'products.html\'"><img class="search-result-img" src="'+p.img+'" alt="'+p.name+'"/><div><div class="search-result-name">'+p.name+'</div><div class="search-result-cat">'+p.cat+'</div></div><div class="search-result-price">฿'+p.price.toLocaleString()+'</div></div>').join('')
+}
+function openCart(){document.getElementById('cartOverlay').classList.add('open');document.getElementById('cartSidebar').classList.add('open')}
+function closeCart(){document.getElementById('cartOverlay').classList.remove('open');document.getElementById('cartSidebar').classList.remove('open')}
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeSearch();closeCart();closeMenu()}});
+(function(){try{const c=JSON.parse(localStorage.getItem('burmelinCart')||'[]');const btn=document.getElementById('cartBtn');if(btn&&c.length)btn.dataset.count=c.length;}catch(e){}}());
+</script>
+
+<!-- SIZE GUIDE MODAL -->
+<style>
+.sg-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:900;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .25s}
+.sg-overlay.open{opacity:1;pointer-events:all}
+.sg-modal{background:#fff;width:100%;max-width:680px;max-height:88vh;overflow-y:auto;border-radius:16px;box-shadow:0 24px 80px rgba(0,0,0,.25);transform:translateY(16px);transition:transform .3s cubic-bezier(.22,.68,0,1.2)}
+.sg-overlay.open .sg-modal{transform:translateY(0)}
+.sg-header{display:flex;align-items:center;justify-content:space-between;padding:24px 28px 0}
+.sg-title{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:20px;letter-spacing:.08em;text-transform:uppercase;color:#1C1A17}
+.sg-close{width:34px;height:34px;border:1.5px solid #e0ddd8;border-radius:50%;background:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#666;transition:all .2s}
+.sg-close:hover{background:#1C1A17;color:#fff;border-color:#1C1A17}
+.sg-tabs{display:flex;gap:6px;padding:20px 28px 0;flex-wrap:wrap}
+.sg-tab{padding:7px 14px;border:1.5px solid #e0ddd8;border-radius:20px;font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;background:none;cursor:pointer;color:#666;transition:all .2s}
+.sg-tab.active{background:#1C1A17;color:#fff;border-color:#1C1A17}
+.sg-body{padding:24px 28px 28px}
+.sg-section{display:none}
+.sg-section.active{display:block}
+.sg-fabric{font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:#8a7d6e;margin-bottom:16px}
+.sg-table{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:24px}
+.sg-table th{background:#1C1A17;color:#fff;padding:10px 14px;text-align:center;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase}
+.sg-table td{padding:10px 14px;text-align:center;border-bottom:1px solid #f0ece6;color:#333}
+.sg-table tr:last-child td{border-bottom:none}
+.sg-table tr:nth-child(even) td{background:#faf9f7}
+.sg-care-title{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#1C1A17;margin-bottom:12px}
+.sg-care-list{display:flex;flex-direction:column;gap:8px}
+.sg-care-item{font-size:13px;color:#555;display:flex;gap:10px;align-items:flex-start}
+.sg-care-label{font-weight:700;color:#1C1A17;min-width:52px}
+.sg-measure-note{font-size:12px;color:#8a7d6e;font-style:italic;margin-top:16px;padding:12px 14px;background:#faf9f7;border-radius:8px;line-height:1.6}
+@media(max-width:500px){.sg-tabs{gap:4px}.sg-tab{font-size:11px;padding:6px 10px}.sg-table th,.sg-table td{padding:8px 8px}}
+</style>
+<div class="sg-overlay" id="sgOverlay" onclick="if(event.target===this)closeSizeGuide()">
+  <div class="sg-modal">
+    <div class="sg-header">
+      <div class="sg-title">Size Guide &amp; Care Instructions</div>
+      <button class="sg-close" onclick="closeSizeGuide()"><svg width="14" height="14" viewBox="0 0 14 14"><line x1="1" y1="1" x2="13" y2="13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="13" y1="1" x2="1" y2="13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+    </div>
+    <div class="sg-tabs">
+      <button class="sg-tab active" onclick="sgTab(this,'sg-tshirt')">T-Shirt</button>
+      <button class="sg-tab" onclick="sgTab(this,'sg-polo')">Polo</button>
+      <button class="sg-tab" onclick="sgTab(this,'sg-shirt-ss')">Shirt (S/S)</button>
+      <button class="sg-tab" onclick="sgTab(this,'sg-shirt-ls')">Shirt (L/S)</button>
+      <button class="sg-tab" onclick="sgTab(this,'sg-trousers')">Trousers</button>
+    </div>
+    <div class="sg-body">
+      <div class="sg-section active" id="sg-tshirt">
+        <div class="sg-fabric">Cotton &amp; Spandex Blend &middot; All measurements in inches</div>
+        <table class="sg-table"><thead><tr><th>Size</th><th>Chest</th><th>Length</th></tr></thead><tbody><tr><td>L</td><td>21</td><td>27</td></tr><tr><td>XL</td><td>21.5</td><td>27.5</td></tr><tr><td>2XL</td><td>22.5</td><td>28</td></tr><tr><td>3XL</td><td>23</td><td>29</td></tr><tr><td>4XL</td><td>24</td><td>30</td></tr></tbody></table>
+        <div class="sg-care-title">Care Instructions</div>
+        <div class="sg-care-list">
+          <div class="sg-care-item"><span class="sg-care-label">Wash</span><span>Cold, inside out. No bleach.</span></div>
+          <div class="sg-care-item"><span class="sg-care-label">Dry</span><span>Hang to dry or tumble low.</span></div>
+          <div class="sg-care-item"><span class="sg-care-label">Iron</span><span>Cool iron only. No high heat.</span></div>
+        </div>
+        <p class="sg-measure-note">Chest — across armpit to armpit laid flat. Length — from highest shoulder point to bottom hem. Natural fabrics have a 1–2 cm tolerance.</p>
+      </div>
+      <div class="sg-section" id="sg-polo">
+        <div class="sg-fabric">Cotton &amp; Spandex Blend &middot; All measurements in inches</div>
+        <table class="sg-table"><thead><tr><th>Size</th><th>Chest</th><th>Length</th></tr></thead><tbody><tr><td>48</td><td>20</td><td>27</td></tr><tr><td>50</td><td>21.5</td><td>27</td></tr><tr><td>52</td><td>22</td><td>28</td></tr><tr><td>54</td><td>22.5</td><td>29</td></tr><tr><td>56</td><td>23</td><td>30</td></tr><tr><td>58</td><td>24</td><td>30.5</td></tr><tr><td>60</td><td>25</td><td>31</td></tr><tr><td>62</td><td>25</td><td>31.5</td></tr><tr><td>64</td><td>26</td><td>31.5</td></tr><tr><td>66</td><td>26.5</td><td>32</td></tr></tbody></table>
+        <div class="sg-care-title">Care Instructions</div>
+        <div class="sg-care-list">
+          <div class="sg-care-item"><span class="sg-care-label">Wash</span><span>Cold, inside out. No bleach.</span></div>
+          <div class="sg-care-item"><span class="sg-care-label">Dry</span><span>Hang to dry or tumble low.</span></div>
+          <div class="sg-care-item"><span class="sg-care-label">Iron</span><span>Cool iron only. No high heat.</span></div>
+        </div>
+        <p class="sg-measure-note">Chest — across armpit to armpit laid flat. Length — from highest shoulder point to bottom hem. Natural fabrics have a 1–2 cm tolerance.</p>
+      </div>
+      <div class="sg-section" id="sg-shirt-ss">
+        <div class="sg-fabric">100% Linen &middot; All measurements in inches</div>
+        <table class="sg-table"><thead><tr><th>Size</th><th>Chest</th><th>Length</th></tr></thead><tbody><tr><td>48</td><td>20</td><td>26</td></tr><tr><td>50</td><td>21</td><td>27</td></tr><tr><td>52</td><td>22</td><td>28</td></tr><tr><td>54</td><td>23</td><td>28.5</td></tr><tr><td>56</td><td>24</td><td>29</td></tr><tr><td>58</td><td>25</td><td>29.5</td></tr><tr><td>60</td><td>26</td><td>30</td></tr><tr><td>62</td><td>27</td><td>30.5</td></tr><tr><td>64</td><td>28</td><td>31</td></tr><tr><td>66</td><td>29</td><td>31.5</td></tr></tbody></table>
+        <div class="sg-care-title">Care Instructions</div>
+        <div class="sg-care-list">
+          <div class="sg-care-item"><span class="sg-care-label">Wash</span><span>Hand wash or cold gentle machine.</span></div>
+          <div class="sg-care-item"><span class="sg-care-label">Dry</span><span>Hang to dry in shade. Do not tumble dry.</span></div>
+          <div class="sg-care-item"><span class="sg-care-label">Iron</span><span>Warm iron while fabric is damp.</span></div>
+          <div class="sg-care-item"><span class="sg-care-label">Pro tip</span><span>Do not wring or twist. Fabric softens with every wash.</span></div>
+        </div>
+        <p class="sg-measure-note">Chest — across armpit to armpit laid flat. Length — from highest shoulder point to bottom hem. Linen may have a 1–2 cm tolerance.</p>
+      </div>
+      <div class="sg-section" id="sg-shirt-ls">
+        <div class="sg-fabric">100% Linen &middot; All measurements in inches</div>
+        <table class="sg-table"><thead><tr><th>Size</th><th>Chest</th><th>Length</th><th>Sleeve</th></tr></thead><tbody><tr><td>48</td><td>20</td><td>26</td><td>24</td></tr><tr><td>50</td><td>21</td><td>27</td><td>24.5</td></tr><tr><td>52</td><td>22</td><td>28</td><td>25</td></tr><tr><td>54</td><td>23</td><td>28.5</td><td>25.5</td></tr><tr><td>56</td><td>24</td><td>29</td><td>26</td></tr><tr><td>58</td><td>25</td><td>29.5</td><td>26.5</td></tr><tr><td>60</td><td>26</td><td>30</td><td>27</td></tr><tr><td>62</td><td>27</td><td>30.5</td><td>27.5</td></tr><tr><td>64</td><td>28</td><td>31</td><td>28</td></tr><tr><td>66</td><td>29</td><td>31.5</td><td>28.5</td></tr></tbody></table>
+        <div class="sg-care-title">Care Instructions</div>
+        <div class="sg-care-list">
+          <div class="sg-care-item"><span class="sg-care-label">Wash</span><span>Hand wash or cold gentle machine.</span></div>
+          <div class="sg-care-item"><span class="sg-care-label">Dry</span><span>Hang to dry in shade. Do not tumble dry.</span></div>
+          <div class="sg-care-item"><span class="sg-care-label">Iron</span><span>Warm iron while fabric is damp.</span></div>
+          <div class="sg-care-item"><span class="sg-care-label">Pro tip</span><span>Do not wring or twist. Fabric softens with every wash.</span></div>
+        </div>
+        <p class="sg-measure-note">Chest — across armpit to armpit laid flat. Sleeve — from shoulder seam to end of cuff. Length — from highest shoulder point to bottom hem. Linen may have a 1–2 cm tolerance.</p>
+      </div>
+      <div class="sg-section" id="sg-trousers">
+        <div class="sg-fabric">100% Linen &amp; 95% Linen Blend with Cotton &middot; All measurements in inches</div>
+        <table class="sg-table"><thead><tr><th>Size</th><th>Waist</th><th>Length</th></tr></thead><tbody><tr><td>29</td><td>29</td><td>40</td></tr><tr><td>30</td><td>30</td><td>40.5</td></tr><tr><td>31</td><td>31</td><td>41</td></tr><tr><td>32</td><td>32</td><td>41.5</td></tr><tr><td>33</td><td>33</td><td>42</td></tr><tr><td>34</td><td>34</td><td>42.5</td></tr><tr><td>36</td><td>36</td><td>42.5</td></tr><tr><td>38</td><td>38</td><td>43</td></tr><tr><td>40</td><td>40</td><td>43</td></tr><tr><td>42</td><td>42</td><td>43</td></tr><tr><td>44</td><td>44</td><td>43.5</td></tr><tr><td>46</td><td>46</td><td>43.5</td></tr></tbody></table>
+        <div class="sg-care-title">Care Instructions</div>
+        <div class="sg-care-list">
+          <div class="sg-care-item"><span class="sg-care-label">Wash</span><span>Hand wash or cold gentle machine.</span></div>
+          <div class="sg-care-item"><span class="sg-care-label">Dry</span><span>Hang to dry in shade. Do not tumble dry.</span></div>
+          <div class="sg-care-item"><span class="sg-care-label">Iron</span><span>Warm iron while slightly damp.</span></div>
+          <div class="sg-care-item"><span class="sg-care-label">Avoid</span><span>Do not bleach or wring. Fabric softens with every wash.</span></div>
+        </div>
+        <p class="sg-measure-note">Waist — across waist from one end to another. Length — from highest point of pant to bottom hem. Linen may have a 1–2 cm tolerance.</p>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+function openSizeGuide(tab){document.getElementById('sgOverlay').classList.add('open');document.body.style.overflow='hidden';if(tab){document.querySelectorAll('.sg-tab').forEach(t=>t.classList.remove('active'));document.querySelectorAll('.sg-section').forEach(s=>s.classList.remove('active'));const tb=document.querySelector(`.sg-tab[onclick*="${tab}"]`);const sc=document.getElementById(tab);if(tb)tb.classList.add('active');if(sc)sc.classList.add('active');}}
+function closeSizeGuide(){document.getElementById('sgOverlay').classList.remove('open');document.body.style.overflow='';}
+function sgTab(btn,id){document.querySelectorAll('.sg-tab').forEach(t=>t.classList.remove('active'));document.querySelectorAll('.sg-section').forEach(s=>s.classList.remove('active'));btn.classList.add('active');document.getElementById(id).classList.add('active');}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeSizeGuide();});
+</script>
+</body>
+</html>

@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Products — BURMELIN</title>
+<meta name="description" content="BURMELIN — Shop premium men's clothing."/>
+<link rel="icon" type="image/png" href="https://res.cloudinary.com/dtpvflgt1/image/upload/v1773996384/LOGO_q2howi.png"/>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;900&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Barlow+Condensed:wght@700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy:#0054A5; --navy-dark:#003d7a; --navy-light:#e8f0f9;
+  --cream:#F7F5F1; --cream-dark:#EEEBE5;
+  --ink:#111118; --muted:#6d6a65; --line:rgba(0,0,0,.1);
+  --white:#ffffff; --gold:#C9A96E;
+  --r-sm:8px; --r:16px; --r-lg:24px;
+  --shadow-sm:0 2px 12px rgba(0,0,0,.06);
+  --shadow:0 6px 28px rgba(0,0,0,.09);
+  --shadow-lg:0 16px 48px rgba(0,0,0,.12);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Archivo',sans-serif;background:var(--cream);color:var(--ink);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+img{max-width:100%;display:block}
+a{text-decoration:none;color:inherit}
+button{cursor:pointer;font-family:inherit}
+.container{max-width:1200px;margin:0 auto;padding:0 24px}
+
+/* ── HEADER ── */
+.site-header{position:fixed;top:0;left:0;right:0;z-index:100;height:72px;padding:0 32px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;background:rgba(255,255,255,.15);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,.15);transition:background .3s}
+.site-header:hover{background:rgba(255,255,255,.85)}
+.hamburger{width:40px;height:40px;border:none;background:none;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:5px;cursor:pointer;flex-shrink:0;border-radius:8px;transition:background .2s}
+.hamburger:hover{background:rgba(0,0,0,.05)}
+.hamburger span{display:block;width:22px;height:2px;background:var(--ink);border-radius:2px;transition:all .3s}
+.header-logo{display:flex;align-items:center;gap:10px;cursor:pointer}
+.header-actions{display:flex;align-items:center;gap:6px;justify-self:end}
+.icon-btn{width:40px;height:40px;border:none;background:none;display:flex;align-items:center;justify-content:center;color:var(--ink);border-radius:50%;transition:all .2s}
+.icon-btn:hover{background:var(--navy-light);color:var(--navy)}
+.cart-badge{position:relative}
+.cart-badge::after{content:attr(data-count);position:absolute;top:4px;right:4px;width:16px;height:16px;background:var(--white);color:var(--navy);font-size:9px;font-weight:700;border-radius:50%;display:flex;align-items:center;justify-content:center;line-height:1}
+
+/* ── SIDE MENU ── */
+.menu-overlay{position:fixed;inset:0;background:rgba(0,0,0,.3);z-index:98;opacity:0;pointer-events:none;transition:opacity .3s}
+.menu-overlay.open{opacity:1;pointer-events:all}
+.side-menu{position:fixed;top:0;left:0;bottom:0;width:280px;background:var(--white);z-index:99;transform:translateX(-100%);transition:transform .4s cubic-bezier(.22,.68,0,1.2);display:flex;flex-direction:column;padding:0;box-shadow:var(--shadow-lg);border-radius:0 var(--r-lg) var(--r-lg) 0}
+.side-menu.open{transform:translateX(0)}
+.side-menu-header{padding:20px 24px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between}
+.side-menu-close{width:32px;height:32px;border:1px solid var(--line);border-radius:50%;background:var(--cream);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--muted);transition:all .2s}
+.side-menu-close:hover{border-color:var(--ink);color:var(--ink)}
+.side-menu-links{display:flex;flex-direction:column;padding:16px 0;flex:1}
+.side-menu-link{padding:14px 28px;font-size:13px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);cursor:pointer;border:none;background:none;text-align:left;font-family:inherit;transition:all .2s;border-left:3px solid transparent}
+.side-menu-link:hover{color:var(--navy);background:var(--navy-light);border-left-color:var(--navy)}
+.side-menu-link.active{color:var(--navy);background:var(--navy-light);border-left-color:var(--navy)}
+.side-menu-footer{padding:20px 24px;border-top:1px solid var(--line)}
+
+/* ── PAGE HEADER ── */
+.page-hero{margin-top:72px;background:linear-gradient(150deg,#003d7a 0%,#0054A5 100%);padding:48px 0 40px;text-align:center;position:relative;overflow:hidden}
+.page-hero::before{content:'PRODUCTS';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:clamp(60px,12vw,160px);color:rgba(255,255,255,.04);white-space:nowrap;pointer-events:none}
+.page-hero-eyebrow{font-size:10px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:rgba(255,255,255,.45);margin-bottom:10px}
+.page-hero-title{font-family:'Cormorant Garamond',serif;font-size:clamp(28px,4vw,48px);font-weight:600;color:#fff;position:relative}
+
+
+
+/* ── CATEGORY PILLS ── */
+.cat-section{padding:20px 0 0}
+.cat-bar{display:flex;gap:8px;flex-wrap:wrap;padding-bottom:20px;border-bottom:1px solid var(--line)}
+.pill{padding:8px 18px;border:1.5px solid var(--line);border-radius:999px;background:var(--white);font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);box-shadow:var(--shadow-sm);transition:all .2s}
+.pill:hover{border-color:var(--navy);color:var(--navy)}
+.pill.active{background:var(--navy);border-color:var(--navy);color:var(--white)}
+
+/* ── PRODUCTS GRID ── */
+.products-section{padding:24px 0 80px}
+.products-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+
+.product-card{background:var(--white);border-radius:var(--r);overflow:hidden;border:1px solid var(--line);cursor:pointer;position:relative;box-shadow:var(--shadow-sm);transition:box-shadow .3s,transform .3s}
+.product-card:hover{box-shadow:var(--shadow-lg);transform:translateY(-4px)}
+.product-card.hidden{display:none}
+
+.product-media{aspect-ratio:3/4;overflow:hidden;background:var(--white);position:relative}
+.product-img{width:100%;height:100%;object-fit:cover;transition:transform .5s ease}
+.product-card:hover .product-img{transform:scale(1.05)}
+
+.product-badge{position:absolute;top:12px;left:12px;padding:4px 10px;border-radius:999px;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase}
+.badge-new{background:var(--navy);color:white}
+.badge-sale{background:#c0392b;color:white}
+.badge-limited{background:var(--gold);color:var(--ink)}
+
+.product-wish{position:absolute;top:10px;right:10px;width:34px;height:34px;background:white;border:none;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:var(--shadow-sm);opacity:0;transition:opacity .2s,transform .2s;transform:scale(.9);color:var(--muted)}
+.product-card:hover .product-wish{opacity:1;transform:scale(1)}
+.product-wish:hover{transform:scale(1.1)!important}
+
+.product-quick{position:absolute;bottom:0;left:0;right:0;background:var(--navy);color:white;border:none;padding:13px;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;opacity:0;transform:translateY(100%);transition:opacity .3s,transform .3s}
+.product-card:hover .product-quick{opacity:1;transform:translateY(0)}
+
+.product-body{padding:16px}
+.product-cat{font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--navy);margin-bottom:4px}
+.product-name{font-size:15px;font-weight:600;color:var(--ink);margin-bottom:4px;line-height:1.3}
+.product-code{font-size:11px;color:var(--muted);margin-bottom:8px}
+.product-swatches{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px;max-width:100%}
+.swatch-dot{width:15px;height:15px;border-radius:50%;border:2px solid white;outline:1.5px solid rgba(0,0,0,.18);cursor:pointer}
+.swatch-dot.active{outline-color:var(--navy);outline-width:2px}
+.product-footer{display:flex;align-items:center;justify-content:space-between}
+.product-price{font-size:17px;font-weight:700;color:var(--ink)}
+.product-price-old{font-size:12px;color:var(--muted);text-decoration:line-through;margin-left:6px}
+.rating{display:flex;align-items:center;gap:3px;font-size:11px;color:var(--muted)}
+.stars{color:var(--gold)}
+
+/* Empty state */
+.empty-state{grid-column:1/-1;text-align:center;padding:80px 24px;color:var(--muted)}
+.empty-icon{font-size:48px;margin-bottom:16px;opacity:.3}
+.empty-title{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:600;color:var(--ink);margin-bottom:8px}
+.empty-sub{font-size:14px}
+
+/* ── MODAL ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:300;display:flex;align-items:center;justify-content:center;padding:24px;opacity:0;pointer-events:none;transition:opacity .3s}
+.modal-overlay.open{opacity:1;pointer-events:all}
+.modal{background:var(--white);width:100%;max-width:880px;max-height:90vh;overflow-y:auto;border-radius:var(--r-lg);transform:scale(.96) translateY(16px);transition:transform .35s cubic-bezier(.22,.68,0,1.2);position:relative;box-shadow:var(--shadow-lg)}
+.modal-overlay.open .modal{transform:scale(1) translateY(0)}
+.modal-inner{display:grid;grid-template-columns:1fr 1fr}
+.modal-gallery{background:var(--cream);border-radius:var(--r-lg) 0 0 var(--r-lg);overflow:hidden}
+.modal-main-img{width:100%;aspect-ratio:3/4;object-fit:cover}
+.modal-body{padding:40px 36px;display:flex;flex-direction:column}
+.modal-cat{font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--navy);margin-bottom:8px}
+.modal-name{font-family:'Cormorant Garamond',serif;font-size:30px;font-weight:600;color:var(--ink);margin-bottom:6px;line-height:1.1}
+.modal-price{font-size:24px;font-weight:700;color:var(--ink);margin-bottom:18px}
+.modal-desc{font-size:13px;color:var(--muted);line-height:1.75;margin-bottom:22px;flex:1}
+.modal-label{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+.modal-colors{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px}
+.modal-swatch{width:26px;height:26px;border-radius:50%;border:2.5px solid white;outline:1.5px solid rgba(0,0,0,.18);cursor:pointer;transition:outline-color .2s,transform .2s}
+.modal-swatch:hover{transform:scale(1.12)}
+.modal-swatch.active{outline-color:var(--navy);outline-width:2px}
+.modal-sizes{display:flex;gap:8px;margin-bottom:24px;flex-wrap:wrap}
+.modal-size{padding:9px 16px;border:1.5px solid var(--line);border-radius:var(--r-sm);font-size:13px;font-weight:600;background:var(--cream);cursor:pointer;transition:all .2s}
+.modal-size:hover{border-color:var(--navy);color:var(--navy)}
+.modal-size.active{background:var(--navy);color:white;border-color:var(--navy)}
+.modal-close{position:absolute;top:16px;right:16px;width:34px;height:34px;background:var(--cream);border:none;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--muted);box-shadow:var(--shadow-sm)}
+.modal-actions{display:flex;flex-direction:column;gap:10px;margin-top:auto}
+
+/* ── BTN ── */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:13px 26px;border-radius:var(--r-sm);font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;border:1.5px solid transparent;transition:all .25s;cursor:pointer;width:100%}
+.btn-navy{background:var(--navy);color:var(--white);border-color:var(--navy)}
+.btn-navy:hover{background:var(--navy-dark)}
+.btn-whatsapp{background:#25D366;color:white;border-color:#25D366}
+.btn-whatsapp:hover{background:#1ea855}
+
+/* ── CART ── */
+.cart-overlay{position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:200;opacity:0;pointer-events:none;transition:opacity .3s}
+.cart-overlay.open{opacity:1;pointer-events:all}
+.cart-sidebar{position:fixed;top:0;right:0;bottom:0;width:390px;background:var(--white);border-radius:var(--r-lg) 0 0 var(--r-lg);z-index:201;transform:translateX(100%);transition:transform .4s cubic-bezier(.22,.68,0,1.2);display:flex;flex-direction:column;box-shadow:var(--shadow-lg)}
+.cart-sidebar.open{transform:translateX(0)}
+.cart-header{padding:24px 28px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between}
+.cart-title{font-size:16px;font-weight:700;color:var(--ink)}
+.cart-close{width:34px;height:34px;border:1px solid var(--line);border-radius:50%;background:var(--cream);display:flex;align-items:center;justify-content:center;color:var(--muted);cursor:pointer;transition:all .2s}
+.cart-close:hover{border-color:var(--ink);color:var(--ink)}
+.cart-items{flex:1;overflow-y:auto;padding:20px 28px}
+.cart-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:10px;color:var(--muted);text-align:center}
+.cart-item{display:flex;gap:14px;padding:16px 0;border-bottom:1px solid var(--line)}
+.cart-item-img{width:70px;height:88px;object-fit:cover;background:var(--cream);border-radius:var(--r-sm);flex-shrink:0}
+.cart-item-details{flex:1}
+.cart-item-name{font-size:14px;font-weight:600;margin-bottom:3px}
+.cart-item-meta{font-size:11px;color:var(--muted);margin-bottom:10px}
+.cart-item-controls{display:flex;align-items:center;justify-content:space-between}
+.qty-ctrl{display:flex;align-items:center;border:1px solid var(--line);border-radius:var(--r-sm);overflow:hidden}
+.qty-btn{width:30px;height:30px;border:none;background:var(--cream);font-size:16px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--muted)}
+.qty-btn:hover{color:var(--ink)}
+.qty-num{width:32px;height:30px;text-align:center;font-size:13px;font-weight:600;display:flex;align-items:center;justify-content:center;border-left:1px solid var(--line);border-right:1px solid var(--line)}
+.cart-item-price{font-size:15px;font-weight:700}
+.cart-item-remove{background:none;border:none;color:var(--muted);font-size:11px;cursor:pointer;text-decoration:underline;margin-top:6px}
+.cart-footer{padding:24px 28px;border-top:1px solid var(--line);background:var(--cream)}
+.cart-total-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.cart-total-label{font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.cart-total-amount{font-size:24px;font-weight:700;color:var(--ink)}
+.checkout-btn{width:100%;padding:15px;background:var(--ink);color:white;border:none;border-radius:var(--r-sm);font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;margin-bottom:10px;transition:background .2s}
+.checkout-btn:hover{background:#2a2a30}
+.whatsapp-btn{width:100%;padding:14px;background:#25D366;color:white;border:none;border-radius:var(--r-sm);font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:background .2s}
+.whatsapp-btn:hover{background:#1ea855}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:28px;right:28px;background:var(--ink);color:white;padding:13px 20px;border-radius:var(--r);font-size:13px;font-weight:600;z-index:999;display:flex;align-items:center;gap:10px;box-shadow:var(--shadow-lg);transform:translateY(80px);opacity:0;transition:all .4s cubic-bezier(.22,.68,0,1.2);pointer-events:none}
+.toast.show{transform:translateY(0);opacity:1}
+
+/* ── RESPONSIVE ── */
+@media(max-width:1100px){.products-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:768px){.products-grid{grid-template-columns:repeat(2,1fr)}.modal-overlay{padding:0;align-items:flex-end}.modal{border-radius:var(--r-lg) var(--r-lg) 0 0;max-height:95svh;width:100%;transform:translateY(100%)}.modal-overlay.open .modal{transform:translateY(0)}.modal::before{content:'';display:block;width:36px;height:4px;background:rgba(0,0,0,.15);border-radius:4px;margin:10px auto 0}.modal-inner{grid-template-columns:1fr}.modal-gallery{border-radius:0}.modal-main-img{aspect-ratio:3/4;max-height:48svh;object-fit:contain;background:var(--cream)}.modal-body{padding:20px 16px}.modal-close{top:12px;right:12px}.toolbar-inner{gap:8px}.price-wrap{display:none}}
+@media(max-width:480px){.products-grid{grid-template-columns:repeat(2,1fr)}.cart-sidebar{width:100%;border-radius:0}.product-quick{opacity:1!important;transform:translateY(0)!important;font-size:10px;padding:10px}.product-wish{opacity:1!important;transform:scale(1)!important}.modal-size{padding:7px 11px;font-size:12px}}
+
+@keyframes spin{to{transform:rotate(360deg)}}
+.grid-loader{grid-column:1/-1;text-align:center;padding:64px 24px;color:var(--muted)}
+.grid-spinner{display:inline-block;width:26px;height:26px;border:2px solid var(--line);border-top-color:var(--navy);border-radius:50%;animation:spin .8s linear infinite;margin-bottom:14px}
+
+/* SEARCH */
+.search-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:400;display:flex;align-items:flex-start;justify-content:center;padding-top:120px;opacity:0;pointer-events:none;transition:opacity .3s}
+.search-overlay.open{opacity:1;pointer-events:all}
+.search-box{background:var(--white);border-radius:var(--r-lg);padding:32px;width:100%;max-width:600px;margin:0 24px;box-shadow:var(--shadow-lg)}
+.search-box-inner{display:flex;align-items:center;gap:12px;border-bottom:2px solid var(--navy);padding-bottom:12px;margin-bottom:20px}
+.search-box-input{flex:1;border:none;outline:none;font-size:20px;font-family:inherit;color:var(--ink);background:transparent}
+.search-box-input::placeholder{color:var(--muted)}
+.search-box-close{width:32px;height:32px;border:1px solid var(--line);border-radius:50%;background:var(--cream);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--muted);flex-shrink:0}
+.search-results{display:flex;flex-direction:column;gap:10px;max-height:320px;overflow-y:auto}
+.search-result-item{display:flex;align-items:center;gap:14px;padding:10px;border-radius:var(--r-sm);cursor:pointer;transition:background .2s}
+.search-result-item:hover{background:var(--cream)}
+.search-result-img{width:48px;height:60px;object-fit:cover;border-radius:6px;flex-shrink:0;background:var(--cream-dark)}
+.search-result-name{font-size:14px;font-weight:600;color:var(--ink)}
+.search-result-cat{font-size:11px;color:var(--muted);margin-top:2px}
+.search-result-price{font-size:14px;font-weight:700;color:var(--navy);margin-left:auto}
+.search-empty{text-align:center;padding:24px;color:var(--muted);font-size:14px}
+.search-tip{font-size:11px;color:var(--muted);text-align:center;margin-top:8px}
+
+/* FOOTER */
+.site-footer{background:linear-gradient(160deg,#1C1A17 0%,#2E2A24 100%);color:rgba(255,255,255,.55);padding:48px 0 28px}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:32px;margin-bottom:32px}
+.footer-tagline{font-family:'Cormorant Garamond',serif;font-size:14px;font-style:italic;color:rgba(255,255,255,.35);line-height:1.7;max-width:240px;margin-top:14px}
+.footer-socials{display:flex;gap:8px;margin-top:22px}
+.social-btn{width:36px;height:36px;border:1px solid rgba(255,255,255,.12);border-radius:50%;background:none;color:rgba(255,255,255,.4);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s}
+.social-btn:hover{border-color:var(--navy);color:white;background:var(--navy)}
+.footer-heading{font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.65);margin-bottom:18px}
+.footer-links{display:flex;flex-direction:column;gap:10px}
+.footer-link{font-size:13px;color:rgba(255,255,255,.4);transition:color .2s;cursor:pointer;border:none;background:none;text-align:left;font-family:inherit}
+.footer-link:hover{color:white}
+.footer-bottom{padding-top:24px;border-top:1px solid rgba(255,255,255,.07);display:flex;justify-content:space-between;align-items:center}
+.footer-copy{font-size:11px;color:rgba(255,255,255,.25)}
+.footer-legal{display:flex;gap:20px}
+@media(max-width:900px){.footer-grid{grid-template-columns:1fr 1fr;gap:24px}}
+@media(max-width:480px){.footer-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="site-header">
+  <button class="hamburger" onclick="openMenu()" title="Menu">
+    <span></span><span></span><span></span>
+  </button>
+  <div class="header-logo" onclick="window.location.href='index.html'">
+    <img src="https://res.cloudinary.com/dtpvflgt1/image/upload/v1773996384/LOGO_q2howi.png" alt="BURMELIN logo" style="height:36px;width:auto;display:block;filter:brightness(0) saturate(100%) invert(23%) sepia(89%) saturate(1500%) hue-rotate(191deg) brightness(93%)"/>
+    <span style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:22px;letter-spacing:.12em;color:#0054A5;text-transform:uppercase">BURMELIN</span>
+  </div>
+  <div class="header-actions">
+    <button class="icon-btn" title="Search" onclick="openSearch()"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></button>
+    <button class="icon-btn cart-badge" id="cartBtn" data-count="0" onclick="openCart()"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg></button>
+  </div>
+</header>
+
+<!-- SIDE MENU -->
+<div class="menu-overlay" id="menuOverlay" onclick="closeMenu()"></div>
+<div class="side-menu" id="sideMenu">
+  <div class="side-menu-header">
+    <img src="https://res.cloudinary.com/dtpvflgt1/image/upload/v1773996384/LOGO_q2howi.png" alt="BURMELIN" style="height:30px;width:auto"/>
+    <button class="side-menu-close" onclick="closeMenu()">
+      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="side-menu-links">
+    <button class="side-menu-link" onclick="window.location.href='index.html'">Home</button>
+    <button class="side-menu-link active">Products</button>
+    <button class="side-menu-link" onclick="window.location.href='stores.html'">Stores</button>
+    <button class="side-menu-link" onclick="window.location.href='about.html'">About Us</button>
+  </div>
+  <div class="side-menu-footer">
+    <a href="https://wa.me/66835398811" class="btn btn-navy" style="width:100%;justify-content:center;font-size:11px">WhatsApp Us</a>
+  </div>
+</div>
+
+<!-- PAGE HERO -->
+<div class="page-hero">
+  <div class="page-hero-eyebrow">Burmelin</div>
+  <h1 class="page-hero-title">The Collection</h1>
+</div>
+
+<!-- CATEGORY PILLS -->
+<div class="container">
+  <div class="cat-section">
+    <div class="cat-bar">
+      <button class="pill active" data-cat="all" onclick="filterCat(this,'all')">All Pieces</button>
+      <button class="pill" data-cat="polo" onclick="filterCat(this,'polo')">Polo Shirts</button>
+      <button class="pill" data-cat="tshirt" onclick="filterCat(this,'tshirt')">T-Shirts</button>
+      <button class="pill" data-cat="pants" onclick="filterCat(this,'pants')">Linen Pants</button>
+      <button class="pill" data-cat="jeans" onclick="filterCat(this,'jeans')">Jeans</button>
+      <button class="pill" data-cat="jacket" onclick="filterCat(this,'jacket')">Jackets</button>
+      <button class="pill" data-cat="shirt" onclick="filterCat(this,'shirt')">Linen Shirts</button>
+      <button class="pill" data-cat="chino" onclick="filterCat(this,'chino')">Chino Pants</button>
+      <button class="pill" data-cat="undergarments" onclick="filterCat(this,'undergarments')">Undergarments</button>
+    </div>
+  </div>
+</div>
+
+<!-- PRODUCTS GRID -->
+<div class="products-section">
+  <div class="container">
+    <div class="products-grid" id="productGrid">
+
+      <div class="grid-loader" id="gridLoader">
+        <div class="grid-spinner"></div>
+        <div style="font-size:14px">Loading products…</div>
+      </div>
+
+
+
+    </div>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay" onclick="handleModalClick(event)">
+  <div class="modal" id="modal">
+    <button class="modal-close" onclick="closeModal()"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    <div class="modal-inner">
+      <div class="modal-gallery"><img id="modalImg" class="modal-main-img" src="" alt=""/></div>
+      <div class="modal-body">
+        <div id="modalCat" class="modal-cat"></div>
+        <h2 id="modalName" class="modal-name"></h2>
+        <div id="modalPrice" class="modal-price"></div>
+        <p id="modalDesc" class="modal-desc"></p>
+        <div class="modal-label">Color — <span id="modalColorName" style="font-weight:500;text-transform:none;letter-spacing:0;color:var(--ink)"></span></div>
+        <div class="modal-colors" id="modalColors"></div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+          <div class="modal-label" style="margin-bottom:0">Size</div>
+          <button onclick="openSizeGuideForProduct()" style="display:flex;align-items:center;gap:5px;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--navy);background:none;border:none;cursor:pointer;padding:0;text-decoration:underline;text-underline-offset:3px">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16H3a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h18a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2z"/><line x1="7" y1="8" x2="7" y2="12"/><line x1="11" y1="8" x2="11" y2="10"/><line x1="15" y1="8" x2="15" y2="12"/><line x1="19" y1="8" x2="19" y2="10"/></svg>
+            Size Guide
+          </button>
+        </div>
+        <div class="modal-sizes" id="modalSizes"></div>
+        <div class="modal-actions">
+          <button id="modalAddBtn" class="btn btn-navy">Add to Cart</button>
+          <button id="modalWABtn" class="btn btn-whatsapp">
+            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            Order via WhatsApp
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CART -->
+<div class="cart-overlay" id="cartOverlay" onclick="closeCart()"></div>
+<div class="cart-sidebar" id="cartSidebar">
+  <div class="cart-header"><div class="cart-title">Your Cart</div><button class="cart-close" onclick="closeCart()"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
+  <div class="cart-items" id="cartItems">
+    <div class="cart-empty"><div style="margin-bottom:8px"><svg xmlns="http://www.w3.org/2000/svg" width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="#c5c5cc" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg></div><div style="font-weight:700;font-size:15px">Your cart is empty</div><div style="font-size:12px;color:var(--muted)">Add some pieces to get started</div></div>
+  </div>
+  <div class="cart-footer" id="cartFooter" style="display:none">
+    <div class="cart-total-row"><span class="cart-total-label">Total</span><span class="cart-total-amount" id="cartTotal">฿0</span></div>
+    <button class="checkout-btn" id="checkoutBtn" onclick="goToCheckout()">Checkout</button>
+    <button class="whatsapp-btn" onclick="orderWhatsApp()"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Order via WhatsApp</button>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span id="toastMsg"> Added to cart</span></div>
+
+<script>
+// ── Supabase config ──────────────────────────────────────────────────────
+const SUPABASE_URL      = 'https://fwhczruomutdgelmwcly.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_RR_Kxpb0HBiVdt3YJkBo7A_lo8RYiPW';
+
+// Hardcoded fallback — store shows these if Supabase is unreachable or empty
+const FALLBACK_PRODUCTS = [
+  {id:'f0',name:"Classic Linen Polo",cat:"polo",price:1190,code:"F9027",img:"https://images.unsplash.com/photo-1621072156002-e2fccdc0b176?q=80&w=800&auto=format&fit=crop",desc:"Our signature polo cut in 100% pre-washed linen. Relaxed silhouette with a subtle collar and two-button placket.",colors:[{name:"Stone",hex:"#CFC8BA"},{name:"Navy",hex:"#0B3D91"},{name:"Ivory",hex:"#F4F1EA"}],sizes:["XS","S","M","L","XL","XXL"],badge:'new'},
+  {id:'f1',name:"Essential Linen Tee",cat:"tshirt",price:890,code:"F8812",img:"https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?q=80&w=800&auto=format&fit=crop",desc:"The foundational piece every wardrobe needs. Pre-washed for instant softness with a relaxed crew neck.",colors:[{name:"Ivory",hex:"#F4F1EA"},{name:"Charcoal",hex:"#2E2E2E"},{name:"Sand",hex:"#C8B8A2"}],sizes:["XS","S","M","L","XL","XXL"],badge:''},
+  {id:'f2',name:"Relaxed Linen Pants",cat:"pants",price:1590,code:"G1145",img:"https://images.unsplash.com/photo-1593030761757-71fae45fa0e7?q=80&w=800&auto=format&fit=crop",desc:"Wide-leg linen trousers with an elasticated waistband and side pockets. The ultimate warm-weather pant.",colors:[{name:"Olive",hex:"#6B7645"},{name:"Stone",hex:"#CFC8BA"},{name:"Midnight",hex:"#1a1a2e"}],sizes:["XS","S","M","L","XL","XXL"],badge:'limited'},
+  {id:'f3',name:"Straight Cut Jeans",cat:"jeans",price:1490,code:"G2230",img:"https://images.unsplash.com/photo-1542272604-787c3835535d?q=80&w=800&auto=format&fit=crop",desc:"Classic straight-leg denim with a clean wash and tailored fit.",colors:[{name:"Indigo",hex:"#2b4c89"},{name:"Washed Brown",hex:"#8a7560"}],sizes:["28","30","32","34","36"],badge:''},
+  {id:'f4',name:"Linen Overshirt",cat:"jacket",price:1890,code:"H0312",img:"https://images.unsplash.com/photo-1591047139829-d91aecb6caea?q=80&w=800&auto=format&fit=crop",desc:"Wear it open over a tee or buttoned as a lightweight layer. Chest pockets, drop shoulder, clean hem.",colors:[{name:"Khaki",hex:"#B5A898"},{name:"Black",hex:"#2E2E2E"},{name:"Forest",hex:"#5c6b3a"}],sizes:["XS","S","M","L","XL","XXL"],badge:'new'},
+  {id:'f5',name:"Navy Resort Polo",cat:"polo",price:990,code:"F9033",img:"https://images.unsplash.com/photo-1589992896912-f40acba26c74?q=80&w=800&auto=format&fit=crop",desc:"A deep navy polo with BURMELIN's signature mark embroidered at the chest.",colors:[{name:"Navy",hex:"#0B3D91"},{name:"Burgundy",hex:"#8B0000"}],sizes:["XS","S","M","L","XL"],badge:'sale'},
+  {id:'f6',name:"Graphic Print Tee",cat:"tshirt",price:790,code:"F8840",img:"https://images.unsplash.com/photo-1562157873-818bc0726f68?q=80&w=800&auto=format&fit=crop",desc:"A seasonal graphic tee featuring the BURMELIN arrow motif on heavyweight linen-cotton blend.",colors:[{name:"White",hex:"#ffffff"},{name:"Black",hex:"#2E2E2E"}],sizes:["XS","S","M","L","XL","XXL"],badge:''},
+  {id:'f7',name:"Tapered Linen Trousers",cat:"pants",price:1750,code:"G1188",img:"https://images.unsplash.com/photo-1548883354-7622d03aca27?q=80&w=800&auto=format&fit=crop",desc:"A refined cut with a tapered leg and flat front. Suitable for the office and beyond.",colors:[{name:"Stone",hex:"#CFC8BA"},{name:"Midnight",hex:"#1a1a2e"},{name:"Caramel",hex:"#8B6914"}],sizes:["XS","S","M","L","XL"],badge:'new'},
+  {id:'f8',name:"100% Linen Long Sleeve Shirt",cat:"shirt",price:1450,code:"T9027",img:"https://res.cloudinary.com/dtpvflgt1/image/upload/v1775697533/E72AE919-6A79-4D75-8E9C-545770499B7E_wsahiw.png",desc:"BURMELIN's signature best-seller. 100% pure natural linen — long sleeve, relaxed fit with a clean collar and button-front. Available in 16 natural colors. Crafted for Bangkok's climate and beyond.",colors:[
+    {name:"White",colorNo:"2",hex:"#F5F3EE",group:"light",img:"https://res.cloudinary.com/dtpvflgt1/image/upload/v1775697533/E72AE919-6A79-4D75-8E9C-545770499B7E_wsahiw.png"},
+    {name:"Soft Green",colorNo:"91",hex:"#9FB89A",group:"light",img:"https://res.cloudinary.com/dtpvflgt1/image/upload/v1775697533/FD0D549E-580D-45B7-B165-932BD85DBF5E_fb1ftk.png"},
+    {name:"Light Pink",colorNo:"44",hex:"#E0B8B2",group:"light",img:"https://res.cloudinary.com/dtpvflgt1/image/upload/v1775697533/679571FF-0B05-486B-A627-493A3C4E4FF2_q7dgf5.png"},
+    {name:"Sky Blue",colorNo:"81",hex:"#82B5CB",group:"light",img:"https://res.cloudinary.com/dtpvflgt1/image/upload/v1775697532/IMG_9632_fsevpt.png"},
+    {name:"Beige",colorNo:"37",hex:"#C8A87A",group:"light",img:"https://res.cloudinary.com/dtpvflgt1/image/upload/v1775697532/315F642B-7B07-4D20-AC06-4CDFA86DD000_f5h9nf.png"},
+    {name:"Dark Blue",colorNo:"50",hex:"#1B3D6E",group:"dark",img:"https://res.cloudinary.com/dtpvflgt1/image/upload/v1775697530/641F2508-1808-41EC-B28F-4F0D8DFB954C_kbpbfu.png"},
+    {name:"Navy Blue",colorNo:"127",hex:"#1A2B4A",group:"dark",img:"https://res.cloudinary.com/dtpvflgt1/image/upload/v1775697530/E1653697-09E3-42DD-B4BB-98077F9CBE15_z548dc.png"},
+    {name:"Deep Teal",colorNo:"101",hex:"#1A5A58",group:"dark",img:"https://res.cloudinary.com/dtpvflgt1/image/upload/v1775697531/E879F6C3-6479-4BDA-8360-CB5D2D49EBA9_iatf7o.png"},
+    {name:"Black",colorNo:"33",hex:"#1C1C1C",group:"dark",img:"https://res.cloudinary.com/dtpvflgt1/image/upload/v1775697534/E7D42C1C-10DC-4F9B-920C-922E3AD09C59_nj7wql.png"},
+    {name:"Maroon",colorNo:"80",hex:"#6B1A2A",group:"dark",img:"https://res.cloudinary.com/dtpvflgt1/image/upload/v1775697535/5F2498F0-8C34-4883-B3D3-BFA3F0D48284_m85kgt.png"},
+    {name:"Olive Green",colorNo:"59",hex:"#5F7033",group:"natural",img:"https://res.cloudinary.com/dtpvflgt1/image/upload/v1775697541/DFA8F8CE-B752-4B4A-9C27-3481DC6332D3_m8iruu.png"},
+    {name:"Olive Earth",colorNo:"127",hex:"#8A7150",group:"natural",img:"https://res.cloudinary.com/dtpvflgt1/image/upload/v1775697533/F0758DF9-CA1F-425E-8A7D-DAB4C843A670_cjdfng.png"},
+    {name:"Taupe Brown",colorNo:"123",hex:"#9A7860",group:"natural",img:"https://res.cloudinary.com/dtpvflgt1/image/upload/v1775697532/B385A28F-7676-4A8A-92D1-659B6D95D28C_rxzixm.png"},
+    {name:"Taupe Gray",colorNo:"35",hex:"#8C8680",group:"natural",img:"https://res.cloudinary.com/dtpvflgt1/image/upload/v1775697534/625C964C-D587-4CBB-947E-C46E43A33D0B_wcsxae.png"},
+    {name:"Brown Sugar",colorNo:"24",hex:"#A05A32",group:"natural",img:"https://res.cloudinary.com/dtpvflgt1/image/upload/v1775697534/618FE7DB-2BAD-43C7-9F96-08B09079B42E_rm5asx.png"},
+    {name:"Gray Green",colorNo:"43",hex:"#788075",group:"natural",img:"https://res.cloudinary.com/dtpvflgt1/image/upload/v1776837882/521032E8-B609-41F9-A3EA-35A876529F99_ggycwi.png"}
+  ],sizes:["48","50","52","54","56","58","60","62","64","66"],badge:'new'}
+];
+
+let PRODUCTS = [];
+
+const CAT_LABELS = {polo:'Polo Shirt',tshirt:'T-Shirt',pants:'Linen Pants',jeans:'Jeans',jacket:'Jacket',shirt:'Shirt',chino:'Chino Pant',undergarments:'Undergarments'};
+const WISH_SVG = `<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>`;
+
+async function loadProducts() {
+  try {
+    const res = await fetch(
+      SUPABASE_URL + '/rest/v1/products?active=eq.true&order=created_at.desc',
+      { headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + SUPABASE_ANON_KEY, 'Content-Type': 'application/json' } }
+    );
+    const data = await res.json();
+    if (Array.isArray(data) && data.length) { PRODUCTS = data; renderGrid(); return; }
+  } catch(e) { /* fall through to fallback */ }
+  PRODUCTS = FALLBACK_PRODUCTS;
+  renderGrid();
+}
+
+function renderGrid() {
+  const grid   = document.getElementById('productGrid');
+  const loader = document.getElementById('gridLoader');
+  if (loader) loader.remove();
+  const activePill = document.querySelector('.cat-bar .pill.active');
+  const currentCat = activePill ? activePill.dataset.cat : 'all';
+  if (!PRODUCTS.length) {
+    grid.innerHTML = `<div class="empty-state"><div class="empty-icon">🛍</div><div class="empty-title">No products available</div><div class="empty-sub">Check back soon.</div></div>`;
+    return;
+  }
+  grid.innerHTML = PRODUCTS.map((p, i) => renderCard(p, i)).join('');
+  if (currentCat !== 'all') {
+    grid.querySelectorAll('.product-card').forEach(card => {
+      card.classList.toggle('hidden', card.dataset.cat !== currentCat);
+    });
+  }
+}
+
+function renderCard(p, i) {
+  const badge = p.badge ? `<span class="product-badge badge-${p.badge}">${p.badge.charAt(0).toUpperCase()+p.badge.slice(1)}</span>` : '';
+  const swatches = (p.colors||[]).map((c,si) =>
+    `<div class="swatch-dot${si===0?' active':''}" style="background:${c.hex}" title="${c.name}"></div>`).join('');
+  const catLabel = CAT_LABELS[p.cat] || p.cat || '';
+  return `<div class="product-card" data-cat="${p.cat}" data-price="${p.price}" onclick="openModal(${i})">
+    <div class="product-media">
+      <img class="product-img" src="${p.img||''}" alt="${p.name}" loading="lazy"/>
+      ${badge}
+      <button class="product-wish" onclick="event.stopPropagation()">${WISH_SVG}</button>
+      <button class="product-quick" onclick="event.stopPropagation();quickAdd(${i})">Add to Cart</button>
+    </div>
+    <div class="product-body">
+      <div class="product-cat">${catLabel}</div>
+      <div class="product-name">${p.name}</div>
+      ${p.code ? `<div class="product-code">Code: ${p.code}</div>` : ''}
+      <div class="product-swatches">${swatches}</div>
+      <div class="product-footer"><span class="product-price">฿${p.price.toLocaleString()}</span></div>
+    </div>
+  </div>`;
+}
+
+let cart=[], selectedColorIndex=0, selectedSize='', currentCat='all', currentProduct=null;
+
+// Navigation
+
+function openMenu(){
+  const menu=document.getElementById('sideMenu');
+  const overlay=document.getElementById('menuOverlay');
+  if(menu.classList.contains('open')){menu.classList.remove('open');overlay.classList.remove('open');}
+  else{menu.classList.add('open');overlay.classList.add('open');}
+}
+function closeMenu(){document.getElementById('menuOverlay').classList.remove('open');document.getElementById('sideMenu').classList.remove('open')}
+
+// Category filter
+function filterCat(btn,cat){
+  document.querySelectorAll('.cat-bar .pill').forEach(p=>p.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('#productGrid .product-card').forEach(card=>{
+    card.classList.toggle('hidden', cat!=='all' && card.dataset.cat!==cat);
+  });
+}
+
+// Cart
+function openCart(){document.getElementById('cartOverlay').classList.add('open');document.getElementById('cartSidebar').classList.add('open');renderCart()}
+function closeCart(){document.getElementById('cartOverlay').classList.remove('open');document.getElementById('cartSidebar').classList.remove('open')}
+function saveCart(){try{localStorage.setItem('burmelinCart',JSON.stringify(cart));}catch(e){}}
+function updateBadge(){document.getElementById('cartBtn').dataset.count=cart.reduce((s,i)=>s+i.qty,0)||0}
+function addToCart(item){
+  const existing=cart.find(c=>c.name===item.name&&c.color===item.color&&c.size===item.size);
+  if(existing){existing.qty++;}else{cart.push({...item,qty:1});}
+  updateBadge();saveCart();renderCart();showToast(item.name+' added');
+}
+// Load cart from localStorage on page start
+(function(){try{const saved=JSON.parse(localStorage.getItem('burmelinCart')||'[]');cart.push(...saved.map(i=>({...i,qty:i.qty||1})));if(cart.length){updateBadge();renderCart();}}catch(e){}}());
+function removeFromCart(i){cart.splice(i,1);updateBadge();saveCart();renderCart()}
+function changeQty(i,delta){
+  cart[i].qty=Math.max(1,cart[i].qty+delta);
+  updateBadge();saveCart();renderCart();
+}
+function quickAdd(index){
+  const p=PRODUCTS[index];
+  if(!p)return;
+  addToCart({name:p.name,price:p.price,color:(p.colors&&p.colors[0])?p.colors[0].name:'',size:(p.sizes&&p.sizes[0])?p.sizes[0]:'',img:p.img||''});
+}
+function renderCart(){
+  const container=document.getElementById('cartItems'),footer=document.getElementById('cartFooter');
+  if(!cart.length){container.innerHTML=`<div class="cart-empty"><div style="margin-bottom:8px"><svg xmlns="http://www.w3.org/2000/svg" width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="#c5c5cc" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg></div><div style="font-weight:700;font-size:15px">Your cart is empty</div><div style="font-size:12px;color:var(--muted)">Add some pieces to get started</div></div>`;footer.style.display='none';return}
+  footer.style.display='';let total=0;
+  container.innerHTML=cart.map((item,i)=>{total+=item.price*item.qty;return`<div class="cart-item"><img class="cart-item-img" src="${item.img}" alt="${item.name}"/><div class="cart-item-details"><div class="cart-item-name">${item.name}</div><div class="cart-item-meta">${item.color} · Size ${item.size}</div><div class="cart-item-controls"><div class="qty-ctrl"><button class="qty-btn" onclick="changeQty(${i},-1)">−</button><div class="qty-num">${item.qty}</div><button class="qty-btn" onclick="changeQty(${i},1)">+</button></div><div class="cart-item-price">฿${(item.price*item.qty).toLocaleString()}</div></div><button class="cart-item-remove" onclick="removeFromCart(${i})">Remove</button></div></div>`}).join('');
+  document.getElementById('cartTotal').textContent='฿'+total.toLocaleString();
+}
+function orderWhatsApp(){
+  if(!cart.length)return;
+  const total=cart.reduce((s,i)=>s+i.price*i.qty,0);
+  let msg='Hello, I would like to place an order from BURMELIN.\n\n';
+  cart.forEach(i=>{
+    msg+=`Product: ${i.name}\n`;
+    msg+=`Color: ${i.color}\n`;
+    msg+=`Size: ${i.size}\n`;
+    if(i.qty>1)msg+=`Qty: ${i.qty}\n`;
+    msg+=`Price: ฿${(i.price*i.qty).toLocaleString()}\n\n`;
+  });
+  msg+=`Order Total: ฿${total.toLocaleString()}\n`;
+  msg+='Please advise on delivery details and payment at your earliest convenience.\n';
+  msg+='Name:\n';
+  msg+='Phone:\n';
+  msg+='Delivery Address:';
+  window.open('https://wa.me/66835398811?text='+encodeURIComponent(msg),'_blank');
+  const d=new Date().toLocaleString('en-GB',{timeZone:'Asia/Bangkok'});
+  fetch(SUPABASE_URL+'/rest/v1/orders',{method:'POST',headers:{'apikey':SUPABASE_ANON_KEY,'Authorization':'Bearer '+SUPABASE_ANON_KEY,'Content-Type':'application/json'},body:JSON.stringify({order_id:'ORD-'+Date.now(),customer_name:'WhatsApp',items:cart,total,status:'Pending',date:d})}).catch(()=>{});
+}
+
+// Modal
+function openModal(index){
+  selectedColorIndex=0;currentProduct=null;
+  const p=PRODUCTS[index];currentProduct=p;
+  const colors=p.colors||[];
+  const sizes=p.sizes||[];
+  selectedSize=sizes[0]||'';
+  const firstImg=(colors[0]&&colors[0].img)?colors[0].img:(p.img||'');
+  document.getElementById('modalImg').src=firstImg;
+  document.getElementById('modalCat').textContent=CAT_LABELS[p.cat]||p.cat;
+  document.getElementById('modalName').textContent=p.name;
+  document.getElementById('modalPrice').textContent='฿'+p.price.toLocaleString();
+  document.getElementById('modalDesc').textContent=p.description||p.desc||'';
+  const nameEl=document.getElementById('modalColorName');
+  if(nameEl)nameEl.textContent=colors[0]?(colors[0].name+(colors[0].colorNo?' (No. '+colors[0].colorNo+')':'')):'';
+  const colorsEl=document.getElementById('modalColors');
+  if(colors[0]&&colors[0].group){
+    colorsEl.style.cssText='display:block;margin-bottom:18px';
+    const groups=[['light','Light Tones'],['dark','Dark Tones'],['natural','Natural Tones']];
+    let html='';
+    groups.forEach(([key,label])=>{
+      const gc=colors.filter(c=>c.group===key);
+      if(!gc.length)return;
+      html+=`<div style="margin-bottom:10px"><div style="font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:6px">${label}</div><div style="display:flex;gap:6px;flex-wrap:wrap">`;
+      gc.forEach(c=>{const i=colors.indexOf(c);const border=c.hex==='#F5F3EE'?'outline:2px solid rgba(0,0,0,.2)':'';html+=`<div class="modal-swatch${i===0?' active':''}" style="background:${c.hex};${border}" title="${c.name}${c.colorNo?' — No. '+c.colorNo:''}" onclick="selectColor(${i})"></div>`;});
+      html+='</div></div>';
+    });
+    colorsEl.innerHTML=html;
+  }else{
+    colorsEl.style.cssText='';
+    colorsEl.innerHTML=colors.map((c,i)=>`<div class="modal-swatch${i===0?' active':''}" style="background:${c.hex}" title="${c.name}" onclick="selectColor(${i})"></div>`).join('');
+  }
+  document.getElementById('modalSizes').innerHTML=sizes.length?sizes.map((s,i)=>`<button class="modal-size${i===0?' active':''}" onclick="selectSize('${s}',this)">${s}</button>`).join(''):'<span style="font-size:13px;color:var(--muted)">One size</span>';
+  document.getElementById('modalAddBtn').onclick=()=>{const c=colors[selectedColorIndex]||colors[0]||{name:'',img:''};addToCart({name:p.name,price:p.price,color:c.name,size:selectedSize,img:c.img||p.img||''});closeModal();setTimeout(openCart,300)};
+  document.getElementById('modalWABtn').onclick=()=>{
+    const c=colors[selectedColorIndex]||colors[0]||{name:''};
+    let msg='Hello, I would like to place an order from BURMELIN.\n\n';
+    msg+=`Product: ${p.name}\n`;
+    msg+=`Color: ${c.name}\n`;
+    msg+=`Size: ${selectedSize}\n`;
+    msg+=`Price: ฿${p.price.toLocaleString()}\n`;
+    msg+=`Order Total: ฿${p.price.toLocaleString()}\n`;
+    msg+='Please advise on delivery details and payment at your earliest convenience.\n';
+    msg+='Name:\n';
+    msg+='Phone:\n';
+    msg+='Delivery Address:';
+    window.open('https://wa.me/66835398811?text='+encodeURIComponent(msg),'_blank');
+  };
+  document.getElementById('modalOverlay').classList.add('open');
+}
+function selectColor(i){
+  selectedColorIndex=i;
+  document.querySelectorAll('.modal-swatch').forEach((s,idx)=>s.classList.toggle('active',idx===i));
+  if(currentProduct&&currentProduct.colors[i]){
+    if(currentProduct.colors[i].img)document.getElementById('modalImg').src=currentProduct.colors[i].img;
+    const nameEl=document.getElementById('modalColorName');
+    if(nameEl)nameEl.textContent=currentProduct.colors[i].name+(currentProduct.colors[i].colorNo?' (No. '+currentProduct.colors[i].colorNo+')':'');
+  }
+}
+function selectSize(size,btn){selectedSize=size;document.querySelectorAll('.modal-size').forEach(s=>s.classList.remove('active'));btn.classList.add('active')}
+function closeModal(){document.getElementById('modalOverlay').classList.remove('open')}
+function handleModalClick(e){if(e.target===document.getElementById('modalOverlay'))closeModal()}
+function openSizeGuideForProduct(){
+  const cat=document.getElementById('modalCat').textContent.trim();
+  const map={'Polo Shirt':'sg-polo','T-Shirt':'sg-tshirt','Linen Pants':'sg-trousers','Jeans':'sg-trousers','Jacket':'sg-shirt-ls','Shirt':'sg-shirt-ls'};
+  openSizeGuide(map[cat]||null);
+}
+
+// Toast
+function showToast(msg){document.getElementById('toastMsg').textContent=' '+msg;const t=document.getElementById('toast');t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500)}
+
+// Stripe Checkout
+async function goToCheckout(){
+  if(!cart.length)return;
+  const btn=document.getElementById('checkoutBtn');
+  btn.textContent='Processing...';
+  btn.disabled=true;
+  try{
+    // Save order to Supabase before redirecting (best-effort)
+    const total=cart.reduce((s,i)=>s+i.price*i.qty,0);
+    const orderId='ORD-'+Date.now();
+    const d=new Date().toLocaleString('en-GB',{timeZone:'Asia/Bangkok'});
+    fetch(SUPABASE_URL+'/rest/v1/orders',{method:'POST',headers:{'apikey':SUPABASE_ANON_KEY,'Authorization':'Bearer '+SUPABASE_ANON_KEY,'Content-Type':'application/json'},body:JSON.stringify({order_id:orderId,customer_name:'Stripe Checkout',items:cart,total,status:'Pending',date:d})}).catch(()=>{});
+    const res=await fetch('/.netlify/functions/create-checkout',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({items:cart,origin:window.location.origin,orderId})
+    });
+    const data=await res.json();
+    if(data.url){
+      window.location.href=data.url;
+    }else{
+      throw new Error(data.error||'Checkout failed');
+    }
+  }catch(err){
+    showToast('Checkout error — please try WhatsApp');
+    btn.textContent='Checkout';
+    btn.disabled=false;
+  }
+}
+
+// ── Search ────────────────────────────────────────────────────────────────
+function openSearch(){
+  document.getElementById('searchOverlay').classList.add('open');
+  setTimeout(()=>document.getElementById('searchBoxInput').focus(),100);
+}
+function closeSearch(){
+  document.getElementById('searchOverlay').classList.remove('open');
+  document.getElementById('searchBoxInput').value='';
+  document.getElementById('searchResults').innerHTML='<div class="search-tip">Try "polo", "chino", "navy", "T9027"...</div>';
+}
+function handleSearchOverlayClick(e){
+  if(e.target===document.getElementById('searchOverlay'))closeSearch();
+}
+function runSearch(query){
+  const results=document.getElementById('searchResults');
+  if(!query.trim()){results.innerHTML='<div class="search-tip">Try "polo", "chino", "navy", "T9027"...</div>';return;}
+  const q=query.toLowerCase();
+  const matches=PRODUCTS.filter(p=>
+    p.name.toLowerCase().includes(q)||
+    (CAT_LABELS[p.cat]||p.cat||'').toLowerCase().includes(q)||
+    (p.code&&p.code.toLowerCase().includes(q))||
+    (p.colors||[]).some(c=>c.name.toLowerCase().includes(q))||
+    (p.description||p.desc||'').toLowerCase().includes(q)
+  );
+  if(!matches.length){results.innerHTML='<div class="search-empty">No products found for "<strong>'+query+'</strong>"</div>';return;}
+  results.innerHTML=matches.map(p=>{
+    const idx=PRODUCTS.indexOf(p);
+    const cat=CAT_LABELS[p.cat]||p.cat||'';
+    return '<div class="search-result-item" onclick="closeSearch();setTimeout(()=>openModal('+idx+'),200)">'+
+      '<img class="search-result-img" src="'+(p.img||'')+'" alt="'+p.name+'"/>'+
+      '<div><div class="search-result-name">'+p.name+'</div><div class="search-result-cat">'+cat+(p.code?' · '+p.code:'')+'</div></div>'+
+      '<div class="search-result-price">฿'+p.price.toLocaleString()+'</div>'+
+    '</div>';
+  }).join('');
+}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeSearch();});
+
+// Start — load products from Supabase (falls back to hardcoded if unavailable)
+loadProducts();
+
+
+</script>
+
+<!-- SEARCH OVERLAY -->
+<div class="search-overlay" id="searchOverlay" onclick="handleSearchOverlayClick(event)">
+  <div class="search-box" id="searchBox">
+    <div class="search-box-inner">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0054A5" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input class="search-box-input" id="searchBoxInput" type="text" placeholder="Search products, colors, codes..." oninput="runSearch(this.value)"/>
+      <button class="search-box-close" onclick="closeSearch()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="search-results" id="searchResults">
+      <div class="search-tip">Try "polo", "chino", "navy", "T9027"...</div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div style="display:flex;align-items:center;gap:10px"><img src="https://res.cloudinary.com/dtpvflgt1/image/upload/v1773996384/LOGO_q2howi.png" alt="BURMELIN logo" style="height:32px;width:auto;display:block;"/><span style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:22px;color:white;letter-spacing:.12em">BURMELIN</span></div>
+        <p class="footer-tagline">Natural fabrics. Refined cuts. Made for Bangkok and beyond.</p>
+        <div class="footer-socials">
+          <button class="social-btn"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></button>
+          <button class="social-btn"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"/></svg></button>
+          <button class="social-btn"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></button>
+          <button class="social-btn"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></button>
+        </div>
+      </div>
+      <div><div class="footer-heading">Shop</div><div class="footer-links"><button class="footer-link" onclick="filterCat(document.querySelector('.cat-bar .pill[data-cat=polo]'),'polo')">Polo Shirts</button><button class="footer-link" onclick="filterCat(document.querySelector('.cat-bar .pill[data-cat=tshirt]'),'tshirt')">T-Shirts</button><button class="footer-link" onclick="filterCat(document.querySelector('.cat-bar .pill[data-cat=pants]'),'pants')">Linen Pants</button><button class="footer-link" onclick="filterCat(document.querySelector('.cat-bar .pill[data-cat=jeans]'),'jeans')">Jeans</button><button class="footer-link" onclick="filterCat(document.querySelector('.cat-bar .pill[data-cat=jacket]'),'jacket')">Jackets</button></div></div>
+      <div><div class="footer-heading">Company</div><div class="footer-links"><button class="footer-link" onclick="window.location.href='about.html'">About Us</button><button class="footer-link" onclick="window.location.href='stores.html'">Store Locations</button><a href="#" class="footer-link">Wholesale</a></div></div>
+      <div><div class="footer-heading">Help</div><div class="footer-links"><a href="javascript:void(0)" class="footer-link" onclick="openSizeGuide()">Size Guide</a><a href="terms.html" class="footer-link">Exchange Policy</a><a href="javascript:void(0)" class="footer-link" onclick="openSizeGuide()">Care Instructions</a><a href="https://wa.me/66835398811" class="footer-link">Contact Us</a><a href="#" class="footer-link">FAQ</a></div></div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-copy">© <span id="year"></span> BURMELIN. All rights reserved. Bangkok, Thailand.</div>
+      <div class="footer-legal"><a href="privacy.html" class="footer-link" style="font-size:11px">Privacy</a><a href="terms.html" class="footer-link" style="font-size:11px">Terms</a></div>
+    </div>
+  </div>
+</footer>
+
+
+<!-- SIZE GUIDE MODAL -->
+<style>
+.sg-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:900;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .25s}
+.sg-overlay.open{opacity:1;pointer-events:all}
+.sg-modal{background:#fff;width:100%;max-width:680px;max-height:88vh;overflow-y:auto;border-radius:16px;box-shadow:0 24px 80px rgba(0,0,0,.25);transform:translateY(16px);transition:transform .3s cubic-bezier(.22,.68,0,1.2)}
+.sg-overlay.open .sg-modal{transform:translateY(0)}
+.sg-header{display:flex;align-items:center;justify-content:space-between;padding:24px 28px 0}
+.sg-title{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:20px;letter-spacing:.08em;text-transform:uppercase;color:#1C1A17}
+.sg-close{width:34px;height:34px;border:1.5px solid #e0ddd8;border-radius:50%;background:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#666;transition:all .2s}
+.sg-close:hover{background:#1C1A17;color:#fff;border-color:#1C1A17}
+.sg-tabs{display:flex;gap:6px;padding:20px 28px 0;flex-wrap:wrap}
+.sg-tab{padding:7px 14px;border:1.5px solid #e0ddd8;border-radius:20px;font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;background:none;cursor:pointer;color:#666;transition:all .2s}
+.sg-tab.active{background:#1C1A17;color:#fff;border-color:#1C1A17}
+.sg-body{padding:24px 28px 28px}
+.sg-section{display:none}
+.sg-section.active{display:block}
+.sg-fabric{font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:#8a7d6e;margin-bottom:16px}
+.sg-table{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:24px}
+.sg-table th{background:#1C1A17;color:#fff;padding:10px 14px;text-align:center;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase}
+.sg-table td{padding:10px 14px;text-align:center;border-bottom:1px solid #f0ece6;color:#333}
+.sg-table tr:last-child td{border-bottom:none}
+.sg-table tr:nth-child(even) td{background:#faf9f7}
+.sg-care-title{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#1C1A17;margin-bottom:12px}
+.sg-care-list{display:flex;flex-direction:column;gap:8px}
+.sg-care-item{font-size:13px;color:#555;display:flex;gap:10px;align-items:flex-start}
+.sg-care-label{font-weight:700;color:#1C1A17;min-width:52px}
+.sg-measure-note{font-size:12px;color:#8a7d6e;font-style:italic;margin-top:16px;padding:12px 14px;background:#faf9f7;border-radius:8px;line-height:1.6}
+@media(max-width:500px){.sg-tabs{gap:4px}.sg-tab{font-size:11px;padding:6px 10px}.sg-table th,.sg-table td{padding:8px 8px}}
+</style>
+<div class="sg-overlay" id="sgOverlay" onclick="if(event.target===this)closeSizeGuide()">
+  <div class="sg-modal">
+    <div class="sg-header">
+      <div class="sg-title">Size Guide &amp; Care Instructions</div>
+      <button class="sg-close" onclick="closeSizeGuide()"><svg width="14" height="14" viewBox="0 0 14 14"><line x1="1" y1="1" x2="13" y2="13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="13" y1="1" x2="1" y2="13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+    </div>
+    <div class="sg-tabs">
+      <button class="sg-tab active" onclick="sgTab(this,'sg-tshirt')">T-Shirt</button>
+      <button class="sg-tab" onclick="sgTab(this,'sg-polo')">Polo</button>
+      <button class="sg-tab" onclick="sgTab(this,'sg-shirt-ss')">Shirt (S/S)</button>
+      <button class="sg-tab" onclick="sgTab(this,'sg-shirt-ls')">Shirt (L/S)</button>
+      <button class="sg-tab" onclick="sgTab(this,'sg-trousers')">Trousers</button>
+    </div>
+    <div class="sg-body">
+      <div class="sg-section active" id="sg-tshirt">
+        <div class="sg-fabric">Cotton &amp; Spandex Blend &middot; All measurements in inches</div>
+        <table class="sg-table"><thead><tr><th>Size</th><th>Chest</th><th>Length</th></tr></thead><tbody><tr><td>L</td><td>21</td><td>27</td></tr><tr><td>XL</td><td>21.5</td><td>27.5</td></tr><tr><td>2XL</td><td>22.5</td><td>28</td></tr><tr><td>3XL</td><td>23</td><td>29</td></tr><tr><td>4XL</td><td>24</td><td>30</td></tr></tbody></table>
+        <div class="sg-care-title">Care Instructions</div>
+        <div class="sg-care-list">
+          <div class="sg-care-item"><span class="sg-care-label">Wash</span><span>Cold, inside out. No bleach.</span></div>
+          <div class="sg-care-item"><span class="sg-care-label">Dry</span><span>Hang to dry or tumble low.</span></div>
+          <div class="sg-care-item"><span class="sg-care-label">Iron</span><span>Cool iron only. No high heat.</span></div>
+        </div>
+        <p class="sg-measure-note">Chest — across armpit to armpit laid flat. Length — from highest shoulder point to bottom hem. Natural fabrics have a 1–2 cm tolerance.</p>
+      </div>
+      <div class="sg-section" id="sg-polo">
+        <div class="sg-fabric">Cotton &amp; Spandex Blend &middot; All measurements in inches</div>
+        <table class="sg-table"><thead><tr><th>Size</th><th>Chest</th><th>Length</th></tr></thead><tbody><tr><td>48</td><td>20</td><td>27</td></tr><tr><td>50</td><td>21.5</td><td>27</td></tr><tr><td>52</td><td>22</td><td>28</td></tr><tr><td>54</td><td>22.5</td><td>29</td></tr><tr><td>56</td><td>23</td><td>30</td></tr><tr><td>58</td><td>24</td><td>30.5</td></tr><tr><td>60</td><td>25</td><td>31</td></tr><tr><td>62</td><td>25</td><td>31.5</td></tr><tr><td>64</td><td>26</td><td>31.5</td></tr><tr><td>66</td><td>26.5</td><td>32</td></tr></tbody></table>
+        <div class="sg-care-title">Care Instructions</div>
+        <div class="sg-care-list">
+          <div class="sg-care-item"><span class="sg-care-label">Wash</span><span>Cold, inside out. No bleach.</span></div>
+          <div class="sg-care-item"><span class="sg-care-label">Dry</span><span>Hang to dry or tumble low.</span></div>
+          <div class="sg-care-item"><span class="sg-care-label">Iron</span><span>Cool iron only. No high heat.</span></div>
+        </div>
+        <p class="sg-measure-note">Chest — across armpit to armpit laid flat. Length — from highest shoulder point to bottom hem. Natural fabrics have a 1–2 cm tolerance.</p>
+      </div>
+      <div class="sg-section" id="sg-shirt-ss">
+        <div class="sg-fabric">100% Linen &middot; All measurements in inches</div>
+        <table class="sg-table"><thead><tr><th>Size</th><th>Chest</th><th>Length</th></tr></thead><tbody><tr><td>48</td><td>20</td><td>26</td></tr><tr><td>50</td><td>21</td><td>27</td></tr><tr><td>52</td><td>22</td><td>28</td></tr><tr><td>54</td><td>23</td><td>28.5</td></tr><tr><td>56</td><td>24</td><td>29</td></tr><tr><td>58</td><td>25</td><td>29.5</td></tr><tr><td>60</td><td>26</td><td>30</td></tr><tr><td>62</td><td>27</td><td>30.5</td></tr><tr><td>64</td><td>28</td><td>31</td></tr><tr><td>66</td><td>29</td><td>31.5</td></tr></tbody></table>
+        <div class="sg-care-title">Care Instructions</div>
+        <div class="sg-care-list">
+          <div class="sg-care-item"><span class="sg-care-label">Wash</span><span>Hand wash or cold gentle machine.</span></div>
+          <div class="sg-care-item"><span class="sg-care-label">Dry</span><span>Hang to dry in shade. Do not tumble dry.</span></div>
+          <div class="sg-care-item"><span class="sg-care-label">Iron</span><span>Warm iron while fabric is damp.</span></div>
+          <div class="sg-care-item"><span class="sg-care-label">Pro tip</span><span>Do not wring or twist. Fabric softens with every wash.</span></div>
+        </div>
+        <p class="sg-measure-note">Chest — across armpit to armpit laid flat. Length — from highest shoulder point to bottom hem. Linen may have a 1–2 cm tolerance.</p>
+      </div>
+      <div class="sg-section" id="sg-shirt-ls">
+        <div class="sg-fabric">100% Linen &middot; All measurements in inches</div>
+        <table class="sg-table"><thead><tr><th>Size</th><th>Chest</th><th>Length</th><th>Sleeve</th></tr></thead><tbody><tr><td>48</td><td>20</td><td>26</td><td>24</td></tr><tr><td>50</td><td>21</td><td>27</td><td>24.5</td></tr><tr><td>52</td><td>22</td><td>28</td><td>25</td></tr><tr><td>54</td><td>23</td><td>28.5</td><td>25.5</td></tr><tr><td>56</td><td>24</td><td>29</td><td>26</td></tr><tr><td>58</td><td>25</td><td>29.5</td><td>26.5</td></tr><tr><td>60</td><td>26</td><td>30</td><td>27</td></tr><tr><td>62</td><td>27</td><td>30.5</td><td>27.5</td></tr><tr><td>64</td><td>28</td><td>31</td><td>28</td></tr><tr><td>66</td><td>29</td><td>31.5</td><td>28.5</td></tr></tbody></table>
+        <div class="sg-care-title">Care Instructions</div>
+        <div class="sg-care-list">
+          <div class="sg-care-item"><span class="sg-care-label">Wash</span><span>Hand wash or cold gentle machine.</span></div>
+          <div class="sg-care-item"><span class="sg-care-label">Dry</span><span>Hang to dry in shade. Do not tumble dry.</span></div>
+          <div class="sg-care-item"><span class="sg-care-label">Iron</span><span>Warm iron while fabric is damp.</span></div>
+          <div class="sg-care-item"><span class="sg-care-label">Pro tip</span><span>Do not wring or twist. Fabric softens with every wash.</span></div>
+        </div>
+        <p class="sg-measure-note">Chest — across armpit to armpit laid flat. Sleeve — from shoulder seam to end of cuff. Length — from highest shoulder point to bottom hem. Linen may have a 1–2 cm tolerance.</p>
+      </div>
+      <div class="sg-section" id="sg-trousers">
+        <div class="sg-fabric">100% Linen &amp; 95% Linen Blend with Cotton &middot; All measurements in inches</div>
+        <table class="sg-table"><thead><tr><th>Size</th><th>Waist</th><th>Length</th></tr></thead><tbody><tr><td>29</td><td>29</td><td>40</td></tr><tr><td>30</td><td>30</td><td>40.5</td></tr><tr><td>31</td><td>31</td><td>41</td></tr><tr><td>32</td><td>32</td><td>41.5</td></tr><tr><td>33</td><td>33</td><td>42</td></tr><tr><td>34</td><td>34</td><td>42.5</td></tr><tr><td>36</td><td>36</td><td>42.5</td></tr><tr><td>38</td><td>38</td><td>43</td></tr><tr><td>40</td><td>40</td><td>43</td></tr><tr><td>42</td><td>42</td><td>43</td></tr><tr><td>44</td><td>44</td><td>43.5</td></tr><tr><td>46</td><td>46</td><td>43.5</td></tr></tbody></table>
+        <div class="sg-care-title">Care Instructions</div>
+        <div class="sg-care-list">
+          <div class="sg-care-item"><span class="sg-care-label">Wash</span><span>Hand wash or cold gentle machine.</span></div>
+          <div class="sg-care-item"><span class="sg-care-label">Dry</span><span>Hang to dry in shade. Do not tumble dry.</span></div>
+          <div class="sg-care-item"><span class="sg-care-label">Iron</span><span>Warm iron while slightly damp.</span></div>
+          <div class="sg-care-item"><span class="sg-care-label">Avoid</span><span>Do not bleach or wring. Fabric softens with every wash.</span></div>
+        </div>
+        <p class="sg-measure-note">Waist — across waist from one end to another. Length — from highest point of pant to bottom hem. Linen may have a 1–2 cm tolerance.</p>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+function openSizeGuide(tab){document.getElementById('sgOverlay').classList.add('open');document.body.style.overflow='hidden';if(tab){document.querySelectorAll('.sg-tab').forEach(t=>t.classList.remove('active'));document.querySelectorAll('.sg-section').forEach(s=>s.classList.remove('active'));const tb=document.querySelector(`.sg-tab[onclick*="${tab}"]`);const sc=document.getElementById(tab);if(tb)tb.classList.add('active');if(sc)sc.classList.add('active');}}
+function closeSizeGuide(){document.getElementById('sgOverlay').classList.remove('open');document.body.style.overflow='';}
+function sgTab(btn,id){document.querySelectorAll('.sg-tab').forEach(t=>t.classList.remove('active'));document.querySelectorAll('.sg-section').forEach(s=>s.classList.remove('active'));btn.classList.add('active');document.getElementById(id).classList.add('active');}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeSizeGuide();});
+</script>
+</body>
+</html>
