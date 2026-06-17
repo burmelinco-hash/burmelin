@@ -829,9 +829,6 @@ document.addEventListener('keydown', e => { if(e.key==='Escape') closeSearch(); 
 
 document.getElementById('year').textContent = new Date().getFullYear();
 
-// ── Supabase config ──────────────────────────────────────────────────────
-const SUPABASE_URL      = 'https://fwhczruomutdgelmwcly.supabase.co';
-const SUPABASE_ANON_KEY = 'sb_publishable_RR_Kxpb0HBiVdt3YJkBo7A_lo8RYiPW';
 
 const FALLBACK_PRODUCTS = [
   {id:'f0',name:"Classic Linen Polo",cat:"polo",price:1190,code:"F9027",img:"https://images.unsplash.com/photo-1621072156002-e2fccdc0b176?q=80&w=800&auto=format&fit=crop",desc:"Our signature polo cut in 100% pre-washed linen. Relaxed silhouette with a subtle collar and two-button placket.",colors:[{name:"Stone",hex:"#CFC8BA"},{name:"Navy",hex:"#0B3D91"},{name:"Ivory",hex:"#F4F1EA"}],sizes:["XS","S","M","L","XL","XXL"],badge:'new'},
@@ -890,10 +887,7 @@ function renderHomeCard(p, i) {
 
 async function loadHomeProducts() {
   try {
-    const res = await fetch(
-      SUPABASE_URL + '/rest/v1/products?active=eq.true&order=created_at.desc',
-      { headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + SUPABASE_ANON_KEY, 'Content-Type': 'application/json' } }
-    );
+    const res = await fetch('/.netlify/functions/get-products');
     const data = await res.json();
     if (Array.isArray(data) && data.length) { PRODUCTS = data; }
     else { PRODUCTS = FALLBACK_PRODUCTS; }
@@ -957,7 +951,7 @@ function orderWhatsApp(){
   msg+='Delivery Address:';
   window.open('https://wa.me/66835398811?text='+encodeURIComponent(msg),'_blank');
   const d=new Date().toLocaleString('en-GB',{timeZone:'Asia/Bangkok'});
-  fetch(SUPABASE_URL+'/rest/v1/orders',{method:'POST',headers:{'apikey':SUPABASE_ANON_KEY,'Authorization':'Bearer '+SUPABASE_ANON_KEY,'Content-Type':'application/json'},body:JSON.stringify({order_id:'ORD-'+Date.now(),customer_name:'WhatsApp',items:cart,total,status:'Pending',date:d})}).catch(()=>{});
+  fetch('/.netlify/functions/save-order',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({order_id:'ORD-'+Date.now(),customer_name:'WhatsApp',items:cart,total,status:'Pending',date:d})}).catch(()=>{});
 }
 
 function openModal(index){
@@ -1057,7 +1051,7 @@ async function goToCheckout(){
     const orderId='ORD-'+Date.now();
     const d=new Date().toLocaleString('en-GB',{timeZone:'Asia/Bangkok'});
     const total=cart.reduce((s,i)=>s+i.price*i.qty,0);
-    fetch(SUPABASE_URL+'/rest/v1/orders',{method:'POST',headers:{'apikey':SUPABASE_ANON_KEY,'Authorization':'Bearer '+SUPABASE_ANON_KEY,'Content-Type':'application/json'},body:JSON.stringify({order_id:orderId,customer_name:'Stripe Checkout',items:cart,total,status:'Pending',date:d})}).catch(()=>{});
+    fetch('/.netlify/functions/save-order',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({order_id:orderId,customer_name:'Stripe Checkout',items:cart,total,status:'Pending',date:d})}).catch(()=>{});
     const res=await fetch('/.netlify/functions/create-checkout',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({items:cart,origin:window.location.origin,orderId})});
     const data=await res.json();
     if(data.url){window.location.href=data.url}else{throw new Error(data.error||'Checkout failed')}

@@ -353,9 +353,6 @@ button{cursor:pointer;font-family:inherit}
 <div class="toast" id="toast"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span id="toastMsg"> Added to cart</span></div>
 
 <script>
-// ── Supabase config ──────────────────────────────────────────────────────
-const SUPABASE_URL      = 'https://fwhczruomutdgelmwcly.supabase.co';
-const SUPABASE_ANON_KEY = 'sb_publishable_RR_Kxpb0HBiVdt3YJkBo7A_lo8RYiPW';
 
 // Hardcoded fallback — store shows these if Supabase is unreachable or empty
 const FALLBACK_PRODUCTS = [
@@ -394,10 +391,7 @@ const WISH_SVG = `<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15"
 
 async function loadProducts() {
   try {
-    const res = await fetch(
-      SUPABASE_URL + '/rest/v1/products?active=eq.true&order=created_at.desc',
-      { headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + SUPABASE_ANON_KEY, 'Content-Type': 'application/json' } }
-    );
+    const res = await fetch('/.netlify/functions/get-products');
     const data = await res.json();
     if (Array.isArray(data) && data.length) { PRODUCTS = data; renderGrid(); return; }
   } catch(e) { /* fall through to fallback */ }
@@ -513,7 +507,7 @@ function orderWhatsApp(){
   msg+='Delivery Address:';
   window.open('https://wa.me/66835398811?text='+encodeURIComponent(msg),'_blank');
   const d=new Date().toLocaleString('en-GB',{timeZone:'Asia/Bangkok'});
-  fetch(SUPABASE_URL+'/rest/v1/orders',{method:'POST',headers:{'apikey':SUPABASE_ANON_KEY,'Authorization':'Bearer '+SUPABASE_ANON_KEY,'Content-Type':'application/json'},body:JSON.stringify({order_id:'ORD-'+Date.now(),customer_name:'WhatsApp',items:cart,total,status:'Pending',date:d})}).catch(()=>{});
+  fetch('/.netlify/functions/save-order',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({order_id:'ORD-'+Date.now(),customer_name:'WhatsApp',items:cart,total,status:'Pending',date:d})}).catch(()=>{});
 }
 
 // Modal
@@ -598,7 +592,7 @@ async function goToCheckout(){
     const total=cart.reduce((s,i)=>s+i.price*i.qty,0);
     const orderId='ORD-'+Date.now();
     const d=new Date().toLocaleString('en-GB',{timeZone:'Asia/Bangkok'});
-    fetch(SUPABASE_URL+'/rest/v1/orders',{method:'POST',headers:{'apikey':SUPABASE_ANON_KEY,'Authorization':'Bearer '+SUPABASE_ANON_KEY,'Content-Type':'application/json'},body:JSON.stringify({order_id:orderId,customer_name:'Stripe Checkout',items:cart,total,status:'Pending',date:d})}).catch(()=>{});
+    fetch('/.netlify/functions/save-order',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({order_id:orderId,customer_name:'Stripe Checkout',items:cart,total,status:'Pending',date:d})}).catch(()=>{});
     const res=await fetch('/.netlify/functions/create-checkout',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
