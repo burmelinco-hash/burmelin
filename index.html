@@ -674,6 +674,51 @@ button{cursor:pointer;font-family:inherit}
   </div>
 </section>
 
+<!-- REVIEWS SECTION -->
+<section class="section" id="reviews" style="background:var(--cream)">
+  <div class="container">
+    <div class="section-header">
+      <div>
+        <div class="eyebrow">What Customers Say</div>
+        <h2 class="section-title">Customer Reviews</h2>
+      </div>
+      <a href="https://g.page/r/CbTQDha-pwVtEAE/review" target="_blank" class="view-all">Leave a Review →</a>
+    </div>
+
+    <!-- Review cards -->
+    <div id="reviewsGrid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:40px">
+      <!-- Empty state — shown until reviews are added -->
+      <div style="grid-column:1/-1;text-align:center;padding:60px 24px;background:var(--white);border-radius:var(--r-lg);border:1px solid var(--line)">
+        <div style="font-size:36px;margin-bottom:12px">⭐</div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;color:var(--ink);margin-bottom:8px">Be the first to review</div>
+        <div style="font-size:14px;color:var(--muted);max-width:360px;margin:0 auto 24px">Visit any of our Bangkok stores and leave us a Google review — we'd love to hear from you.</div>
+        <a href="https://g.page/r/CbTQDha-pwVtEAE/review" target="_blank" class="btn btn-navy" style="display:inline-flex">Leave a Google Review</a>
+      </div>
+    </div>
+
+    <!-- Google Review CTA Banner -->
+    <div style="background:linear-gradient(135deg,#0054A5 0%,#003d7a 100%);border-radius:var(--r-lg);padding:36px 40px;display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap">
+      <div style="display:flex;align-items:center;gap:20px">
+        <div style="width:52px;height:52px;background:rgba(255,255,255,.15);border-radius:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        </div>
+        <div>
+          <div style="font-size:18px;font-weight:700;color:white;margin-bottom:4px">Enjoyed your purchase? Get 10% off!</div>
+          <div style="font-size:13px;color:rgba(255,255,255,.7);max-width:420px">Leave us a Google review at any of our stores and show it to our staff — we'll take 10% off your purchase on the spot.</div>
+        </div>
+      </div>
+      <a href="https://g.page/r/CbTQDha-pwVtEAE/review" target="_blank" style="background:white;color:#0054A5;padding:13px 26px;border-radius:var(--r-sm);font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap;display:inline-flex;align-items:center;gap:8px;flex-shrink:0">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        Write a Google Review
+      </a>
+    </div>
+  </div>
+</section>
+
+<style>
+@media(max-width:900px){#reviewsGrid{grid-template-columns:1fr!important}}
+</style>
+
 <div class="newsletter">
   <div class="container">
     <div class="newsletter-eyebrow">Stay Connected</div>
