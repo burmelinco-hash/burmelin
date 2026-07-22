@@ -44,11 +44,57 @@ function patchSupabase(supabaseUrl, serviceKey, orderId, payload) {
   });
 }
 
-function sendWhatsApp(phone, message) {
-  return new Promise((resolve) => {
-    const body = JSON.stringify({ messaging_product: 'whatsapp', to: phone, type: 'text', text: { body: message } });
-    // WhatsApp notification via simple HTTPS (optional — resolve silently if not configured)
-    resolve();
+function sendEmailNotification(resendKey, order) {
+  return new Promise((resolve, reject) => {
+    const html = `
+      <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;background:#f7f5f1;padding:32px;border-radius:12px">
+        <div style="background:#0054A5;padding:20px 28px;border-radius:8px;margin-bottom:24px">
+          <h1 style="color:#fff;margin:0;font-size:22px;letter-spacing:2px">BURMELIN</h1>
+          <p style="color:rgba(255,255,255,.6);margin:4px 0 0;font-size:12px">New Order Received</p>
+        </div>
+        <div style="background:#fff;padding:24px;border-radius:8px;margin-bottom:16px">
+          <h2 style="color:#111;margin:0 0 16px;font-size:16px">🛍️ New Order — ฿${order.amount}</h2>
+          <table style="width:100%;border-collapse:collapse;font-size:14px">
+            <tr><td style="padding:8px 0;color:#666;width:140px">Order ID</td><td style="padding:8px 0;font-weight:600">${order.orderId}</td></tr>
+            <tr style="border-top:1px solid #eee"><td style="padding:8px 0;color:#666">Customer</td><td style="padding:8px 0;font-weight:600">${order.name}</td></tr>
+            <tr style="border-top:1px solid #eee"><td style="padding:8px 0;color:#666">Email</td><td style="padding:8px 0">${order.email}</td></tr>
+            <tr style="border-top:1px solid #eee"><td style="padding:8px 0;color:#666">Phone</td><td style="padding:8px 0">${order.phone}</td></tr>
+            <tr style="border-top:1px solid #eee"><td style="padding:8px 0;color:#666">Shipping To</td><td style="padding:8px 0">${order.address}</td></tr>
+            <tr style="border-top:1px solid #eee"><td style="padding:8px 0;color:#666">Amount Paid</td><td style="padding:8px 0;font-weight:700;color:#0054A5;font-size:16px">฿${order.amount}</td></tr>
+          </table>
+        </div>
+        <div style="text-align:center;margin-top:20px">
+          <a href="https://burmelin.com/admin.html" style="background:#0054A5;color:#fff;padding:12px 28px;border-radius:8px;text-decoration:none;font-weight:600;font-size:13px">View in Admin Panel</a>
+        </div>
+        <p style="color:#999;font-size:11px;text-align:center;margin-top:20px">BURMELIN · Bangkok, Thailand</p>
+      </div>`;
+
+    const body = JSON.stringify({
+      from: 'BURMELIN Orders <onboarding@resend.dev>',
+      to: ['burmelinco@gmail.com'],
+      subject: `New Order ฿${order.amount} — ${order.name}`,
+      html
+    });
+
+    const options = {
+      hostname: 'api.resend.com',
+      path: '/emails',
+      method: 'POST',
+      headers: {
+        'Authorization': 'Bearer ' + resendKey,
+        'Content-Type': 'application/json',
+        'Content-Length': Buffer.byteLength(body)
+      }
+    };
+
+    const req = https.request(options, (res) => {
+      let data = '';
+      res.on('data', chunk => data += chunk);
+      res.on('end', () => resolve(data));
+    });
+    req.on('error', reject);
+    req.write(body);
+    req.end();
   });
 }
 
@@ -57,10 +103,11 @@ exports.handler = async (event) => {
     return { statusCode: 405, body: 'Method Not Allowed' };
   }
 
-  const secretKey   = process.env.STRIPE_SECRET_KEY;
-  const supabaseUrl = process.env.SUPABASE_URL;
-  const serviceKey  = process.env.SUPABASE_SERVICE_KEY;
+  const secretKey     = process.env.STRIPE_SECRET_KEY;
+  const supabaseUrl   = process.env.SUPABASE_URL;
+  const serviceKey    = process.env.SUPABASE_SERVICE_KEY;
   const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
+  const resendKey     = process.env.RESEND_API_KEY;
 
   if (!secretKey) return { statusCode: 500, body: 'STRIPE_SECRET_KEY not set' };
 
@@ -126,6 +173,23 @@ exports.handler = async (event) => {
         address:       fullAddress,
         status:        'Processing'
       });
+    }
+
+    // Send email notification
+    if (resendKey) {
+      try {
+        await sendEmailNotification(resendKey, {
+          orderId: orderId || 'N/A',
+          name:    customer.name || 'Guest',
+          email:   customer.email || '—',
+          phone:   customer.phone || '—',
+          address: fullAddress || '—',
+          amount:  amountPaid
+        });
+        console.log('Email notification sent');
+      } catch(e) {
+        console.error('Email send failed:', e.message);
+      }
     }
 
     console.log(`Order ${orderId} completed — ${customer.name} — ฿${amountPaid} — ${fullAddress}`);
