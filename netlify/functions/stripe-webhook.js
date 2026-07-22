@@ -70,7 +70,7 @@ function sendEmailNotification(resendKey, order) {
       </div>`;
 
     const body = JSON.stringify({
-      from: 'BURMELIN Orders <onboarding@resend.dev>',
+      from: 'BURMELIN Orders <orders@burmelin.com>',
       to: ['burmelinco@gmail.com'],
       subject: `New Order ฿${order.amount} — ${order.name}`,
       html
@@ -170,7 +170,7 @@ function sendCustomerEmail(resendKey, order) {
       </div>`;
 
     const body = JSON.stringify({
-      from: 'BURMELIN <onboarding@resend.dev>',
+      from: 'BURMELIN <orders@burmelin.com>',
       to: [order.email],
       subject: `Your BURMELIN order is confirmed — ฿${order.amount}`,
       html
