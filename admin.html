@@ -154,6 +154,28 @@ select.fc{cursor:pointer}
 @keyframes spin{to{transform:rotate(360deg)}}
 .spinner{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,.1);border-top-color:rgba(255,255,255,.45);border-radius:50%;animation:spin .7s linear infinite;margin-right:8px;vertical-align:middle}
 
+/* ORDER DETAIL MODAL */
+.ord-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(4px);z-index:300;display:flex;align-items:flex-start;justify-content:center;padding:32px 16px;overflow-y:auto;opacity:0;pointer-events:none;transition:opacity .22s}
+.ord-modal-overlay.open{opacity:1;pointer-events:all}
+.ord-modal{background:#16161d;border:1px solid rgba(255,255,255,.1);border-radius:16px;width:100%;max-width:580px;margin:auto;transform:scale(.97) translateY(10px);transition:transform .28s cubic-bezier(.22,.68,0,1.2)}
+.ord-modal-overlay.open .ord-modal{transform:none}
+.ord-modal-head{padding:22px 26px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,.07)}
+.ord-modal-title{font-size:15px;font-weight:700;color:#fff}
+.ord-modal-id{font-size:11px;color:rgba(255,255,255,.28);font-family:monospace;margin-top:3px}
+.ord-section{padding:20px 26px;border-bottom:1px solid rgba(255,255,255,.06)}
+.ord-section:last-child{border-bottom:none}
+.ord-section-label{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.25);margin-bottom:12px}
+.ord-row{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:9px;gap:16px}
+.ord-row:last-child{margin-bottom:0}
+.ord-key{font-size:12px;color:rgba(255,255,255,.35);flex-shrink:0;width:110px}
+.ord-val{font-size:13px;color:rgba(255,255,255,.8);text-align:right;word-break:break-word}
+.ord-val strong{color:#fff}
+.ord-amount{font-size:22px;font-weight:700;color:#C9A96E}
+.ord-items-list{display:flex;flex-direction:column;gap:6px}
+.ord-item{display:flex;justify-content:space-between;padding:8px 12px;background:rgba(255,255,255,.04);border-radius:8px;font-size:13px}
+.tr-clickable{cursor:pointer}
+.tr-clickable:hover td{background:rgba(0,84,165,.08)!important}
+
 /* TOAST */
 .toast-ct{position:fixed;bottom:24px;right:24px;display:flex;flex-direction:column;gap:8px;z-index:999}
 .toast{padding:12px 18px;border-radius:10px;font-size:13px;font-weight:600;transform:translateX(130%);transition:transform .32s cubic-bezier(.22,.68,0,1.2);border:1px solid}
@@ -340,6 +362,43 @@ select.fc{cursor:pointer}
     <div class="modal-foot">
       <button class="btn-cancel" onclick="closeProdModal()">Cancel</button>
       <button class="btn-save" id="saveBtn" onclick="saveProduct()">Save Product</button>
+    </div>
+  </div>
+</div>
+
+<!-- ORDER DETAIL MODAL -->
+<div class="ord-modal-overlay" id="ordModal" onclick="if(event.target===this)closeOrdModal()">
+  <div class="ord-modal">
+    <div class="ord-modal-head">
+      <div>
+        <div class="ord-modal-title">Order Details</div>
+        <div class="ord-modal-id" id="omOrderId"></div>
+      </div>
+      <button class="modal-x" onclick="closeOrdModal()">×</button>
+    </div>
+    <div class="ord-section">
+      <div class="ord-section-label">Payment</div>
+      <div class="ord-row"><span class="ord-key">Amount Paid</span><span class="ord-val"><span class="ord-amount" id="omAmount"></span></span></div>
+      <div class="ord-row"><span class="ord-key">Status</span><span class="ord-val" id="omStatus"></span></div>
+      <div class="ord-row"><span class="ord-key">Date</span><span class="ord-val" id="omDate"></span></div>
+    </div>
+    <div class="ord-section">
+      <div class="ord-section-label">Customer</div>
+      <div class="ord-row"><span class="ord-key">Name</span><span class="ord-val"><strong id="omName"></strong></span></div>
+      <div class="ord-row"><span class="ord-key">Email</span><span class="ord-val" id="omEmail"></span></div>
+      <div class="ord-row"><span class="ord-key">Phone</span><span class="ord-val" id="omPhone"></span></div>
+    </div>
+    <div class="ord-section">
+      <div class="ord-section-label">Shipping Address</div>
+      <div style="font-size:14px;color:rgba(255,255,255,.75);line-height:1.7" id="omAddress"></div>
+    </div>
+    <div class="ord-section">
+      <div class="ord-section-label">Items Ordered</div>
+      <div class="ord-items-list" id="omItems"></div>
+    </div>
+    <div class="ord-section" style="display:flex;justify-content:space-between;align-items:center;padding-bottom:22px">
+      <select class="status-sel" id="omStatusSel" onchange="changeStatusFromModal(this)"></select>
+      <button class="btn-danger" id="omDelBtn">Delete Order</button>
     </div>
   </div>
 </div>
@@ -723,24 +782,18 @@ function renderOrds() {
       : (o.items || '—');
     const st  = o.status || 'Pending';
     const cls = 's-' + st.replace(/\s+/g, '');
-    return `<tr>
+    return `<tr class="tr-clickable" onclick="openOrdModal('${esc(o.id)}')">
       <td style="font-family:monospace;font-size:11px;color:rgba(255,255,255,.3)">${esc(o.order_id || o.id)}</td>
       <td>
         <div>${esc(o.customer_name || 'Guest')}</div>
         ${o.email ? `<div class="td-sub">${esc(o.email)}</div>` : ''}
-        ${o.phone ? `<div class="td-sub">${esc(o.phone)}</div>` : ''}
       </td>
-      <td style="font-size:11px;color:rgba(255,255,255,.55);max-width:200px;white-space:normal;line-height:1.5">${esc(o.address || '—')}</td>
-      <td style="font-size:12px;max-width:220px;white-space:normal">${esc(items)}</td>
+      <td style="font-size:11px;color:rgba(255,255,255,.55);max-width:180px;white-space:normal;line-height:1.5">${esc(o.address || '—')}</td>
+      <td style="font-size:12px;max-width:180px;white-space:normal">${esc(items)}</td>
       <td><strong>฿${(o.total||0).toLocaleString()}</strong></td>
-      <td>
-        <select class="status-sel ${cls}" onchange="changeStatus('${esc(o.id)}',this)">
-          ${['Pending','Processing','Shipped','Delivered','Cancelled'].map(s =>
-            `<option${o.status===s?' selected':''}>${s}</option>`).join('')}
-        </select>
-      </td>
+      <td><span class="badge ${cls === 's-Pending' ? 'badge-off' : ''}" style="font-size:10px;padding:3px 9px;border-radius:999px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;background:transparent;border:1px solid;${statusStyle(st)}">${esc(st)}</span></td>
       <td style="font-size:11px;color:rgba(255,255,255,.32)">${esc(o.date || '—')}</td>
-      <td><button class="btn-danger" onclick="delOrder('${esc(o.id)}','${esc(o.order_id||o.id)}')">Delete</button></td>
+      <td onclick="event.stopPropagation()"><button class="btn-danger" onclick="delOrder('${esc(o.id)}','${esc(o.order_id||o.id)}')">Delete</button></td>
     </tr>`;
   }).join('');
 }
@@ -762,6 +815,97 @@ async function changeStatus(id, sel) {
     toast('Status → ' + status, 'ok');
     const o = orders.find(x => x.id === id);
     if (o) { o.status = status; renderOrdStats(); }
+  } catch(e) { toast('Error: ' + e.message, 'err'); }
+}
+
+// ── ORDER DETAIL MODAL ────────────────────────────────────────────────
+
+let currentOrdId = null;
+
+function statusStyle(st) {
+  const map = {
+    Pending:    'color:#fbbf24;border-color:rgba(251,191,36,.35)',
+    Processing: 'color:#60a5fa;border-color:rgba(96,165,250,.35)',
+    Shipped:    'color:#a78bfa;border-color:rgba(167,139,250,.35)',
+    Delivered:  'color:#4ade80;border-color:rgba(74,222,128,.35)',
+    Cancelled:  'color:#f87171;border-color:rgba(248,113,113,.35)'
+  };
+  return map[st] || 'color:rgba(255,255,255,.4);border-color:rgba(255,255,255,.15)';
+}
+
+function openOrdModal(id) {
+  const o = orders.find(x => x.id === id);
+  if (!o) return;
+  currentOrdId = id;
+
+  document.getElementById('omOrderId').textContent  = o.order_id || o.id;
+  document.getElementById('omAmount').textContent   = '฿' + (o.total || 0).toLocaleString();
+  document.getElementById('omDate').textContent     = o.date || '—';
+  document.getElementById('omName').textContent     = o.customer_name || 'Guest';
+  document.getElementById('omEmail').textContent    = o.email || '—';
+  document.getElementById('omPhone').textContent    = o.phone || '—';
+
+  // Status badge
+  const st = o.status || 'Pending';
+  document.getElementById('omStatus').innerHTML = `<span style="font-size:12px;font-weight:700;padding:3px 10px;border-radius:999px;border:1px solid;${statusStyle(st)}">${esc(st)}</span>`;
+
+  // Address — split by comma for readability
+  const addrParts = (o.address || '').split(',').map(s => s.trim()).filter(Boolean);
+  document.getElementById('omAddress').innerHTML = addrParts.length
+    ? addrParts.map(p => `<div>${esc(p)}</div>`).join('')
+    : '<div style="color:rgba(255,255,255,.25)">No address recorded</div>';
+
+  // Items
+  let itemsHtml = '';
+  if (Array.isArray(o.items) && o.items.length) {
+    itemsHtml = o.items.map(i => `
+      <div class="ord-item">
+        <span>${esc(i.name)}${i.size ? ' · ' + esc(i.size) : ''}${i.color ? ' · ' + esc(i.color) : ''}</span>
+        <span style="color:rgba(255,255,255,.4)">×${i.qty || 1}</span>
+      </div>`).join('');
+  } else if (o.items) {
+    itemsHtml = `<div class="ord-item"><span>${esc(o.items)}</span></div>`;
+  } else {
+    itemsHtml = '<div style="color:rgba(255,255,255,.25);font-size:13px">No item details recorded</div>';
+  }
+  document.getElementById('omItems').innerHTML = itemsHtml;
+
+  // Status selector
+  const sel = document.getElementById('omStatusSel');
+  sel.className = 'status-sel s-' + st.replace(/\s+/g, '');
+  sel.innerHTML = ['Pending','Processing','Shipped','Delivered','Cancelled']
+    .map(s => `<option${o.status===s?' selected':''}>${s}</option>`).join('');
+  sel.dataset.ordId = id;
+
+  // Delete button
+  document.getElementById('omDelBtn').onclick = () => {
+    closeOrdModal();
+    delOrder(id, o.order_id || id);
+  };
+
+  document.getElementById('ordModal').classList.add('open');
+}
+
+function closeOrdModal() {
+  document.getElementById('ordModal').classList.remove('open');
+  currentOrdId = null;
+}
+
+async function changeStatusFromModal(sel) {
+  const id     = sel.dataset.ordId;
+  const status = sel.value;
+  sel.className = 'status-sel s-' + status.replace(/\s+/g, '');
+  try {
+    await sb('orders?id=eq.' + id, 'PATCH', { status });
+    toast('Status → ' + status, 'ok');
+    const o = orders.find(x => x.id === id);
+    if (o) {
+      o.status = status;
+      renderOrds();
+      renderOrdStats();
+      // refresh status badge in modal
+      document.getElementById('omStatus').innerHTML = `<span style="font-size:12px;font-weight:700;padding:3px 10px;border-radius:999px;border:1px solid;${statusStyle(status)}">${esc(status)}</span>`;
+    }
   } catch(e) { toast('Error: ' + e.message, 'err'); }
 }
 
