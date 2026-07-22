@@ -98,6 +98,106 @@ function sendEmailNotification(resendKey, order) {
   });
 }
 
+function sendCustomerEmail(resendKey, order) {
+  return new Promise((resolve, reject) => {
+    const html = `
+      <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;background:#f7f5f1">
+
+        <!-- Header -->
+        <div style="background:#0054A5;padding:28px 32px 24px">
+          <div style="font-size:26px;font-weight:700;letter-spacing:4px;color:#fff">BURMELIN</div>
+          <div style="width:40px;height:2px;background:#C9A96E;margin:10px 0 0"></div>
+        </div>
+
+        <!-- Hero -->
+        <div style="background:#fff;padding:36px 32px 28px;border-bottom:3px solid #C9A96E">
+          <div style="font-size:13px;letter-spacing:3px;color:#C9A96E;text-transform:uppercase;margin-bottom:12px">Order Confirmed</div>
+          <h1 style="margin:0 0 12px;font-size:24px;color:#111118;font-weight:700">Thank you, ${order.name.split(' ')[0]}.</h1>
+          <p style="margin:0;color:#555;font-size:15px;line-height:1.6">Your order has been received and is being prepared with care. We will have it ready and dispatched within <strong>1–3 business days</strong>.</p>
+        </div>
+
+        <!-- Order Summary -->
+        <div style="background:#fff;margin-top:2px;padding:28px 32px">
+          <div style="font-size:11px;letter-spacing:2px;color:#999;text-transform:uppercase;margin-bottom:16px">Order Summary</div>
+          <table style="width:100%;border-collapse:collapse">
+            <tr style="border-bottom:1px solid #eee">
+              <td style="padding:12px 0;color:#111;font-size:14px">${order.items}</td>
+              <td style="padding:12px 0;color:#0054A5;font-size:14px;font-weight:700;text-align:right">฿${order.amount}</td>
+            </tr>
+            <tr>
+              <td style="padding:12px 0;color:#999;font-size:13px">Receipt</td>
+              <td style="padding:12px 0;color:#555;font-size:13px;text-align:right">#${order.receiptId}</td>
+            </tr>
+            <tr>
+              <td style="padding:4px 0;color:#999;font-size:13px">Shipping to</td>
+              <td style="padding:4px 0;color:#555;font-size:13px;text-align:right">${order.address || 'Address on file'}</td>
+            </tr>
+          </table>
+        </div>
+
+        <!-- What happens next -->
+        <div style="background:#0054A5;margin:2px 0;padding:28px 32px">
+          <div style="font-size:11px;letter-spacing:2px;color:#C9A96E;text-transform:uppercase;margin-bottom:20px">What Happens Next</div>
+          <div style="display:flex;margin-bottom:16px">
+            <div style="width:28px;height:28px;border-radius:50%;background:#C9A96E;color:#fff;font-size:12px;font-weight:700;text-align:center;line-height:28px;flex-shrink:0;margin-right:14px">1</div>
+            <div style="color:rgba(255,255,255,.85);font-size:14px;padding-top:4px">Our team carefully prepares and quality-checks your item.</div>
+          </div>
+          <div style="display:flex;margin-bottom:16px">
+            <div style="width:28px;height:28px;border-radius:50%;background:#C9A96E;color:#fff;font-size:12px;font-weight:700;text-align:center;line-height:28px;flex-shrink:0;margin-right:14px">2</div>
+            <div style="color:rgba(255,255,255,.85);font-size:14px;padding-top:4px">Your order is dispatched within 1–3 business days.</div>
+          </div>
+          <div style="display:flex">
+            <div style="width:28px;height:28px;border-radius:50%;background:#C9A96E;color:#fff;font-size:12px;font-weight:700;text-align:center;line-height:28px;flex-shrink:0;margin-right:14px">3</div>
+            <div style="color:rgba(255,255,255,.85);font-size:14px;padding-top:4px">We'll notify you with tracking details once shipped.</div>
+          </div>
+        </div>
+
+        <!-- Contact -->
+        <div style="background:#fff;margin-top:2px;padding:28px 32px">
+          <div style="font-size:11px;letter-spacing:2px;color:#999;text-transform:uppercase;margin-bottom:14px">Need Help?</div>
+          <p style="color:#555;font-size:14px;margin:0 0 10px">We're here for you — reach out anytime.</p>
+          <a href="https://wa.me/66835398811" style="display:inline-block;background:#25D366;color:#fff;padding:10px 22px;border-radius:6px;text-decoration:none;font-size:13px;font-weight:600;margin-right:10px">WhatsApp Us</a>
+          <a href="mailto:burmelinco@gmail.com" style="display:inline-block;background:#f0f0f0;color:#333;padding:10px 22px;border-radius:6px;text-decoration:none;font-size:13px;font-weight:600">Email Us</a>
+        </div>
+
+        <!-- Footer -->
+        <div style="padding:20px 32px;text-align:center">
+          <div style="font-size:13px;letter-spacing:3px;color:#0054A5;font-weight:700;margin-bottom:4px">BURMELIN</div>
+          <div style="font-size:11px;color:#aaa">Bangkok, Thailand · burmelin.com</div>
+          <div style="font-size:11px;color:#ccc;margin-top:12px">This email confirms your order. For payment queries, refer to your Stripe receipt.</div>
+        </div>
+
+      </div>`;
+
+    const body = JSON.stringify({
+      from: 'BURMELIN <onboarding@resend.dev>',
+      to: [order.email],
+      subject: `Your BURMELIN order is confirmed — ฿${order.amount}`,
+      html
+    });
+
+    const options = {
+      hostname: 'api.resend.com',
+      path: '/emails',
+      method: 'POST',
+      headers: {
+        'Authorization': 'Bearer ' + resendKey,
+        'Content-Type': 'application/json',
+        'Content-Length': Buffer.byteLength(body)
+      }
+    };
+
+    const req = https.request(options, (res) => {
+      let data = '';
+      res.on('data', chunk => data += chunk);
+      res.on('end', () => resolve(data));
+    });
+    req.on('error', reject);
+    req.write(body);
+    req.end();
+  });
+}
+
 exports.handler = async (event) => {
   if (event.httpMethod !== 'POST') {
     return { statusCode: 405, body: 'Method Not Allowed' };
@@ -175,7 +275,7 @@ exports.handler = async (event) => {
       });
     }
 
-    // Send email notification
+    // Send owner notification
     if (resendKey) {
       try {
         await sendEmailNotification(resendKey, {
@@ -186,9 +286,29 @@ exports.handler = async (event) => {
           address: fullAddress || '—',
           amount:  amountPaid
         });
-        console.log('Email notification sent');
+        console.log('Owner notification sent');
       } catch(e) {
-        console.error('Email send failed:', e.message);
+        console.error('Owner email failed:', e.message);
+      }
+    }
+
+    // Send branded confirmation to customer
+    if (resendKey && customer.email) {
+      try {
+        const lineItems = session.line_items && session.line_items.data
+          ? session.line_items.data.map(i => `${i.description} × ${i.quantity}`).join(', ')
+          : 'Your order';
+        await sendCustomerEmail(resendKey, {
+          name:      customer.name || 'Valued Customer',
+          email:     customer.email,
+          address:   fullAddress || '',
+          amount:    amountPaid,
+          receiptId: orderId || stripeEvent.data.object.id,
+          items:     lineItems
+        });
+        console.log('Customer confirmation sent to', customer.email);
+      } catch(e) {
+        console.error('Customer email failed:', e.message);
       }
     }
 
