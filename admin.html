@@ -256,6 +256,12 @@ select.fc{cursor:pointer}
         <div class="page-title">Orders</div>
         <div class="page-sub">Track and update customer orders</div>
         <div class="stats-row" id="oStats"></div>
+        <div style="display:flex;align-items:center;justify-content:flex-end;margin-bottom:12px;gap:10px">
+          <span style="font-size:12px;color:rgba(255,255,255,.35)">Show abandoned checkouts</span>
+          <div class="tog-wrap" onclick="toggleAbandoned()" style="margin:0">
+            <div class="tog-track" id="abandonedToggle"><div class="tog-thumb"></div></div>
+          </div>
+        </div>
         <div class="table-wrap">
           <table>
             <thead><tr>
@@ -761,22 +767,39 @@ async function delProduct(id, name) {
 
 // ── ORDERS TABLE ──────────────────────────────────────────────────────
 
+let showAbandoned = false;
+
+function isAbandoned(o) {
+  return !o.email && (o.customer_name === 'Stripe Checkout' || o.customer_name === 'WhatsApp' || !o.customer_name);
+}
+
+function toggleAbandoned() {
+  showAbandoned = !showAbandoned;
+  document.getElementById('abandonedToggle').classList.toggle('on', showAbandoned);
+  renderOrds();
+  renderOrdStats();
+}
+
 function renderOrdStats() {
-  const pending   = orders.filter(o => o.status === 'Pending').length;
-  const shipped   = orders.filter(o => o.status === 'Shipped').length;
-  const revenue   = orders.reduce((s, o) => s + (o.total || 0), 0);
+  const visible   = orders.filter(o => !isAbandoned(o));
+  const pending   = visible.filter(o => o.status === 'Pending' || o.status === 'Processing').length;
+  const shipped   = visible.filter(o => o.status === 'Shipped').length;
+  const revenue   = visible.reduce((s, o) => s + (o.total || 0), 0);
+  const abandoned = orders.filter(isAbandoned).length;
   document.getElementById('oStats').innerHTML =
-    stat('Total Orders', orders.length) + stat('Pending', pending) +
-    stat('Shipped', shipped) + stat('Revenue (฿)', revenue.toLocaleString());
+    stat('Paid Orders', visible.length) + stat('Pending / Processing', pending) +
+    stat('Shipped', shipped) + stat('Revenue (฿)', revenue.toLocaleString()) +
+    (abandoned ? stat('Abandoned', abandoned) : '');
 }
 
 function renderOrds() {
   const tb = document.getElementById('ordBody');
-  if (!orders.length) {
-    tb.innerHTML = `<tr><td colspan="8" class="loading-cell">No orders yet.</td></tr>`;
+  const visible = showAbandoned ? orders : orders.filter(o => !isAbandoned(o));
+  if (!visible.length) {
+    tb.innerHTML = `<tr><td colspan="8" class="loading-cell">${showAbandoned ? 'No orders yet.' : 'No paid orders yet.'}</td></tr>`;
     return;
   }
-  tb.innerHTML = orders.map(o => {
+  tb.innerHTML = visible.map(o => {
     const items = Array.isArray(o.items)
       ? o.items.map(i => `${i.name}${i.size ? ' · ' + i.size : ''}${i.qty > 1 ? ' ×' + i.qty : ''}`).join(', ')
       : (o.items || '—');
@@ -796,6 +819,16 @@ function renderOrds() {
       <td onclick="event.stopPropagation()"><button class="btn-danger" onclick="delOrder('${esc(o.id)}','${esc(o.order_id||o.id)}')">Delete</button></td>
     </tr>`;
   }).join('');
+
+  // dim abandoned rows if showing mixed
+  if (showAbandoned) {
+    visible.forEach((o, i) => {
+      if (isAbandoned(o)) {
+        const row = tb.querySelectorAll('tr')[i];
+        if (row) row.style.opacity = '0.4';
+      }
+    });
+  }
 }
 
 async function delOrder(id, orderId) {
