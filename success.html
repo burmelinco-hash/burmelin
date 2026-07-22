@@ -53,15 +53,22 @@ button{cursor:pointer;font-family:inherit}
 .btn-navy:hover{background:var(--navy-dark)}
 
 /* SUCCESS CONTENT */
-.success-wrap{flex:1;display:flex;align-items:center;justify-content:center;padding:120px 24px 80px}
-.success-card{background:var(--white);border-radius:var(--r-lg);padding:64px 52px;max-width:560px;width:100%;text-align:center;box-shadow:var(--shadow-lg);border:1px solid var(--line)}
-.success-icon{width:72px;height:72px;background:var(--navy-light);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 28px;color:var(--navy)}
-.success-title{font-family:'Cormorant Garamond',serif;font-size:clamp(28px,4vw,40px);font-weight:600;color:var(--ink);margin-bottom:12px;line-height:1.1}
-.success-sub{font-size:15px;color:var(--muted);line-height:1.75;margin-bottom:8px}
-.success-note{font-size:13px;color:var(--muted);line-height:1.65;margin-bottom:32px;padding:16px 20px;background:var(--cream);border-radius:var(--r-sm)}
-.success-ref{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-top:28px}
-.success-ref span{color:var(--navy)}
+.success-wrap{flex:1;display:flex;align-items:center;justify-content:center;padding:100px 24px 80px}
+.success-card{background:var(--white);border-radius:var(--r-lg);padding:52px 44px;max-width:560px;width:100%;text-align:center;box-shadow:var(--shadow-lg);border:1px solid var(--line)}
+.success-icon-wrap{margin:0 auto 24px;position:relative;width:80px;height:80px}
+.success-icon-ring{position:absolute;inset:0;border-radius:50%;border:2px solid rgba(0,84,165,.12)}
+.success-icon{width:80px;height:80px;background:linear-gradient(135deg,#e8f0f9,#d0e3f5);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--navy)}
+.success-gold-line{width:40px;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);margin:0 auto 20px}
+.success-title{font-family:'Cormorant Garamond',serif;font-size:clamp(30px,4vw,42px);font-weight:600;color:var(--ink);margin-bottom:10px;line-height:1.1}
+.success-sub{font-size:14px;color:var(--muted);line-height:1.8;margin-bottom:20px}
+.success-note{font-size:13px;color:var(--ink);line-height:1.7;margin-bottom:28px;padding:18px 22px;background:var(--cream);border-radius:var(--r-sm);text-align:left;border-left:3px solid var(--navy)}
 .success-actions{display:flex;flex-direction:column;gap:10px}
+.success-divider{width:100%;height:1px;background:var(--line);margin:24px 0}
+.success-ref{font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.success-ref span{color:var(--navy)}
+.success-trust{display:flex;align-items:center;justify-content:center;gap:6px;margin-top:16px}
+.success-trust svg{color:#4ade80}
+.success-trust span{font-size:10px;color:var(--muted);letter-spacing:.03em}
 
 /* FOOTER */
 .site-footer{background:linear-gradient(160deg,#1C1A17 0%,#2E2A24 100%);color:rgba(255,255,255,.55);padding:32px 0}
@@ -109,17 +116,31 @@ button{cursor:pointer;font-family:inherit}
 <!-- SUCCESS -->
 <div class="success-wrap">
   <div class="success-card">
-    <div class="success-icon">
-      <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+    <div class="success-icon-wrap">
+      <div class="success-icon-ring"></div>
+      <div class="success-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
     </div>
-    <h1 class="success-title">Order confirmed.</h1>
-    <p class="success-sub">Thank you for your BURMELIN order. Your payment was successful.</p>
-    <div class="success-note" id="customerDetails">We will process and dispatch your order within 1–3 business days.</div>
+    <div class="success-gold-line"></div>
+    <h1 class="success-title">Order Confirmed</h1>
+    <p class="success-sub">Thank you for shopping with BURMELIN.<br/>Your payment was successful.</p>
+    <div class="success-note" id="customerDetails">
+      We will process and dispatch your order within <strong>1–3 business days</strong>. You will be contacted via the phone number provided.
+    </div>
     <div class="success-actions">
       <a href="products.html" class="btn btn-navy" style="width:100%;justify-content:center">Continue Shopping</a>
-      <a href="https://wa.me/66835398811" class="btn" style="width:100%;justify-content:center;background:transparent;color:var(--navy);border:1.5px solid var(--navy)">Questions? WhatsApp Us</a>
+      <a href="https://wa.me/66835398811" class="btn" style="width:100%;justify-content:center;background:transparent;color:var(--navy);border:1.5px solid var(--navy)">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:6px"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        Questions? WhatsApp Us
+      </a>
     </div>
+    <div class="success-divider"></div>
     <p class="success-ref">Order reference: <span id="sessionRef">—</span></p>
+    <div class="success-trust">
+      <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      <span>Payment secured by Stripe · SSL Encrypted</span>
+    </div>
   </div>
 </div>
 

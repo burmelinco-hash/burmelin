@@ -344,7 +344,26 @@ button{cursor:pointer;font-family:inherit}
   </div>
   <div class="cart-footer" id="cartFooter" style="display:none">
     <div class="cart-total-row"><span class="cart-total-label">Total</span><span class="cart-total-amount" id="cartTotal">฿0</span></div>
-    <button class="checkout-btn" id="checkoutBtn" onclick="goToCheckout()">Checkout</button>
+    <button class="checkout-btn" id="checkoutBtn" onclick="goToCheckout()">
+      <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right:6px;vertical-align:middle"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      Secure Checkout
+    </button>
+    <div style="margin-top:12px;text-align:center">
+      <div style="display:flex;align-items:center;justify-content:center;gap:6px;margin-bottom:8px">
+        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        <span style="font-size:10px;color:var(--muted);letter-spacing:.04em">Payments secured by <strong style="color:var(--ink)">Stripe</strong></span>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:center;gap:6px">
+        <!-- Visa -->
+        <svg xmlns="http://www.w3.org/2000/svg" width="36" height="22" viewBox="0 0 36 22" style="border-radius:3px;border:1px solid #e5e2dc"><rect width="36" height="22" rx="3" fill="#1A1F71"/><text x="18" y="15" text-anchor="middle" font-family="Arial" font-size="9" font-weight="bold" fill="#FFFFFF" letter-spacing="0.5">VISA</text></svg>
+        <!-- Mastercard -->
+        <svg xmlns="http://www.w3.org/2000/svg" width="36" height="22" viewBox="0 0 36 22" style="border-radius:3px;border:1px solid #e5e2dc"><rect width="36" height="22" rx="3" fill="#fff"/><circle cx="14" cy="11" r="7" fill="#EB001B"/><circle cx="22" cy="11" r="7" fill="#F79E1B"/><path d="M18 5.9a7 7 0 0 1 0 10.2A7 7 0 0 1 18 5.9z" fill="#FF5F00"/></svg>
+        <!-- PromptPay -->
+        <svg xmlns="http://www.w3.org/2000/svg" width="36" height="22" viewBox="0 0 36 22" style="border-radius:3px;border:1px solid #e5e2dc"><rect width="36" height="22" rx="3" fill="#003B6E"/><text x="18" y="15" text-anchor="middle" font-family="Arial" font-size="6.5" font-weight="bold" fill="#FFFFFF">PromptPay</text></svg>
+        <!-- Apple Pay -->
+        <svg xmlns="http://www.w3.org/2000/svg" width="36" height="22" viewBox="0 0 36 22" style="border-radius:3px;border:1px solid #e5e2dc"><rect width="36" height="22" rx="3" fill="#000"/><text x="18" y="15" text-anchor="middle" font-family="Arial" font-size="7.5" fill="#fff"> Pay</text><text x="10" y="14" font-family="Arial" font-size="10" fill="#fff"></text></svg>
+      </div>
+    </div>
     <button class="whatsapp-btn" onclick="orderWhatsApp()"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Order via WhatsApp</button>
   </div>
 </div>
