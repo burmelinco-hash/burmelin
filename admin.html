@@ -237,11 +237,11 @@ select.fc{cursor:pointer}
         <div class="table-wrap">
           <table>
             <thead><tr>
-              <th>Order ID</th><th>Customer</th><th>Items</th>
+              <th>Order ID</th><th>Customer</th><th>Shipping Address</th><th>Items</th>
               <th>Total</th><th>Status</th><th>Date</th><th>Actions</th>
             </tr></thead>
             <tbody id="ordBody">
-              <tr><td colspan="7" class="loading-cell"><span class="spinner"></span>Loading orders…</td></tr>
+              <tr><td colspan="8" class="loading-cell"><span class="spinner"></span>Loading orders…</td></tr>
             </tbody>
           </table>
         </div>
@@ -714,7 +714,7 @@ function renderOrdStats() {
 function renderOrds() {
   const tb = document.getElementById('ordBody');
   if (!orders.length) {
-    tb.innerHTML = `<tr><td colspan="6" class="loading-cell">No orders yet.</td></tr>`;
+    tb.innerHTML = `<tr><td colspan="8" class="loading-cell">No orders yet.</td></tr>`;
     return;
   }
   tb.innerHTML = orders.map(o => {
@@ -727,9 +727,11 @@ function renderOrds() {
       <td style="font-family:monospace;font-size:11px;color:rgba(255,255,255,.3)">${esc(o.order_id || o.id)}</td>
       <td>
         <div>${esc(o.customer_name || 'Guest')}</div>
+        ${o.email ? `<div class="td-sub">${esc(o.email)}</div>` : ''}
         ${o.phone ? `<div class="td-sub">${esc(o.phone)}</div>` : ''}
       </td>
-      <td style="font-size:12px;max-width:240px;white-space:normal">${esc(items)}</td>
+      <td style="font-size:11px;color:rgba(255,255,255,.55);max-width:200px;white-space:normal;line-height:1.5">${esc(o.address || '—')}</td>
+      <td style="font-size:12px;max-width:220px;white-space:normal">${esc(items)}</td>
       <td><strong>฿${(o.total||0).toLocaleString()}</strong></td>
       <td>
         <select class="status-sel ${cls}" onchange="changeStatus('${esc(o.id)}',this)">

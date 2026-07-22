@@ -21,9 +21,10 @@ function stripeGet(secretKey, sessionId) {
 async function saveToSupabase(supabaseUrl, serviceKey, orderId, customer) {
   const body = JSON.stringify({
     customer_name: customer.name || 'Stripe Customer',
+    email:   customer.email || '',
     phone:   customer.phone || '',
     address: customer.address
-      ? [customer.address.line1, customer.address.line2, customer.address.city, customer.address.country]
+      ? [customer.address.line1, customer.address.line2, customer.address.city, customer.address.state, customer.address.postal_code, customer.address.country]
           .filter(Boolean).join(', ')
       : ''
   });
