@@ -238,10 +238,10 @@ select.fc{cursor:pointer}
           <table>
             <thead><tr>
               <th>Order ID</th><th>Customer</th><th>Items</th>
-              <th>Total</th><th>Status</th><th>Date</th>
+              <th>Total</th><th>Status</th><th>Date</th><th>Actions</th>
             </tr></thead>
             <tbody id="ordBody">
-              <tr><td colspan="6" class="loading-cell"><span class="spinner"></span>Loading orders…</td></tr>
+              <tr><td colspan="7" class="loading-cell"><span class="spinner"></span>Loading orders…</td></tr>
             </tbody>
           </table>
         </div>
@@ -738,8 +738,18 @@ function renderOrds() {
         </select>
       </td>
       <td style="font-size:11px;color:rgba(255,255,255,.32)">${esc(o.date || '—')}</td>
+      <td><button class="btn-danger" onclick="delOrder('${esc(o.id)}','${esc(o.order_id||o.id)}')">Delete</button></td>
     </tr>`;
   }).join('');
+}
+
+async function delOrder(id, orderId) {
+  if (!confirm(`Delete order "${orderId}"?\n\nThis cannot be undone.`)) return;
+  try {
+    await sb('orders?id=eq.' + id, 'DELETE');
+    toast('Order deleted.', 'info');
+    await loadOrders();
+  } catch(e) { toast('Error: ' + e.message, 'err'); }
 }
 
 async function changeStatus(id, sel) {
