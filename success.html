@@ -79,8 +79,8 @@ button{cursor:pointer;font-family:inherit}
 .footer-link:hover{color:white}
 </style>
 <!-- Meta Pixel -->
-<script>!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');fbq('init','2545009766003640');fbq('track','PageView');</script>
-<noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=2545009766003640&ev=PageView&noscript=1"/></noscript>
+<script>!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');fbq('init','10166101011919054');fbq('track','PageView');</script>
+<noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=10166101011919054&ev=PageView&noscript=1"/></noscript>
 <!-- End Meta Pixel -->
 </head>
 <body>
@@ -183,10 +183,24 @@ if(sid){
       box.innerHTML=html;
       // Meta Pixel Purchase event
       if(typeof fbq==='function' && d.total){
-        fbq('track','Purchase',{value:d.total,currency:'THB'});
+        try{
+          const lastCart=JSON.parse(localStorage.getItem('burmelinLastCart')||'[]');
+          fbq('track','Purchase',{
+            value:d.total,
+            currency:'THB',
+            content_type:'product',
+            content_ids:lastCart.map(i=>i.id||i.name),
+            content_name:lastCart.map(i=>i.name).join(', '),
+            num_items:lastCart.reduce((s,i)=>s+(i.qty||1),0)
+          });
+          localStorage.removeItem('burmelinLastCart');
+        }catch(e){
+          fbq('track','Purchase',{value:d.total,currency:'THB'});
+        }
       }
     }).catch(()=>{});
 }
 </script>
 </body>
 </html>
+
