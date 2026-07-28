@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
@@ -78,6 +78,10 @@ button{cursor:pointer;font-family:inherit}
 .footer-link{font-size:11px;color:rgba(255,255,255,.4);transition:color .2s;text-decoration:none}
 .footer-link:hover{color:white}
 </style>
+<!-- Meta Pixel -->
+<script>!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');fbq('init','2545009766003640');fbq('track','PageView');</script>
+<noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=2545009766003640&ev=PageView&noscript=1"/></noscript>
+<!-- End Meta Pixel -->
 </head>
 <body>
 
@@ -177,6 +181,10 @@ if(sid){
       if(d.address) html+=d.address+'<br/>';
       html+='<br/>We will process and dispatch within 1–3 business days.';
       box.innerHTML=html;
+      // Meta Pixel Purchase event
+      if(typeof fbq==='function' && d.total){
+        fbq('track','Purchase',{value:d.total,currency:'THB'});
+      }
     }).catch(()=>{});
 }
 </script>
