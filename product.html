@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title id="metaTitle">Product — BURMELIN</title>
+<meta name="description" id="metaDesc" content="Shop premium men's clothing at BURMELIN."/>
+<!-- OG tags for Meta Ads -->
+<meta property="og:type" content="product"/>
+<meta property="og:site_name" content="BURMELIN"/>
+<meta property="og:title" id="ogTitle" content="BURMELIN"/>
+<meta property="og:description" id="ogDesc" content="Shop premium men's clothing at BURMELIN."/>
+<meta property="og:image" id="ogImage" content=""/>
+<meta property="og:url" id="ogUrl" content=""/>
+<meta property="product:price:amount" id="ogPrice" content=""/>
+<meta property="product:price:currency" content="THB"/>
+<link rel="icon" type="image/png" href="https://res.cloudinary.com/dtpvflgt1/image/upload/v1773996384/LOGO_q2howi.png"/>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;900&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Barlow+Condensed:wght@700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#0054A5;--navy-dark:#003d7a;--navy-light:#e8f0f9;
+  --cream:#F7F5F1;--cream-dark:#EEEBE5;
+  --ink:#111118;--muted:#6d6a65;--line:rgba(0,0,0,.1);
+  --white:#ffffff;--gold:#C9A96E;
+  --r-sm:8px;--r:16px;--r-lg:24px;
+  --shadow-sm:0 2px 12px rgba(0,0,0,.06);
+  --shadow:0 6px 28px rgba(0,0,0,.09);
+  --shadow-lg:0 16px 48px rgba(0,0,0,.12);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Archivo',sans-serif;background:var(--cream);color:var(--ink);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+img{max-width:100%;display:block}
+a{text-decoration:none;color:inherit}
+button{cursor:pointer;font-family:inherit}
+.container{max-width:1200px;margin:0 auto;padding:0 24px}
+
+/* HEADER */
+.site-header{position:fixed;top:0;left:0;right:0;z-index:100;height:72px;padding:0 32px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;background:rgba(255,255,255,.92);backdrop-filter:blur(12px);border-bottom:1px solid rgba(0,0,0,.07);transition:background .3s}
+.hamburger{width:40px;height:40px;border:none;background:none;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:5px;cursor:pointer;flex-shrink:0;border-radius:8px;transition:background .2s}
+.hamburger:hover{background:rgba(0,0,0,.05)}
+.hamburger span{display:block;width:22px;height:2px;background:var(--ink);border-radius:2px}
+.header-logo{display:flex;align-items:center;gap:10px;cursor:pointer}
+.header-actions{display:flex;align-items:center;gap:6px;justify-self:end}
+.icon-btn{width:40px;height:40px;border:none;background:none;display:flex;align-items:center;justify-content:center;color:var(--ink);border-radius:50%;transition:all .2s}
+.icon-btn:hover{background:var(--navy-light);color:var(--navy)}
+.cart-badge{position:relative}
+.cart-badge::after{content:attr(data-count);position:absolute;top:4px;right:4px;width:16px;height:16px;background:var(--navy);color:#fff;font-size:9px;font-weight:700;border-radius:50%;display:flex;align-items:center;justify-content:center;line-height:1;display:none}
+.cart-badge[data-count]:not([data-count="0"])::after{display:flex}
+
+/* SIDE MENU */
+.menu-overlay{position:fixed;inset:0;background:rgba(0,0,0,.3);z-index:98;opacity:0;pointer-events:none;transition:opacity .3s}
+.menu-overlay.open{opacity:1;pointer-events:all}
+.side-menu{position:fixed;top:0;left:0;bottom:0;width:280px;background:var(--white);z-index:99;transform:translateX(-100%);transition:transform .4s cubic-bezier(.22,.68,0,1.2);display:flex;flex-direction:column;box-shadow:var(--shadow-lg);border-radius:0 var(--r-lg) var(--r-lg) 0}
+.side-menu.open{transform:translateX(0)}
+.side-menu-header{padding:20px 24px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between}
+.side-menu-close{width:32px;height:32px;border:1px solid var(--line);border-radius:50%;background:var(--cream);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--muted)}
+.side-menu-links{display:flex;flex-direction:column;padding:16px 0;flex:1}
+.side-menu-link{padding:14px 28px;font-size:13px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);cursor:pointer;border:none;background:none;text-align:left;font-family:inherit;transition:all .2s;border-left:3px solid transparent}
+.side-menu-link:hover{color:var(--navy);background:var(--navy-light);border-left-color:var(--navy)}
+.side-menu-footer{padding:20px 24px;border-top:1px solid var(--line)}
+
+/* BREADCRUMB */
+.breadcrumb{margin-top:72px;padding:14px 0;font-size:12px;color:var(--muted);display:flex;align-items:center;gap:6px}
+.breadcrumb a{color:var(--muted);transition:color .2s}
+.breadcrumb a:hover{color:var(--navy)}
+.breadcrumb-sep{opacity:.4}
+
+/* PRODUCT LAYOUT */
+.product-section{padding:32px 0 80px}
+.product-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start}
+
+/* GALLERY */
+.gallery{position:sticky;top:90px}
+.gallery-main{aspect-ratio:3/4;background:var(--white);border-radius:var(--r-lg);overflow:hidden;border:1px solid var(--line);margin-bottom:12px}
+.gallery-main img{width:100%;height:100%;object-fit:cover;transition:opacity .3s}
+.gallery-thumbs{display:flex;gap:8px;flex-wrap:wrap}
+.gallery-thumb{width:72px;height:90px;border-radius:var(--r-sm);overflow:hidden;border:2px solid transparent;cursor:pointer;transition:border-color .2s;flex-shrink:0}
+.gallery-thumb.active{border-color:var(--navy)}
+.gallery-thumb img{width:100%;height:100%;object-fit:cover}
+
+/* PRODUCT INFO */
+.prod-eyebrow{font-size:10px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--navy);margin-bottom:10px}
+.prod-name{font-family:'Cormorant Garamond',serif;font-size:clamp(28px,3vw,40px);font-weight:600;line-height:1.1;color:var(--ink);margin-bottom:10px}
+.prod-price{font-size:28px;font-weight:700;color:var(--ink);margin-bottom:20px}
+.prod-gold-line{width:40px;height:2px;background:var(--gold);margin-bottom:20px}
+.prod-desc{font-size:14px;color:var(--muted);line-height:1.8;margin-bottom:28px}
+
+.prod-label{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+.prod-colors{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:24px}
+.prod-swatch{width:30px;height:30px;border-radius:50%;border:2.5px solid white;outline:1.5px solid rgba(0,0,0,.18);cursor:pointer;transition:outline-color .2s,transform .2s}
+.prod-swatch:hover{transform:scale(1.1)}
+.prod-swatch.active{outline-color:var(--navy);outline-width:2.5px}
+
+.prod-sizes{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:28px}
+.prod-size{padding:10px 18px;border:1.5px solid var(--line);border-radius:var(--r-sm);font-size:13px;font-weight:600;background:var(--white);cursor:pointer;transition:all .2s}
+.prod-size:hover{border-color:var(--navy);color:var(--navy)}
+.prod-size.active{background:var(--navy);color:white;border-color:var(--navy)}
+.size-hint{font-size:11px;color:var(--muted);margin-bottom:8px}
+
+.prod-actions{display:flex;flex-direction:column;gap:10px;margin-bottom:24px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:15px 26px;border-radius:var(--r-sm);font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;border:1.5px solid transparent;transition:all .25s;cursor:pointer;width:100%}
+.btn-navy{background:var(--ink);color:var(--white);border-color:var(--ink)}
+.btn-navy:hover{background:#2a2a30}
+.btn-navy:disabled{opacity:.5;cursor:not-allowed}
+.btn-whatsapp{background:#25D366;color:white;border-color:#25D366}
+.btn-whatsapp:hover{background:#1ea855}
+
+/* TRUST */
+.prod-trust{padding:16px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin-bottom:24px}
+.prod-trust-row{display:flex;align-items:center;justify-content:center;gap:5px;margin-bottom:8px}
+.prod-trust-cards{display:flex;align-items:center;justify-content:center;gap:5px}
+
+/* DETAILS */
+.prod-details{margin-top:8px}
+.prod-details summary{font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);cursor:pointer;padding:14px 0;border-top:1px solid var(--line);list-style:none;display:flex;justify-content:space-between;align-items:center}
+.prod-details summary::after{content:'+';font-size:16px;font-weight:300}
+.prod-details[open] summary::after{content:'−'}
+.prod-details-body{padding:12px 0 16px;font-size:13px;color:var(--muted);line-height:1.8}
+
+/* LOADING */
+.prod-loader{min-height:60vh;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:14px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.spinner{display:inline-block;width:24px;height:24px;border:2px solid var(--line);border-top-color:var(--navy);border-radius:50%;animation:spin .7s linear infinite;margin-right:10px;vertical-align:middle}
+
+/* CART */
+.cart-overlay{position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:200;opacity:0;pointer-events:none;transition:opacity .3s}
+.cart-overlay.open{opacity:1;pointer-events:all}
+.cart-sidebar{position:fixed;top:0;right:0;bottom:0;width:390px;background:var(--white);border-radius:var(--r-lg) 0 0 var(--r-lg);z-index:201;transform:translateX(100%);transition:transform .4s cubic-bezier(.22,.68,0,1.2);display:flex;flex-direction:column;box-shadow:var(--shadow-lg)}
+.cart-sidebar.open{transform:translateX(0)}
+.cart-header{padding:24px 28px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between}
+.cart-title{font-size:16px;font-weight:700}
+.cart-close{width:34px;height:34px;border:1px solid var(--line);border-radius:50%;background:var(--cream);display:flex;align-items:center;justify-content:center;color:var(--muted);cursor:pointer}
+.cart-items{flex:1;overflow-y:auto;padding:20px 28px}
+.cart-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:10px;color:var(--muted);text-align:center}
+.cart-item{display:flex;gap:14px;padding:16px 0;border-bottom:1px solid var(--line)}
+.cart-item-img{width:70px;height:88px;object-fit:cover;background:var(--cream);border-radius:var(--r-sm);flex-shrink:0}
+.cart-item-details{flex:1}
+.cart-item-name{font-size:14px;font-weight:600;margin-bottom:3px}
+.cart-item-meta{font-size:11px;color:var(--muted);margin-bottom:10px}
+.cart-item-controls{display:flex;align-items:center;justify-content:space-between}
+.qty-ctrl{display:flex;align-items:center;border:1px solid var(--line);border-radius:var(--r-sm);overflow:hidden}
+.qty-btn{width:30px;height:30px;border:none;background:var(--cream);font-size:16px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--muted)}
+.qty-btn:hover{color:var(--ink)}
+.qty-num{width:32px;height:30px;text-align:center;font-size:13px;font-weight:600;display:flex;align-items:center;justify-content:center;border-left:1px solid var(--line);border-right:1px solid var(--line)}
+.cart-item-price{font-size:15px;font-weight:700}
+.cart-item-remove{background:none;border:none;color:var(--muted);font-size:11px;cursor:pointer;text-decoration:underline;margin-top:6px}
+.cart-footer{padding:24px 28px;border-top:1px solid var(--line);background:var(--cream)}
+.cart-total-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.cart-total-label{font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.cart-total-amount{font-size:24px;font-weight:700}
+.checkout-btn{width:100%;padding:15px;background:var(--ink);color:white;border:none;border-radius:var(--r-sm);font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;margin-bottom:10px;transition:background .2s}
+.checkout-btn:hover{background:#2a2a30}
+.whatsapp-btn{width:100%;padding:14px;background:#25D366;color:white;border:none;border-radius:var(--r-sm);font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:background .2s}
+.whatsapp-btn:hover{background:#1ea855}
+
+/* TOAST */
+.toast{position:fixed;bottom:28px;right:28px;background:var(--ink);color:white;padding:13px 20px;border-radius:var(--r);font-size:13px;font-weight:600;z-index:999;display:flex;align-items:center;gap:10px;box-shadow:var(--shadow-lg);transform:translateY(80px);opacity:0;transition:all .4s cubic-bezier(.22,.68,0,1.2);pointer-events:none}
+.toast.show{transform:translateY(0);opacity:1}
+
+/* NOT FOUND */
+.not-found{text-align:center;padding:80px 24px;color:var(--muted)}
+
+/* FOOTER */
+.site-footer{background:linear-gradient(160deg,#1C1A17 0%,#2E2A24 100%);color:rgba(255,255,255,.55);padding:48px 0 28px;margin-top:60px}
+.footer-bottom{padding-top:24px;border-top:1px solid rgba(255,255,255,.07);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+.footer-copy{font-size:11px;color:rgba(255,255,255,.25)}
+.footer-legal{display:flex;gap:20px}
+.footer-link{font-size:11px;color:rgba(255,255,255,.35);transition:color .2s;text-decoration:none}
+.footer-link:hover{color:white}
+
+@media(max-width:768px){
+  .product-grid{grid-template-columns:1fr;gap:28px}
+  .gallery{position:static}
+  .prod-name{font-size:26px}
+  .cart-sidebar{width:100%;border-radius:0}
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="site-header">
+  <button class="hamburger" onclick="openMenu()">
+    <span></span><span></span><span></span>
+  </button>
+  <div class="header-logo" onclick="location.href='index.html'">
+    <img src="https://res.cloudinary.com/dtpvflgt1/image/upload/v1773996384/LOGO_q2howi.png" alt="BURMELIN" style="height:32px;width:auto"/>
+    <span style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:20px;letter-spacing:.12em">BURMELIN</span>
+  </div>
+  <div class="header-actions">
+    <button class="icon-btn cart-badge" id="cartBtn" data-count="0" onclick="openCart()">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+    </button>
+  </div>
+</header>
+
+<!-- SIDE MENU -->
+<div class="menu-overlay" id="menuOverlay" onclick="closeMenu()"></div>
+<div class="side-menu" id="sideMenu">
+  <div class="side-menu-header">
+    <span style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:18px;letter-spacing:.12em">BURMELIN</span>
+    <button class="side-menu-close" onclick="closeMenu()">×</button>
+  </div>
+  <div class="side-menu-links">
+    <button class="side-menu-link" onclick="location.href='index.html'">Home</button>
+    <button class="side-menu-link" onclick="location.href='products.html'">Products</button>
+    <button class="side-menu-link" onclick="location.href='stores.html'">Stores</button>
+    <button class="side-menu-link" onclick="location.href='about.html'">About Us</button>
+  </div>
+  <div class="side-menu-footer">
+    <a href="https://wa.me/66835398811" class="btn btn-whatsapp" style="display:flex;align-items:center;justify-content:center;gap:8px;padding:13px;border-radius:8px;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;text-decoration:none">WhatsApp Us</a>
+  </div>
+</div>
+
+<div class="container">
+  <div class="breadcrumb">
+    <a href="index.html">Home</a>
+    <span class="breadcrumb-sep">›</span>
+    <a href="products.html">Products</a>
+    <span class="breadcrumb-sep">›</span>
+    <span id="breadcrumbName">Loading…</span>
+  </div>
+</div>
+
+<!-- PRODUCT CONTENT -->
+<div class="container">
+  <div id="prodLoader" class="prod-loader"><span class="spinner"></span>Loading product…</div>
+  <div id="prodContent" style="display:none">
+    <div class="product-section">
+      <div class="product-grid">
+
+        <!-- GALLERY -->
+        <div class="gallery">
+          <div class="gallery-main">
+            <img id="mainImg" src="" alt="" style="width:100%;height:100%;object-fit:cover"/>
+          </div>
+          <div class="gallery-thumbs" id="galleryThumbs"></div>
+        </div>
+
+        <!-- INFO -->
+        <div class="prod-info">
+          <div class="prod-eyebrow" id="prodCat"></div>
+          <h1 class="prod-name" id="prodName"></h1>
+          <div class="prod-price" id="prodPrice"></div>
+          <div class="prod-gold-line"></div>
+          <p class="prod-desc" id="prodDesc"></p>
+
+          <!-- COLORS -->
+          <div id="colorSection" style="display:none">
+            <div class="prod-label">Color — <span id="selectedColorName" style="color:var(--ink);font-weight:700"></span></div>
+            <div class="prod-colors" id="prodColors"></div>
+          </div>
+
+          <!-- SIZES -->
+          <div id="sizeSection" style="display:none">
+            <div class="prod-label">Size</div>
+            <div class="size-hint">Select a size to add to cart</div>
+            <div class="prod-sizes" id="prodSizes"></div>
+          </div>
+
+          <!-- ACTIONS -->
+          <div class="prod-actions">
+            <button class="btn btn-navy" id="addToCartBtn" onclick="addToCart()">
+              <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+              Add to Cart
+            </button>
+            <button class="btn btn-whatsapp" onclick="orderWhatsApp()">
+              <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+              Order via WhatsApp
+            </button>
+          </div>
+
+          <!-- TRUST BADGES -->
+          <div class="prod-trust">
+            <div class="prod-trust-row">
+              <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              <span style="font-size:10px;color:var(--muted)">Payments secured by <strong style="color:var(--ink)">Stripe</strong></span>
+            </div>
+            <div class="prod-trust-cards">
+              <svg width="38" height="24" viewBox="0 0 38 24" style="border-radius:4px;border:1px solid #e0ddd7;display:block"><rect width="38" height="24" rx="4" fill="#1A1F71"/><text x="19" y="16" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" font-weight="900" fill="#fff" letter-spacing="1">VISA</text></svg>
+              <svg width="38" height="24" viewBox="0 0 38 24" style="border-radius:4px;border:1px solid #e0ddd7;display:block"><rect width="38" height="24" rx="4" fill="#f9f9f9"/><circle cx="15" cy="12" r="7" fill="#EB001B"/><circle cx="23" cy="12" r="7" fill="#F79E1B" opacity=".9"/><ellipse cx="19" cy="12" rx="3" ry="7" fill="#FF5F00"/></svg>
+              <svg width="38" height="24" viewBox="0 0 38 24" style="border-radius:4px;border:1px solid #e0ddd7;display:block"><rect width="38" height="24" rx="4" fill="#1B4F9B"/><text x="19" y="10" text-anchor="middle" font-family="Arial,sans-serif" font-size="5.5" font-weight="700" fill="#fff">PROMPT</text><text x="19" y="18" text-anchor="middle" font-family="Arial,sans-serif" font-size="5.5" font-weight="700" fill="#fff">PAY</text></svg>
+              <svg width="38" height="24" viewBox="0 0 38 24" style="border-radius:4px;border:1px solid #e0ddd7;display:block"><rect width="38" height="24" rx="4" fill="#000"/><text x="19" y="16" text-anchor="middle" font-family="-apple-system,Arial,sans-serif" font-size="9" fill="#fff"> Pay</text></svg>
+            </div>
+          </div>
+
+          <!-- DETAILS ACCORDION -->
+          <div>
+            <details class="prod-details">
+              <summary>Product Details</summary>
+              <div class="prod-details-body" id="detailsBody">Premium quality garment from BURMELIN. Made with care for comfort and style.</div>
+            </details>
+            <details class="prod-details">
+              <summary>Shipping & Delivery</summary>
+              <div class="prod-details-body">Orders are dispatched within 1–3 business days. We ship across Thailand and internationally. You will receive a tracking number once shipped.</div>
+            </details>
+            <details class="prod-details">
+              <summary>Exchange Policy</summary>
+              <div class="prod-details-body">We accept exchanges within 7 days of delivery for unworn items in original condition. Contact us via WhatsApp to arrange.</div>
+            </details>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div id="prodNotFound" class="not-found" style="display:none">
+    <div style="font-size:40px;margin-bottom:16px">🔍</div>
+    <div style="font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:600;margin-bottom:8px">Product not found</div>
+    <div style="font-size:14px;color:var(--muted);margin-bottom:24px">This product may no longer be available.</div>
+    <a href="products.html" style="display:inline-block;padding:12px 28px;background:var(--navy);color:white;border-radius:8px;font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase">Browse All Products</a>
+  </div>
+</div>
+
+<!-- CART -->
+<div class="cart-overlay" id="cartOverlay" onclick="closeCart()"></div>
+<div class="cart-sidebar" id="cartSidebar">
+  <div class="cart-header">
+    <div class="cart-title">Your Cart</div>
+    <button class="cart-close" onclick="closeCart()">×</button>
+  </div>
+  <div class="cart-items" id="cartItems"></div>
+  <div class="cart-footer" id="cartFooter" style="display:none">
+    <div class="cart-total-row"><span class="cart-total-label">Total</span><span class="cart-total-amount" id="cartTotal">฿0</span></div>
+    <button class="checkout-btn" id="checkoutBtn" onclick="goToCheckout()">
+      <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right:6px;vertical-align:middle"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      Secure Checkout
+    </button>
+    <div style="margin-top:10px;padding:10px 0 4px;border-top:1px solid var(--line)">
+      <div style="display:flex;align-items:center;justify-content:center;gap:5px;margin-bottom:8px">
+        <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        <span style="font-size:10px;color:var(--muted)">Payments secured by <strong style="color:var(--ink)">Stripe</strong></span>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:center;gap:5px">
+        <svg width="38" height="24" viewBox="0 0 38 24" style="border-radius:4px;border:1px solid #e0ddd7;display:block"><rect width="38" height="24" rx="4" fill="#1A1F71"/><text x="19" y="16" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" font-weight="900" fill="#fff" letter-spacing="1">VISA</text></svg>
+        <svg width="38" height="24" viewBox="0 0 38 24" style="border-radius:4px;border:1px solid #e0ddd7;display:block"><rect width="38" height="24" rx="4" fill="#f9f9f9"/><circle cx="15" cy="12" r="7" fill="#EB001B"/><circle cx="23" cy="12" r="7" fill="#F79E1B" opacity=".9"/><ellipse cx="19" cy="12" rx="3" ry="7" fill="#FF5F00"/></svg>
+        <svg width="38" height="24" viewBox="0 0 38 24" style="border-radius:4px;border:1px solid #e0ddd7;display:block"><rect width="38" height="24" rx="4" fill="#1B4F9B"/><text x="19" y="10" text-anchor="middle" font-family="Arial,sans-serif" font-size="5.5" font-weight="700" fill="#fff">PROMPT</text><text x="19" y="18" text-anchor="middle" font-family="Arial,sans-serif" font-size="5.5" font-weight="700" fill="#fff">PAY</text></svg>
+        <svg width="38" height="24" viewBox="0 0 38 24" style="border-radius:4px;border:1px solid #e0ddd7;display:block"><rect width="38" height="24" rx="4" fill="#000"/><text x="19" y="16" text-anchor="middle" font-family="-apple-system,Arial,sans-serif" font-size="9" fill="#fff"> Pay</text></svg>
+      </div>
+    </div>
+    <button class="whatsapp-btn" onclick="orderWhatsApp()">
+      <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      Order via WhatsApp
+    </button>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="site-footer">
+  <div class="container">
+    <div style="display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:12px;padding:0 0 24px;margin-bottom:24px;border-bottom:1px solid rgba(255,255,255,.07)">
+      <div style="display:flex;align-items:center;gap:5px">
+        <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        <span style="font-size:11px;color:rgba(255,255,255,.35)">Payments secured by <strong style="color:rgba(255,255,255,.6)">Stripe</strong></span>
+      </div>
+      <div style="display:flex;align-items:center;gap:5px">
+        <svg width="38" height="24" viewBox="0 0 38 24" style="border-radius:4px;border:1px solid rgba(255,255,255,.12);display:block"><rect width="38" height="24" rx="4" fill="#1A1F71"/><text x="19" y="16" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" font-weight="900" fill="#fff" letter-spacing="1">VISA</text></svg>
+        <svg width="38" height="24" viewBox="0 0 38 24" style="border-radius:4px;border:1px solid rgba(255,255,255,.12);display:block"><rect width="38" height="24" rx="4" fill="#1a1a1a"/><circle cx="15" cy="12" r="7" fill="#EB001B"/><circle cx="23" cy="12" r="7" fill="#F79E1B" opacity=".9"/><ellipse cx="19" cy="12" rx="3" ry="7" fill="#FF5F00"/></svg>
+        <svg width="38" height="24" viewBox="0 0 38 24" style="border-radius:4px;border:1px solid rgba(255,255,255,.12);display:block"><rect width="38" height="24" rx="4" fill="#1B4F9B"/><text x="19" y="10" text-anchor="middle" font-family="Arial,sans-serif" font-size="5.5" font-weight="700" fill="#fff">PROMPT</text><text x="19" y="18" text-anchor="middle" font-family="Arial,sans-serif" font-size="5.5" font-weight="700" fill="#fff">PAY</text></svg>
+        <svg width="38" height="24" viewBox="0 0 38 24" style="border-radius:4px;border:1px solid rgba(255,255,255,.12);display:block"><rect width="38" height="24" rx="4" fill="#000"/><text x="19" y="16" text-anchor="middle" font-family="-apple-system,Arial,sans-serif" font-size="9" fill="#fff"> Pay</text></svg>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-copy">© <span id="year"></span> BURMELIN. All rights reserved. Bangkok, Thailand.</div>
+      <div class="footer-legal"><a href="privacy.html" class="footer-link">Privacy</a><a href="terms.html" class="footer-link">Terms</a></div>
+    </div>
+  </div>
+</footer>
+
+<div class="toast" id="toast"><span id="toastMsg"></span></div>
+
+<script>
+const SUPABASE_URL = 'https://fwhczruomutdgelmwcly.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_RR_Kxpb0HBiVdt3YJkBo7A_lo8RYiPW';
+const CAT_LABELS   = {polo:'Polo Shirt',tshirt:'T-Shirt',pants:'Linen Pants',jeans:'Jeans',jacket:'Jacket',shirt:'Shirt',chino:'Chino Pant',undergarments:'Undergarments'};
+
+let product = null;
+let selectedSize  = '';
+let selectedColor = null;
+let cart = [];
+
+// ── INIT ──────────────────────────────────────────────────────────────
+document.getElementById('year').textContent = new Date().getFullYear();
+loadCart();
+
+const params = new URLSearchParams(location.search);
+const productId = params.get('id');
+
+if (!productId) {
+  showNotFound();
+} else {
+  loadProduct(productId);
+}
+
+async function loadProduct(id) {
+  try {
+    const res  = await fetch(`${SUPABASE_URL}/rest/v1/products?id=eq.${id}&select=*`, {
+      headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY }
+    });
+    const data = await res.json();
+    if (!data.length || !data[0].active) { showNotFound(); return; }
+    product = data[0];
+    renderProduct();
+  } catch(e) {
+    showNotFound();
+  }
+}
+
+function renderProduct() {
+  document.getElementById('prodLoader').style.display = 'none';
+  document.getElementById('prodContent').style.display = '';
+
+  const p = product;
+  const catLabel = CAT_LABELS[p.cat] || p.cat || '';
+
+  // Meta / OG tags
+  document.getElementById('metaTitle').textContent  = `${p.name} — BURMELIN`;
+  document.getElementById('metaDesc').content       = p.description || `Shop ${p.name} at BURMELIN`;
+  document.getElementById('ogTitle').content        = `${p.name} — BURMELIN`;
+  document.getElementById('ogDesc').content         = p.description || `Shop ${p.name} at BURMELIN`;
+  document.getElementById('ogImage').content        = p.img || '';
+  document.getElementById('ogUrl').content          = location.href;
+  document.getElementById('ogPrice').content        = p.price;
+
+  document.getElementById('breadcrumbName').textContent = p.name;
+  document.getElementById('prodCat').textContent        = catLabel;
+  document.getElementById('prodName').textContent       = p.name;
+  document.getElementById('prodPrice').textContent      = '฿' + p.price.toLocaleString();
+  document.getElementById('prodDesc').textContent       = p.description || '';
+  document.getElementById('detailsBody').textContent    = p.description || 'Premium quality garment from BURMELIN.';
+
+  // Gallery
+  const imgs = [];
+  if (p.img) imgs.push(p.img);
+  if (Array.isArray(p.colors)) p.colors.forEach(c => { if (c.img && !imgs.includes(c.img)) imgs.push(c.img); });
+
+  if (imgs.length) {
+    document.getElementById('mainImg').src = imgs[0];
+    const thumbs = document.getElementById('galleryThumbs');
+    thumbs.innerHTML = imgs.map((src, i) => `
+      <div class="gallery-thumb ${i===0?'active':''}" onclick="setMainImg(this,'${src}')">
+        <img src="${src}" alt=""/>
+      </div>`).join('');
+  }
+
+  // Colors
+  if (Array.isArray(p.colors) && p.colors.length) {
+    document.getElementById('colorSection').style.display = '';
+    selectedColor = p.colors[0];
+    document.getElementById('selectedColorName').textContent = selectedColor.name;
+    document.getElementById('prodColors').innerHTML = p.colors.map((c, i) => `
+      <div class="prod-swatch ${i===0?'active':''}" style="background:${c.hex||'#ccc'}" title="${c.name}"
+        onclick="selectColor(this,'${c.name}','${c.img||''}','${c.hex||''}')"></div>`).join('');
+  }
+
+  // Sizes
+  if (Array.isArray(p.sizes) && p.sizes.length) {
+    document.getElementById('sizeSection').style.display = '';
+    document.getElementById('prodSizes').innerHTML = p.sizes.map(s => `
+      <button class="prod-size" onclick="selectSize(this,'${s}')">${s}</button>`).join('');
+  } else {
+    selectedSize = 'One Size';
+  }
+}
+
+function setMainImg(thumb, src) {
+  document.getElementById('mainImg').src = src;
+  document.querySelectorAll('.gallery-thumb').forEach(t => t.classList.remove('active'));
+  thumb.classList.add('active');
+}
+
+function selectColor(el, name, img, hex) {
+  document.querySelectorAll('.prod-swatch').forEach(s => s.classList.remove('active'));
+  el.classList.add('active');
+  selectedColor = { name, img, hex };
+  document.getElementById('selectedColorName').textContent = name;
+  if (img) {
+    document.getElementById('mainImg').src = img;
+    document.querySelectorAll('.gallery-thumb').forEach(t => t.classList.remove('active'));
+    const match = Array.from(document.querySelectorAll('.gallery-thumb img')).find(i => i.src.includes(img.split('/').pop()));
+    if (match) match.closest('.gallery-thumb').classList.add('active');
+  }
+}
+
+function selectSize(el, size) {
+  document.querySelectorAll('.prod-size').forEach(s => s.classList.remove('active'));
+  el.classList.add('active');
+  selectedSize = size;
+}
+
+function showNotFound() {
+  document.getElementById('prodLoader').style.display = 'none';
+  document.getElementById('prodNotFound').style.display = '';
+}
+
+// ── CART ──────────────────────────────────────────────────────────────
+function loadCart() {
+  try { cart = JSON.parse(localStorage.getItem('burmelinCart') || '[]'); } catch(e) { cart = []; }
+  updateBadge();
+}
+
+function saveCart() { localStorage.setItem('burmelinCart', JSON.stringify(cart)); }
+
+function updateBadge() {
+  const count = cart.reduce((s, i) => s + (i.qty || 1), 0);
+  document.getElementById('cartBtn').dataset.count = count || '0';
+}
+
+function addToCart() {
+  if (!product) return;
+  const sizes = Array.isArray(product.sizes) && product.sizes.length;
+  if (sizes && !selectedSize) { showToast('Please select a size'); return; }
+
+  const item = {
+    id:    product.id,
+    name:  product.name,
+    price: product.price,
+    qty:   1,
+    size:  selectedSize,
+    color: selectedColor ? selectedColor.name : '',
+    img:   (selectedColor && selectedColor.img) || product.img || ''
+  };
+
+  const existing = cart.find(i => i.id === item.id && i.size === item.size && i.color === item.color);
+  if (existing) { existing.qty++; } else { cart.push(item); }
+
+  saveCart();
+  updateBadge();
+  renderCart();
+  openCart();
+  showToast(product.name + ' added to cart');
+}
+
+function renderCart() {
+  const container = document.getElementById('cartItems');
+  const footer    = document.getElementById('cartFooter');
+  if (!cart.length) {
+    container.innerHTML = '<div class="cart-empty"><div style="font-size:32px">🛍</div><div style="font-size:14px">Your cart is empty</div></div>';
+    footer.style.display = 'none';
+    return;
+  }
+  footer.style.display = '';
+  let total = 0;
+  container.innerHTML = cart.map((item, i) => {
+    total += item.price * item.qty;
+    return `<div class="cart-item">
+      ${item.img ? `<img class="cart-item-img" src="${item.img}" alt=""/>` : '<div class="cart-item-img"></div>'}
+      <div class="cart-item-details">
+        <div class="cart-item-name">${item.name}</div>
+        <div class="cart-item-meta">${[item.color, item.size].filter(Boolean).join(' · ')}</div>
+        <div class="cart-item-controls">
+          <div class="qty-ctrl">
+            <button class="qty-btn" onclick="changeQty(${i},-1)">−</button>
+            <div class="qty-num">${item.qty}</div>
+            <button class="qty-btn" onclick="changeQty(${i},1)">+</button>
+          </div>
+          <div class="cart-item-price">฿${(item.price * item.qty).toLocaleString()}</div>
+        </div>
+        <button class="cart-item-remove" onclick="removeFromCart(${i})">Remove</button>
+      </div>
+    </div>`;
+  }).join('');
+  document.getElementById('cartTotal').textContent = '฿' + total.toLocaleString();
+}
+
+function removeFromCart(i) { cart.splice(i, 1); saveCart(); updateBadge(); renderCart(); }
+function changeQty(i, d)   { cart[i].qty = Math.max(1, cart[i].qty + d); saveCart(); updateBadge(); renderCart(); }
+function openCart()        { document.getElementById('cartSidebar').classList.add('open'); document.getElementById('cartOverlay').classList.add('open'); renderCart(); }
+function closeCart()       { document.getElementById('cartSidebar').classList.remove('open'); document.getElementById('cartOverlay').classList.remove('open'); }
+
+async function goToCheckout() {
+  if (!cart.length) return;
+  const btn = document.getElementById('checkoutBtn');
+  btn.textContent = 'Processing...'; btn.disabled = true;
+  try {
+    const total   = cart.reduce((s, i) => s + i.price * i.qty, 0);
+    const orderId = 'ORD-' + Date.now();
+    const d       = new Date().toLocaleString('en-GB', { timeZone: 'Asia/Bangkok' });
+    fetch('/.netlify/functions/save-order', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ order_id: orderId, customer_name: 'Stripe Checkout', items: cart, total, status: 'Pending', date: d }) }).catch(()=>{});
+    const res  = await fetch('/.netlify/functions/create-checkout', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ items: cart, origin: location.origin, orderId }) });
+    const data = await res.json();
+    if (data.url) { window.location.href = data.url; }
+    else { throw new Error(data.error || 'Checkout failed'); }
+  } catch(e) {
+    showToast('Error: ' + e.message);
+    btn.textContent = 'Secure Checkout'; btn.disabled = false;
+  }
+}
+
+function orderWhatsApp() {
+  if (!product) return;
+  const msg = `Hi BURMELIN, I'd like to order:\n\n${product.name}${selectedColor?' · '+selectedColor.name:''}${selectedSize?' · '+selectedSize:''}\n\nPrice: ฿${product.price.toLocaleString()}\n\nName:\nPhone:\nDelivery Address:`;
+  window.open('https://wa.me/66835398811?text=' + encodeURIComponent(msg), '_blank');
+}
+
+// ── MENU ──────────────────────────────────────────────────────────────
+function openMenu()  { document.getElementById('sideMenu').classList.add('open'); document.getElementById('menuOverlay').classList.add('open'); }
+function closeMenu() { document.getElementById('sideMenu').classList.remove('open'); document.getElementById('menuOverlay').classList.remove('open'); }
+
+// ── TOAST ─────────────────────────────────────────────────────────────
+function showToast(msg) {
+  document.getElementById('toastMsg').textContent = msg;
+  const t = document.getElementById('toast');
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+</script>
+</body>
+</html>
