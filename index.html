@@ -109,6 +109,16 @@ button{cursor:pointer;font-family:inherit}
 .badge-new{background:var(--navy);color:white}
 .badge-sale{background:#c0392b;color:white}
 .badge-limited{background:var(--gold);color:var(--ink)}
+.badge-soldout{background:#4b5563;color:white}
+.product-card.soldout .product-img{filter:grayscale(1);opacity:.55}
+.product-card.soldout .product-quick{display:none}
+.modal-size.sold,.modal-swatch.sold{opacity:.35;cursor:not-allowed;pointer-events:none}
+.modal-size.sold{text-decoration:line-through;border-style:dashed}
+.modal-swatch.sold{position:relative}
+.modal-swatch.sold::after{content:'';position:absolute;inset:-2px;background:linear-gradient(to bottom right,transparent 44%,rgba(0,0,0,.55) 44%,rgba(0,0,0,.55) 56%,transparent 56%);border-radius:50%}
+.modal-soldnote{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#b45309;background:#fef3c7;border-radius:6px;padding:7px 11px;margin:10px 0;display:none}
+#modalAddBtn:disabled,.feat-add:disabled{opacity:.42;cursor:not-allowed;pointer-events:none}
+.feat-size-btn.sold{opacity:.35;cursor:not-allowed;pointer-events:none;text-decoration:line-through;border-style:dashed}
 .product-wish{position:absolute;top:10px;right:10px;width:34px;height:34px;background:white;border:none;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:var(--shadow-sm);opacity:0;transition:opacity .2s,transform .2s;transform:scale(.9);color:var(--muted)}
 .product-card:hover .product-wish{opacity:1;transform:scale(1)}
 .product-wish:hover{transform:scale(1.1)!important}
@@ -530,7 +540,7 @@ src="https://www.facebook.com/tr?id=1016610101191905&ev=PageView&noscript=1"
         </div>
         <div style="font-size:14px;color:var(--muted);line-height:1.75;margin-bottom:28px">BURMELIN's #1 best-seller. 100% pure natural linen with a relaxed long-sleeve cut. Wears beautifully in Bangkok's climate — soft, breathable, and effortlessly refined.</div>
         <div style="display:flex;gap:12px;flex-wrap:wrap">
-          <button class="btn btn-navy" onclick="featAddToCart()" style="min-width:170px">Add to Cart</button>
+          <button class="btn btn-navy feat-add" id="featAddBtn" onclick="featAddToCart()" style="min-width:170px">Add to Cart</button>
           <a href="stores.html" class="btn" style="background:transparent;color:var(--navy);border:1.5px solid var(--navy)">See Shop Locations</a>
         </div>
       </div>
@@ -873,6 +883,7 @@ src="https://www.facebook.com/tr?id=1016610101191905&ev=PageView&noscript=1"
           </button>
         </div>
         <div class="modal-sizes" id="modalSizes"></div>
+        <div class="modal-soldnote" id="modalSoldNote"></div>
         <div class="modal-actions">
           <button id="modalAddBtn" class="btn btn-navy">Add to Cart</button>
           <button id="modalWABtn" class="btn btn-whatsapp">
@@ -980,11 +991,41 @@ let PRODUCTS = [];
 const CAT_LABELS_H = {polo:'Polo Shirt',tshirt:'T-Shirt',pants:'Linen Pants',jeans:'Jeans',jacket:'Jacket',shirt:'Shirt',chino:'Chino Pant',undergarments:'Undergarments'};
 const WISH_SVG_H = `<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>`;
 
+// ── AVAILABILITY ──────────────────────────────────────────────────────
+// Same `variants` semantics as the admin panel and the other pages:
+//   { "Navy": { "S": false } }
+// Missing key = available; only an explicit false is sold out.
+
+function isAvailable(p, colorName, sizeName) {
+  const v = p && p.variants;
+  if (!v || typeof v !== 'object') return true;
+  const row = v[colorName || ''];
+  if (!row || typeof row !== 'object') return true;
+  return row[sizeName || ''] !== false;
+}
+function sizeKeys(p)  { return (Array.isArray(p.sizes)  && p.sizes.length)  ? p.sizes : ['']; }
+function colorKeys(p) { return (Array.isArray(p.colors) && p.colors.length) ? p.colors.map(c => c.name) : ['']; }
+function colorSoldOut(p, c) { return sizeKeys(p).every(s => !isAvailable(p, c, s)); }
+function productSoldOut(p)  { return colorKeys(p).every(c => colorSoldOut(p, c)); }
+
+// First colour+size pair still on sale, or null when nothing is left.
+function firstAvailable(p) {
+  for (const c of colorKeys(p)) {
+    for (const s of sizeKeys(p)) {
+      if (isAvailable(p, c, s)) return { color: c, size: s };
+    }
+  }
+  return null;
+}
+
 function renderHomeCard(p, i) {
-  const badge = p.badge ? `<span class="product-badge badge-${p.badge}">${p.badge.charAt(0).toUpperCase()+p.badge.slice(1)}</span>` : '';
+  const gone  = productSoldOut(p);
+  const badge = gone
+    ? `<span class="product-badge badge-soldout">Sold Out</span>`
+    : (p.badge ? `<span class="product-badge badge-${p.badge}">${p.badge.charAt(0).toUpperCase()+p.badge.slice(1)}</span>` : '');
   const swatches = (p.colors||[]).map((c,si) =>
     `<div class="swatch-dot${si===0?' active':''}" style="background:${c.hex}" title="${c.name}"></div>`).join('');
-  return `<div class="product-card" data-cat="${p.cat}" onclick="openModal(${i})">
+  return `<div class="product-card${gone ? ' soldout' : ''}" data-cat="${p.cat}" onclick="openModal(${i})">
     <div class="product-media">
       <img class="product-img" src="${p.img||''}" alt="${p.name}" loading="lazy"/>
       ${badge}
@@ -1012,11 +1053,61 @@ async function loadHomeProducts() {
   const loader = document.getElementById('gridLoader');
   if (loader) loader.remove();
   grid.innerHTML = PRODUCTS.map((p, i) => renderHomeCard(p, i)).join('');
+  syncFeatAvailability();
 }
 
 loadHomeProducts();
 
-function quickAdd(i){const p=PRODUCTS[i];if(!p)return;addToCart({id:p.id,name:p.name,price:p.price,color:((p.colors||[])[0]||{name:''}).name,size:(p.sizes||[])[0]||'',img:p.img||''});}
+// The featured banner is hardcoded markup, but it is the same garment as the
+// "Long Sleeve Linen Shirt" row - same price, same 48-66 size run. Resolving
+// it means its sold-out flags apply here too, instead of the banner being a
+// way to buy something the rest of the site has marked unavailable.
+function featProduct() {
+  return PRODUCTS.find(p => /long\s*sleeve/i.test(p.name || '') && /linen/i.test(p.name || '')) || null;
+}
+
+// Grey out the hardcoded size buttons that are sold out in the chosen colour.
+function syncFeatAvailability() {
+  const p = featProduct();
+  const btns = document.querySelectorAll('.feat-size-btn');
+  if (!btns.length) return;
+
+  const addBtn    = document.getElementById('featAddBtn');
+  const colorName = (document.getElementById('featColorName') || {}).textContent || '';
+
+  if (!p) {  // nothing to check against - leave everything enabled
+    btns.forEach(b => b.classList.remove('sold'));
+    if (addBtn) addBtn.disabled = false;
+    return;
+  }
+
+  btns.forEach(b => {
+    const size = (b.textContent || '').trim();
+    const dead = !isAvailable(p, colorName, size);
+    b.classList.toggle('sold', dead);
+    if (dead && b.classList.contains('active')) b.classList.remove('active');
+  });
+
+  // If the selected size just went away, move to the first live one.
+  if (!isAvailable(p, colorName, featSelectedSize)) {
+    const live = Array.from(btns).find(b => !b.classList.contains('sold'));
+    if (live) {
+      featSelectedSize = (live.textContent || '').trim();
+      btns.forEach(b => b.classList.remove('active'));
+      live.classList.add('active');
+    }
+  }
+  if (addBtn) addBtn.disabled = colorSoldOut(p, colorName);
+}
+
+function quickAdd(i){
+  const p=PRODUCTS[i];if(!p)return;
+  // Take the first combination still on sale rather than blindly the first one.
+  const pick=firstAvailable(p);
+  if(!pick){showToast('Sorry — this product is sold out');return}
+  const c=(p.colors||[]).find(x=>x.name===pick.color);
+  addToCart({id:p.id,name:p.name,price:p.price,color:pick.color,size:pick.size,img:(c&&c.img)||p.img||''});
+}
 
 let cart=[], selectedColorIndex=0, selectedSize="", currentProduct=null;
 
@@ -1077,15 +1168,22 @@ function openModal(index){
   currentProduct=p;
   const colors=p.colors||[];
   const sizes=p.sizes||[];
-  selectedSize=sizes[0]||'';
-  const firstImg=(colors[0]&&colors[0].img)?colors[0].img:(p.img||'');
+  // Open on a colour/size that is actually on sale.
+  const pick=firstAvailable(p);
+  if(pick&&colors.length){
+    const idx=colors.findIndex(c=>c.name===pick.color);
+    if(idx>-1)selectedColorIndex=idx;
+  }
+  selectedSize=pick?pick.size:(sizes[0]||'');
+  const startC=colors[selectedColorIndex]||colors[0];
+  const firstImg=(startC&&startC.img)?startC.img:(p.img||'');
   document.getElementById('modalImg').src=firstImg;
   document.getElementById('modalCat').textContent=CAT_LABELS_H[p.cat]||p.cat;
   document.getElementById('modalName').textContent=p.name;
   document.getElementById('modalPrice').textContent='฿'+p.price.toLocaleString();
   document.getElementById('modalDesc').textContent=p.description||p.desc||'';
   const nameEl=document.getElementById('modalColorName');
-  if(nameEl)nameEl.textContent=colors[0]?(colors[0].name+(colors[0].colorNo?' (No. '+colors[0].colorNo+')':'')):'';
+  if(nameEl)nameEl.textContent=startC?(startC.name+(startC.colorNo?' (No. '+startC.colorNo+')':'')):'';
   const colorsEl=document.getElementById('modalColors');
   if(colors[0]&&colors[0].group){
     colorsEl.style.cssText='display:block;margin-bottom:18px';
@@ -1095,16 +1193,19 @@ function openModal(index){
       const gc=colors.filter(c=>c.group===key);
       if(!gc.length)return;
       html+=`<div style="margin-bottom:10px"><div style="font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:6px">${label}</div><div style="display:flex;gap:6px;flex-wrap:wrap">`;
-      gc.forEach(c=>{const i=colors.indexOf(c);const border=c.hex==='#F5F3EE'?'outline:2px solid rgba(0,0,0,.2)':'';html+=`<div class="modal-swatch${i===0?' active':''}" style="background:${c.hex};${border}" title="${c.name}${c.colorNo?' — No. '+c.colorNo:''}" onclick="selectColor(${i})"></div>`;});
+      gc.forEach(c=>{const i=colors.indexOf(c);const border=c.hex==='#F5F3EE'?'outline:2px solid rgba(0,0,0,.2)':'';const dead=colorSoldOut(p,c.name);html+=`<div class="modal-swatch${i===selectedColorIndex?' active':''}${dead?' sold':''}" style="background:${c.hex};${border}" title="${c.name}${c.colorNo?' — No. '+c.colorNo:''}${dead?' — sold out':''}" ${dead?'':`onclick="selectColor(${i})"`}></div>`;});
       html+='</div></div>';
     });
     colorsEl.innerHTML=html;
   }else{
     colorsEl.style.cssText='';
-    colorsEl.innerHTML=colors.map((c,i)=>`<div class="modal-swatch${i===0?' active':''}" style="background:${c.hex}" title="${c.name}" onclick="selectColor(${i})"></div>`).join('');
+    colorsEl.innerHTML=colors.map((c,i)=>{const dead=colorSoldOut(p,c.name);return`<div class="modal-swatch${i===selectedColorIndex?' active':''}${dead?' sold':''}" style="background:${c.hex}" title="${c.name}${dead?' — sold out':''}" ${dead?'':`onclick="selectColor(${i})"`}></div>`}).join('');
   }
-  document.getElementById('modalSizes').innerHTML=sizes.length?sizes.map((s,i)=>`<button class="modal-size${i===0?' active':''}" onclick="selectSize('${s}',this)">${s}</button>`).join(''):'<span style="font-size:13px;color:var(--muted)">One size</span>';
-  document.getElementById('modalAddBtn').onclick=()=>{const c=colors[selectedColorIndex]||colors[0]||{name:'',img:''};addToCart({id:p.id,name:p.name,price:p.price,color:c.name,size:selectedSize,img:c.img||p.img||''});closeModal();setTimeout(openCart,300)};
+  renderModalSizes();
+  document.getElementById('modalAddBtn').onclick=()=>{
+    const c=colors[selectedColorIndex]||colors[0]||{name:'',img:''};
+    if(!isAvailable(p,c.name||'',sizes.length?selectedSize:'')){showToast('Sorry — that combination is sold out');return}
+    addToCart({id:p.id,name:p.name,price:p.price,color:c.name,size:selectedSize,img:c.img||p.img||''});closeModal();setTimeout(openCart,300)};
   document.getElementById('modalWABtn').onclick=()=>{
     const c=colors[selectedColorIndex]||colors[0]||{name:''};
     let msg='Hello, I would like to place an order from BURMELIN.\n\n';
@@ -1121,22 +1222,61 @@ function openModal(index){
   };
   document.getElementById('modalOverlay').classList.add('open');
 }
+// Rebuilt whenever the colour changes, since availability is per colour.
+function renderModalSizes(){
+  const p=currentProduct;if(!p)return;
+  const sizes=p.sizes||[];
+  const colors=p.colors||[];
+  const colorName=(colors[selectedColorIndex]||colors[0]||{}).name||'';
+  const el=document.getElementById('modalSizes');
+  const note=document.getElementById('modalSoldNote');
+  const btn=document.getElementById('modalAddBtn');
+
+  if(!sizes.length){
+    el.innerHTML='<span style="font-size:13px;color:var(--muted)">One size</span>';
+  }else{
+    // Drop a size that is not sold in the newly selected colour.
+    if(selectedSize&&!isAvailable(p,colorName,selectedSize))selectedSize='';
+    if(!selectedSize){const s=sizes.find(s=>isAvailable(p,colorName,s));if(s)selectedSize=s}
+    el.innerHTML=sizes.map(s=>{
+      const dead=!isAvailable(p,colorName,s);
+      return`<button class="modal-size${dead?' sold':(s===selectedSize?' active':'')}" ${dead?'disabled':`onclick="selectSize('${String(s).replace(/'/g,"\\'")}',this)"`}>${s}</button>`;
+    }).join('');
+  }
+
+  let blocked=false,msg='';
+  if(productSoldOut(p)){blocked=true;msg='This product is sold out'}
+  else if(colorSoldOut(p,colorName)){blocked=true;msg=colorName+' is sold out in every size'}
+  else if(!isAvailable(p,colorName,sizes.length?selectedSize:'')){blocked=true;msg='Sold out in this size'}
+  btn.disabled=blocked;
+  note.textContent=msg;
+  note.style.display=blocked?'block':'none';
+}
+
 function selectColor(i){
+  const cp=currentProduct;
+  if(cp&&cp.colors&&cp.colors[i]&&colorSoldOut(cp,cp.colors[i].name))return;
   selectedColorIndex=i;
   document.querySelectorAll('.modal-swatch').forEach((s,idx)=>s.classList.toggle('active',idx===i));
-  const cp=currentProduct;
   if(cp&&cp.colors&&cp.colors[i]){
     if(cp.colors[i].img)document.getElementById('modalImg').src=cp.colors[i].img;
     const nameEl=document.getElementById('modalColorName');
     if(nameEl)nameEl.textContent=cp.colors[i].name+(cp.colors[i].colorNo?' (No. '+cp.colors[i].colorNo+')':'');
   }
+  renderModalSizes();
 }
 function openSizeGuideForProduct(){
   const cat=document.getElementById('modalCat').textContent.trim();
   const map={'Polo Shirt':'sg-polo','T-Shirt':'sg-tshirt','Linen Pants':'sg-trousers','Jeans':'sg-trousers','Jacket':'sg-shirt-ls','Shirt':'sg-shirt-ls'};
   openSizeGuide(map[cat]||null);
 }
-function selectSize(size,btn){selectedSize=size;document.querySelectorAll('.modal-size').forEach(s=>s.classList.remove('active'));btn.classList.add('active')}
+function selectSize(size,btn){
+  const p=currentProduct,colors=(p&&p.colors)||[];
+  const colorName=(colors[selectedColorIndex]||colors[0]||{}).name||'';
+  if(p&&!isAvailable(p,colorName,size))return;
+  selectedSize=size;document.querySelectorAll('.modal-size').forEach(s=>s.classList.remove('active'));btn.classList.add('active');
+  renderModalSizes();
+}
 function closeModal(){document.getElementById('modalOverlay').classList.remove('open')}
 function handleModalClick(e){if(e.target===document.getElementById('modalOverlay'))closeModal()}
 
@@ -1149,15 +1289,25 @@ function featSwatch(el,imgUrl,colorName){
   featColorImg=imgUrl;
   document.querySelectorAll('.feat-swatch').forEach(s=>s.classList.remove('active'));
   el.classList.add('active');
+  // Availability is per colour, so re-check the size row.
+  syncFeatAvailability();
 }
 function featSize(btn,size){
+  if(btn.classList.contains('sold'))return;
   featSelectedSize=size;
   document.querySelectorAll('.feat-size-btn').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
 }
 function featAddToCart(){
   const colorName=document.getElementById('featColorName').textContent;
-  addToCart({name:'100% Linen Long Sleeve Shirt',price:1450,color:colorName,size:featSelectedSize,img:featColorImg});
+  const p=featProduct();
+  if(p&&!isAvailable(p,colorName,featSelectedSize)){
+    showToast('Sorry — that combination is sold out');
+    syncFeatAvailability();
+    return;
+  }
+  // Carry the database id so checkout can pin the price and re-check stock.
+  addToCart({id:p?p.id:undefined,name:'100% Linen Long Sleeve Shirt',price:1450,color:colorName,size:featSelectedSize,img:featColorImg});
 }
 async function goToCheckout(){
   if(!cart.length)return;
