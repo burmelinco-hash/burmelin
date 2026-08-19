@@ -134,6 +134,22 @@ select.fc{cursor:pointer}
 .color-img input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
 .color-img.loading{opacity:.45;pointer-events:none}
 
+/* AVAILABILITY MATRIX */
+.avail-hint{font-size:11px;color:rgba(255,255,255,.3);margin-bottom:10px;line-height:1.6}
+.avail-empty{font-size:12px;color:rgba(255,255,255,.25);padding:14px;border:1px dashed rgba(255,255,255,.1);border-radius:8px;text-align:center}
+.avail-scroll{overflow-x:auto;border:1px solid rgba(255,255,255,.08);border-radius:8px;background:#0f0f13}
+.avail-tbl{border-collapse:collapse;width:100%;font-size:12px}
+.avail-tbl th,.avail-tbl td{padding:8px 10px;text-align:center;border-bottom:1px solid rgba(255,255,255,.05);border-right:1px solid rgba(255,255,255,.05);white-space:nowrap}
+.avail-tbl th{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.35)}
+.avail-tbl tr:last-child td{border-bottom:none}
+.avail-tbl th:last-child,.avail-tbl td:last-child{border-right:none}
+.avail-col{text-align:left!important;font-weight:600;color:rgba(255,255,255,.75);position:sticky;left:0;background:#0f0f13;z-index:1}
+.avail-sw{width:10px;height:10px;border-radius:50%;display:inline-block;margin-right:7px;vertical-align:middle;border:1px solid rgba(255,255,255,.2);flex-shrink:0}
+.avail-tbl input[type=checkbox]{width:17px;height:17px;accent-color:#22c55e;cursor:pointer;margin:0}
+.avail-tbl td.off{background:rgba(239,68,68,.07)}
+.avail-rowbtn{font-size:10px;color:#60a5fa;background:none;border:none;cursor:pointer;text-decoration:underline;padding:0}
+.avail-actions{display:flex;gap:14px;margin-top:8px}
+
 /* TOGGLE */
 .tog-wrap{display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none}
 .tog-track{width:40px;height:22px;background:rgba(255,255,255,.1);border-radius:11px;position:relative;transition:background .2s;flex-shrink:0}
@@ -356,12 +372,21 @@ select.fc{cursor:pointer}
         </div>
         <div class="fg span2">
           <label>Sizes (comma-separated)</label>
-          <input class="fc" id="fSizes" type="text" placeholder="XS, S, M, L, XL, XXL"/>
+          <input class="fc" id="fSizes" type="text" placeholder="XS, S, M, L, XL, XXL" oninput="buildAvailGrid()"/>
         </div>
         <div class="fg span2">
           <label>Colors</label>
           <div class="colors-list" id="colorsList"></div>
           <button class="add-color" type="button" onclick="addColorRow()">+ Add color</button>
+        </div>
+        <div class="fg span2">
+          <label>Availability</label>
+          <div class="avail-hint">Tick a box to keep that colour and size on sale. Untick it to show the customer &ldquo;Sold Out&rdquo;. Anything you add later starts ticked.</div>
+          <div id="availGrid"></div>
+          <div class="avail-actions" id="availActions" style="display:none">
+            <button class="avail-rowbtn" type="button" onclick="setAllAvail(true)">Tick all</button>
+            <button class="avail-rowbtn" type="button" onclick="setAllAvail(false)">Untick all</button>
+          </div>
         </div>
         <div class="fg span2">
           <label>Visibility</label>
@@ -576,6 +601,9 @@ function openProdModal(id) {
 
   setActive(p ? p.active !== false : true);
   buildColorsList(p ? (p.colors || []) : [{name:'', hex:'#000000'}]);
+  // Clone so editing the grid cannot mutate the cached products array.
+  availState = p && p.variants ? JSON.parse(JSON.stringify(p.variants)) : {};
+  buildAvailGrid();
   document.getElementById('prodModal').classList.add('open');
   setTimeout(() => document.getElementById('fName').focus(), 100);
 }
@@ -606,10 +634,10 @@ function colorImgHtml(imgUrl) {
 function buildColorsList(colors) {
   document.getElementById('colorsList').innerHTML = colors.map((c, i) => `
     <div class="color-row">
-      <input class="fc" type="text" placeholder="Color name (e.g. Navy)" value="${esc(c.name)}" id="cn${i}"/>
-      <input type="color" value="${esc(c.hex || '#000000')}" id="ch${i}"/>
+      <input class="fc" type="text" placeholder="Color name (e.g. Navy)" value="${esc(c.name)}" id="cn${i}" oninput="buildAvailGrid()"/>
+      <input type="color" value="${esc(c.hex || '#000000')}" id="ch${i}" oninput="buildAvailGrid()"/>
       <div class="color-img" data-img="${esc(c.img||'')}" title="Upload photo for this color">${colorImgHtml(c.img)}</div>
-      <button class="color-rm" type="button" onclick="this.closest('.color-row').remove()">×</button>
+      <button class="color-rm" type="button" onclick="this.closest('.color-row').remove();buildAvailGrid()">×</button>
     </div>`).join('');
 }
 
@@ -617,11 +645,12 @@ function addColorRow() {
   const div = document.createElement('div');
   div.className = 'color-row';
   div.innerHTML = `
-    <input class="fc" type="text" placeholder="Color name"/>
-    <input type="color" value="#888888"/>
+    <input class="fc" type="text" placeholder="Color name" oninput="buildAvailGrid()"/>
+    <input type="color" value="#888888" oninput="buildAvailGrid()"/>
     <div class="color-img" data-img="" title="Upload photo for this color"><span style="pointer-events:none">📷</span><input type="file" accept="image/*" onchange="uploadColorImg(this)"/></div>
-    <button class="color-rm" type="button" onclick="this.closest('.color-row').remove()">×</button>`;
+    <button class="color-rm" type="button" onclick="this.closest('.color-row').remove();buildAvailGrid()">×</button>`;
   document.getElementById('colorsList').appendChild(div);
+  buildAvailGrid();
 }
 
 function getColors() {
@@ -651,6 +680,113 @@ async function uploadColorImg(input) {
 
 function getSizes() {
   return document.getElementById('fSizes').value.split(',').map(s => s.trim()).filter(Boolean);
+}
+
+// ── AVAILABILITY MATRIX ───────────────────────────────────────────────
+//
+// Stored on the product as `variants`:
+//   { "Navy": { "S": false }, "Black": { "M": false } }
+//
+// A missing key means AVAILABLE. Only an explicit false is sold out, so
+// products saved before this feature existed stay fully in stock, and a
+// colour or size added later starts available without being touched.
+//
+// Products with no colours use "" as the colour key; products with no
+// sizes use "" as the size key. getColors()/getSizes() both drop blank
+// entries, so "" can never collide with a real name.
+
+let availState = {};   // working copy while the modal is open
+
+function variantAvailable(variants, color, size) {
+  if (!variants || typeof variants !== 'object') return true;
+  const row = variants[color || ''];
+  if (!row || typeof row !== 'object') return true;
+  return row[size || ''] !== false;
+}
+
+function buildAvailGrid() {
+  const grid    = document.getElementById('availGrid');
+  const actions = document.getElementById('availActions');
+  const colors  = getColors();
+  const sizes   = getSizes();
+
+  // Nothing to lay out against yet.
+  if (!colors.length && !sizes.length) {
+    grid.innerHTML = `<div class="avail-empty">Add a size or a colour above and the availability grid appears here.</div>`;
+    actions.style.display = 'none';
+    return;
+  }
+
+  // A product may have only one of the two axes. Use a single unnamed
+  // row/column in that case so the grid still works.
+  const rows = colors.length ? colors : [{ name: '', hex: '' }];
+  const cols = sizes.length  ? sizes  : [''];
+
+  const head = cols.map(s => `<th>${esc(s || 'One Size')}</th>`).join('');
+  const body = rows.map(c => {
+    const cells = cols.map(s => {
+      const on = variantAvailable(availState, c.name, s);
+      return `<td class="${on ? '' : 'off'}">
+        <input type="checkbox" ${on ? 'checked' : ''}
+          data-color="${esc(c.name)}" data-size="${esc(s)}"
+          onchange="onAvailToggle(this)"/>
+      </td>`;
+    }).join('');
+    const swatch = colors.length
+      ? `<span class="avail-sw" style="background:${esc(c.hex || '#888')}"></span>`
+      : '';
+    return `<tr><td class="avail-col">${swatch}${esc(c.name || 'All')}</td>${cells}</tr>`;
+  }).join('');
+
+  grid.innerHTML = `<div class="avail-scroll"><table class="avail-tbl">
+    <thead><tr><th class="avail-col">${colors.length ? 'Colour' : ''}</th>${head}</tr></thead>
+    <tbody>${body}</tbody></table></div>`;
+  actions.style.display = 'flex';
+}
+
+function onAvailToggle(box) {
+  writeAvail(box.dataset.color, box.dataset.size, box.checked);
+  box.closest('td').classList.toggle('off', !box.checked);
+}
+
+function writeAvail(color, size, on) {
+  const c = color || '', s = size || '';
+  if (on) {
+    // Available is the default - drop the key rather than storing true.
+    if (availState[c]) {
+      delete availState[c][s];
+      if (!Object.keys(availState[c]).length) delete availState[c];
+    }
+  } else {
+    if (!availState[c]) availState[c] = {};
+    availState[c][s] = false;
+  }
+}
+
+function setAllAvail(on) {
+  document.querySelectorAll('#availGrid input[type=checkbox]').forEach(box => {
+    box.checked = on;
+    onAvailToggle(box);
+  });
+}
+
+// Drop entries for colours/sizes that no longer exist, so a renamed or
+// deleted option cannot leave an orphaned sold-out flag behind.
+function getVariants() {
+  const colors = getColors().map(c => c.name);
+  const sizes  = getSizes();
+  const validC = colors.length ? colors : [''];
+  const validS = sizes.length  ? sizes  : [''];
+  const out = {};
+  validC.forEach(c => {
+    validS.forEach(s => {
+      if (!variantAvailable(availState, c, s)) {
+        if (!out[c]) out[c] = {};
+        out[c][s] = false;
+      }
+    });
+  });
+  return out;
 }
 
 // ── IMAGE ─────────────────────────────────────────────────────────────
@@ -743,9 +879,10 @@ async function saveProduct() {
       stock:  parseInt(document.getElementById('fStock').value) || 0,
       active: document.getElementById('fActive').value === 'true',
       code:   document.getElementById('fCode').value.trim(),
-      colors: getColors(),
-      sizes:  getSizes(),
-      badge:  document.getElementById('fBadge').value
+      colors:   getColors(),
+      sizes:    getSizes(),
+      variants: getVariants(),
+      badge:    document.getElementById('fBadge').value
     };
 
     btn.textContent = 'Saving…';

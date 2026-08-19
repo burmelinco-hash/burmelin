@@ -1016,7 +1016,7 @@ async function loadHomeProducts() {
 
 loadHomeProducts();
 
-function quickAdd(i){const p=PRODUCTS[i];if(!p)return;addToCart({name:p.name,price:p.price,color:((p.colors||[])[0]||{name:''}).name,size:(p.sizes||[])[0]||'',img:p.img||''});}
+function quickAdd(i){const p=PRODUCTS[i];if(!p)return;addToCart({id:p.id,name:p.name,price:p.price,color:((p.colors||[])[0]||{name:''}).name,size:(p.sizes||[])[0]||'',img:p.img||''});}
 
 let cart=[], selectedColorIndex=0, selectedSize="", currentProduct=null;
 
@@ -1104,7 +1104,7 @@ function openModal(index){
     colorsEl.innerHTML=colors.map((c,i)=>`<div class="modal-swatch${i===0?' active':''}" style="background:${c.hex}" title="${c.name}" onclick="selectColor(${i})"></div>`).join('');
   }
   document.getElementById('modalSizes').innerHTML=sizes.length?sizes.map((s,i)=>`<button class="modal-size${i===0?' active':''}" onclick="selectSize('${s}',this)">${s}</button>`).join(''):'<span style="font-size:13px;color:var(--muted)">One size</span>';
-  document.getElementById('modalAddBtn').onclick=()=>{const c=colors[selectedColorIndex]||colors[0]||{name:'',img:''};addToCart({name:p.name,price:p.price,color:c.name,size:selectedSize,img:c.img||p.img||''});closeModal();setTimeout(openCart,300)};
+  document.getElementById('modalAddBtn').onclick=()=>{const c=colors[selectedColorIndex]||colors[0]||{name:'',img:''};addToCart({id:p.id,name:p.name,price:p.price,color:c.name,size:selectedSize,img:c.img||p.img||''});closeModal();setTimeout(openCart,300)};
   document.getElementById('modalWABtn').onclick=()=>{
     const c=colors[selectedColorIndex]||colors[0]||{name:''};
     let msg='Hello, I would like to place an order from BURMELIN.\n\n';

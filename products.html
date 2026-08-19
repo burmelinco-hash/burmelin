@@ -86,6 +86,15 @@ button{cursor:pointer;font-family:inherit}
 .badge-new{background:var(--navy);color:white}
 .badge-sale{background:#c0392b;color:white}
 .badge-limited{background:var(--gold);color:var(--ink)}
+.badge-soldout{background:#4b5563;color:white}
+.product-card.soldout .product-img{filter:grayscale(1);opacity:.55}
+.product-card.soldout .product-quick{display:none}
+.modal-size.sold,.modal-swatch.sold{opacity:.35;cursor:not-allowed;pointer-events:none}
+.modal-size.sold{text-decoration:line-through;border-style:dashed}
+.modal-swatch.sold{position:relative}
+.modal-swatch.sold::after{content:'';position:absolute;inset:-2px;background:linear-gradient(to bottom right,transparent 44%,rgba(0,0,0,.55) 44%,rgba(0,0,0,.55) 56%,transparent 56%);border-radius:50%}
+.modal-soldnote{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#b45309;background:#fef3c7;border-radius:6px;padding:7px 11px;margin:10px 0;display:none}
+#modalAddBtn:disabled{opacity:.42;cursor:not-allowed;pointer-events:none}
 
 .product-wish{position:absolute;top:10px;right:10px;width:34px;height:34px;background:white;border:none;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:var(--shadow-sm);opacity:0;transition:opacity .2s,transform .2s;transform:scale(.9);color:var(--muted)}
 .product-card:hover .product-wish{opacity:1;transform:scale(1)}
@@ -350,6 +359,7 @@ src="https://www.facebook.com/tr?id=1016610101191905&ev=PageView&noscript=1"
           </button>
         </div>
         <div class="modal-sizes" id="modalSizes"></div>
+        <div class="modal-soldnote" id="modalSoldNote"></div>
         <div class="modal-actions">
           <button id="modalAddBtn" class="btn btn-navy">Add to Cart</button>
           <button id="modalWABtn" class="btn btn-whatsapp">
@@ -463,12 +473,42 @@ function renderGrid() {
   }
 }
 
+// ── AVAILABILITY ──────────────────────────────────────────────────────
+// Same `variants` semantics as the admin panel and product page:
+//   { "Navy": { "S": false } }
+// Missing key = available; only an explicit false is sold out.
+
+function isAvailable(p, colorName, sizeName) {
+  const v = p && p.variants;
+  if (!v || typeof v !== 'object') return true;
+  const row = v[colorName || ''];
+  if (!row || typeof row !== 'object') return true;
+  return row[sizeName || ''] !== false;
+}
+function sizeKeys(p)  { return (Array.isArray(p.sizes)  && p.sizes.length)  ? p.sizes : ['']; }
+function colorKeys(p) { return (Array.isArray(p.colors) && p.colors.length) ? p.colors.map(c => c.name) : ['']; }
+function colorSoldOut(p, c)  { return sizeKeys(p).every(s => !isAvailable(p, c, s)); }
+function productSoldOut(p)   { return colorKeys(p).every(c => colorSoldOut(p, c)); }
+
+// First colour+size pair still on sale, or null when nothing is left.
+function firstAvailable(p) {
+  for (const c of colorKeys(p)) {
+    for (const s of sizeKeys(p)) {
+      if (isAvailable(p, c, s)) return { color: c, size: s };
+    }
+  }
+  return null;
+}
+
 function renderCard(p, i) {
-  const badge = p.badge ? `<span class="product-badge badge-${p.badge}">${p.badge.charAt(0).toUpperCase()+p.badge.slice(1)}</span>` : '';
+  const gone  = productSoldOut(p);
+  const badge = gone
+    ? `<span class="product-badge badge-soldout">Sold Out</span>`
+    : (p.badge ? `<span class="product-badge badge-${p.badge}">${p.badge.charAt(0).toUpperCase()+p.badge.slice(1)}</span>` : '');
   const swatches = (p.colors||[]).map((c,si) =>
     `<div class="swatch-dot${si===0?' active':''}" style="background:${c.hex}" title="${c.name}"></div>`).join('');
   const catLabel = CAT_LABELS[p.cat] || p.cat || '';
-  return `<div class="product-card" data-cat="${p.cat}" data-price="${p.price}" onclick="openModal(${i})">
+  return `<div class="product-card${gone ? ' soldout' : ''}" data-cat="${p.cat}" data-price="${p.price}" onclick="openModal(${i})">
     <div class="product-media">
       <img class="product-img" src="${p.img||''}" alt="${p.name}" loading="lazy"/>
       ${badge}
@@ -526,7 +566,11 @@ function changeQty(i,delta){
 function quickAdd(index){
   const p=PRODUCTS[index];
   if(!p)return;
-  addToCart({name:p.name,price:p.price,color:(p.colors&&p.colors[0])?p.colors[0].name:'',size:(p.sizes&&p.sizes[0])?p.sizes[0]:'',img:p.img||''});
+  // Take the first combination still on sale rather than blindly the first one.
+  const pick=firstAvailable(p);
+  if(!pick){showToast('Sorry — this product is sold out');return}
+  const c=(p.colors||[]).find(x=>x.name===pick.color);
+  addToCart({id:p.id,name:p.name,price:p.price,color:pick.color,size:pick.size,img:(c&&c.img)||p.img||''});
 }
 function renderCart(){
   const container=document.getElementById('cartItems'),footer=document.getElementById('cartFooter');
@@ -562,15 +606,22 @@ function openModal(index){
   const p=PRODUCTS[index];currentProduct=p;
   const colors=p.colors||[];
   const sizes=p.sizes||[];
-  selectedSize=sizes[0]||'';
-  const firstImg=(colors[0]&&colors[0].img)?colors[0].img:(p.img||'');
+  // Open on a colour/size that is actually on sale.
+  const pick=firstAvailable(p);
+  if(pick&&colors.length){
+    const idx=colors.findIndex(c=>c.name===pick.color);
+    if(idx>-1)selectedColorIndex=idx;
+  }
+  selectedSize=pick?pick.size:(sizes[0]||'');
+  const startC=colors[selectedColorIndex]||colors[0];
+  const firstImg=(startC&&startC.img)?startC.img:(p.img||'');
   document.getElementById('modalImg').src=firstImg;
   document.getElementById('modalCat').textContent=CAT_LABELS[p.cat]||p.cat;
   document.getElementById('modalName').textContent=p.name;
   document.getElementById('modalPrice').textContent='฿'+p.price.toLocaleString();
   document.getElementById('modalDesc').textContent=p.description||p.desc||'';
   const nameEl=document.getElementById('modalColorName');
-  if(nameEl)nameEl.textContent=colors[0]?(colors[0].name+(colors[0].colorNo?' (No. '+colors[0].colorNo+')':'')):'';
+  if(nameEl)nameEl.textContent=startC?(startC.name+(startC.colorNo?' (No. '+startC.colorNo+')':'')):'';
   const colorsEl=document.getElementById('modalColors');
   if(colors[0]&&colors[0].group){
     colorsEl.style.cssText='display:block;margin-bottom:18px';
@@ -580,16 +631,19 @@ function openModal(index){
       const gc=colors.filter(c=>c.group===key);
       if(!gc.length)return;
       html+=`<div style="margin-bottom:10px"><div style="font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:6px">${label}</div><div style="display:flex;gap:6px;flex-wrap:wrap">`;
-      gc.forEach(c=>{const i=colors.indexOf(c);const border=c.hex==='#F5F3EE'?'outline:2px solid rgba(0,0,0,.2)':'';html+=`<div class="modal-swatch${i===0?' active':''}" style="background:${c.hex};${border}" title="${c.name}${c.colorNo?' — No. '+c.colorNo:''}" onclick="selectColor(${i})"></div>`;});
+      gc.forEach(c=>{const i=colors.indexOf(c);const border=c.hex==='#F5F3EE'?'outline:2px solid rgba(0,0,0,.2)':'';const dead=colorSoldOut(p,c.name);html+=`<div class="modal-swatch${i===selectedColorIndex?' active':''}${dead?' sold':''}" style="background:${c.hex};${border}" title="${c.name}${c.colorNo?' — No. '+c.colorNo:''}${dead?' — sold out':''}" ${dead?'':`onclick="selectColor(${i})"`}></div>`;});
       html+='</div></div>';
     });
     colorsEl.innerHTML=html;
   }else{
     colorsEl.style.cssText='';
-    colorsEl.innerHTML=colors.map((c,i)=>`<div class="modal-swatch${i===0?' active':''}" style="background:${c.hex}" title="${c.name}" onclick="selectColor(${i})"></div>`).join('');
+    colorsEl.innerHTML=colors.map((c,i)=>{const dead=colorSoldOut(p,c.name);return`<div class="modal-swatch${i===selectedColorIndex?' active':''}${dead?' sold':''}" style="background:${c.hex}" title="${c.name}${dead?' — sold out':''}" ${dead?'':`onclick="selectColor(${i})"`}></div>`}).join('');
   }
-  document.getElementById('modalSizes').innerHTML=sizes.length?sizes.map((s,i)=>`<button class="modal-size${i===0?' active':''}" onclick="selectSize('${s}',this)">${s}</button>`).join(''):'<span style="font-size:13px;color:var(--muted)">One size</span>';
-  document.getElementById('modalAddBtn').onclick=()=>{const c=colors[selectedColorIndex]||colors[0]||{name:'',img:''};addToCart({name:p.name,price:p.price,color:c.name,size:selectedSize,img:c.img||p.img||''});closeModal();setTimeout(openCart,300)};
+  renderModalSizes();
+  document.getElementById('modalAddBtn').onclick=()=>{
+    const c=colors[selectedColorIndex]||colors[0]||{name:'',img:''};
+    if(!isAvailable(p,c.name||'',sizes.length?selectedSize:'')){showToast('Sorry — that combination is sold out');return}
+    addToCart({id:p.id,name:p.name,price:p.price,color:c.name,size:selectedSize,img:c.img||p.img||''});closeModal();setTimeout(openCart,300)};
   document.getElementById('modalWABtn').onclick=()=>{
     const c=colors[selectedColorIndex]||colors[0]||{name:''};
     let msg='Hello, I would like to place an order from BURMELIN.\n\n';
@@ -606,7 +660,40 @@ function openModal(index){
   };
   document.getElementById('modalOverlay').classList.add('open');
 }
+// Rebuilt whenever the colour changes, since availability is per colour.
+function renderModalSizes(){
+  const p=currentProduct;if(!p)return;
+  const sizes=p.sizes||[];
+  const colors=p.colors||[];
+  const colorName=(colors[selectedColorIndex]||colors[0]||{}).name||'';
+  const el=document.getElementById('modalSizes');
+  const note=document.getElementById('modalSoldNote');
+  const btn=document.getElementById('modalAddBtn');
+
+  if(!sizes.length){
+    el.innerHTML='<span style="font-size:13px;color:var(--muted)">One size</span>';
+  }else{
+    // Drop a size that is not sold in the newly selected colour.
+    if(selectedSize&&!isAvailable(p,colorName,selectedSize))selectedSize='';
+    if(!selectedSize){const s=sizes.find(s=>isAvailable(p,colorName,s));if(s)selectedSize=s}
+    el.innerHTML=sizes.map((s,i)=>{
+      const dead=!isAvailable(p,colorName,s);
+      return`<button class="modal-size${dead?' sold':(s===selectedSize?' active':'')}" ${dead?'disabled':`onclick="selectSize('${String(s).replace(/'/g,"\\'")}',this)"`}>${s}</button>`;
+    }).join('');
+  }
+
+  let blocked=false,msg='';
+  if(productSoldOut(p)){blocked=true;msg='This product is sold out'}
+  else if(colorSoldOut(p,colorName)){blocked=true;msg=colorName+' is sold out in every size'}
+  else if(!isAvailable(p,colorName,sizes.length?selectedSize:'')){blocked=true;msg='Sold out in this size'}
+  btn.disabled=blocked;
+  note.textContent=msg;
+  note.style.display=blocked?'block':'none';
+}
+
 function selectColor(i){
+  const p=currentProduct;
+  if(p&&p.colors&&p.colors[i]&&colorSoldOut(p,p.colors[i].name))return;
   selectedColorIndex=i;
   document.querySelectorAll('.modal-swatch').forEach((s,idx)=>s.classList.toggle('active',idx===i));
   if(currentProduct&&currentProduct.colors[i]){
@@ -614,8 +701,15 @@ function selectColor(i){
     const nameEl=document.getElementById('modalColorName');
     if(nameEl)nameEl.textContent=currentProduct.colors[i].name+(currentProduct.colors[i].colorNo?' (No. '+currentProduct.colors[i].colorNo+')':'');
   }
+  renderModalSizes();
 }
-function selectSize(size,btn){selectedSize=size;document.querySelectorAll('.modal-size').forEach(s=>s.classList.remove('active'));btn.classList.add('active')}
+function selectSize(size,btn){
+  const p=currentProduct,colors=(p&&p.colors)||[];
+  const colorName=(colors[selectedColorIndex]||colors[0]||{}).name||'';
+  if(p&&!isAvailable(p,colorName,size))return;
+  selectedSize=size;document.querySelectorAll('.modal-size').forEach(s=>s.classList.remove('active'));btn.classList.add('active');
+  renderModalSizes();
+}
 function closeModal(){document.getElementById('modalOverlay').classList.remove('open')}
 function handleModalClick(e){if(e.target===document.getElementById('modalOverlay'))closeModal()}
 function openSizeGuideForProduct(){
@@ -652,7 +746,8 @@ async function goToCheckout(){
       throw new Error(data.error||'Checkout failed');
     }
   }catch(err){
-    showToast('Checkout error — please try WhatsApp');
+    // Show the real reason (e.g. a sold-out line) instead of a generic failure.
+    showToast(err.message||'Checkout error — please try WhatsApp');
     btn.textContent='Checkout';
     btn.disabled=false;
   }

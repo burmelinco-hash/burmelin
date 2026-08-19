@@ -1,5 +1,69 @@
 const https = require('https');
 
+// ── AVAILABILITY ──────────────────────────────────────────────────────
+//
+// The browser already greys out sold-out sizes and colours, but that check
+// lives in the page and can be edited away. This is the authoritative one.
+//
+// Mirrors the `variants` map written by the admin panel:
+//   { "Navy": { "S": false } }
+// A missing key means AVAILABLE — only an explicit false is sold out.
+
+function isAvailable(p, colorName, sizeName) {
+  const v = p && p.variants;
+  if (!v || typeof v !== 'object') return true;
+  const row = v[colorName || ''];
+  if (!row || typeof row !== 'object') return true;
+  return row[sizeName || ''] !== false;
+}
+
+function supabaseGet(url, key) {
+  return new Promise((resolve, reject) => {
+    const parsed = new URL(url);
+    const req = https.request({
+      hostname: parsed.hostname,
+      path: parsed.pathname + parsed.search,
+      method: 'GET',
+      headers: {
+        'apikey': key,
+        'Authorization': 'Bearer ' + key,
+        'Content-Type': 'application/json',
+      },
+    }, (res) => {
+      let data = '';
+      res.on('data', c => data += c);
+      res.on('end', () => {
+        try { resolve(JSON.parse(data)); }
+        catch (e) { reject(new Error('Invalid response from Supabase')); }
+      });
+    });
+    req.on('error', reject);
+    req.end();
+  });
+}
+
+// Returns a list of human-readable descriptions of sold-out cart lines.
+// Carts saved before this change carry no product id, so fall back to name.
+function findSoldOut(items, products) {
+  const byId   = new Map(products.map(p => [String(p.id), p]));
+  const byName = new Map(products.map(p => [String(p.name).trim().toLowerCase(), p]));
+
+  const bad = [];
+  for (const item of items) {
+    const p = (item.id && byId.get(String(item.id)))
+           || byName.get(String(item.name || '').trim().toLowerCase());
+
+    // Unknown product: leave it alone rather than block a legitimate sale.
+    if (!p) continue;
+
+    const hasSizes = Array.isArray(p.sizes) && p.sizes.length;
+    if (!isAvailable(p, item.color || '', hasSizes ? (item.size || '') : '')) {
+      bad.push([p.name, item.color, item.size].filter(Boolean).join(' · '));
+    }
+  }
+  return bad;
+}
+
 function stripeRequest(secretKey, bodyStr) {
   return new Promise((resolve, reject) => {
     const options = {
@@ -49,6 +113,35 @@ exports.handler = async (event) => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ error: 'Cart is empty' }),
       };
+    }
+
+    // Re-check availability against the database before taking any money.
+    // If Supabase is unreachable we let the sale through rather than block
+    // every customer on an outage - the admin panel stays the source of truth.
+    const sbUrl = process.env.SUPABASE_URL;
+    const sbKey = process.env.SUPABASE_ANON_KEY;
+    if (sbUrl && sbKey) {
+      try {
+        const products = await supabaseGet(
+          sbUrl + '/rest/v1/products?select=id,name,sizes,variants', sbKey
+        );
+        if (Array.isArray(products)) {
+          const soldOut = findSoldOut(items, products);
+          if (soldOut.length) {
+            return {
+              statusCode: 409,
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                error: 'Sold out: ' + soldOut.join(', ') +
+                       '. Please remove it from your cart and try again.',
+                soldOut,
+              }),
+            };
+          }
+        }
+      } catch (e) {
+        console.error('Availability check skipped:', e.message);
+      }
     }
 
     const baseUrl = origin || process.env.URL || 'https://burmelin.com';
