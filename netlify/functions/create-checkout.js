@@ -42,26 +42,54 @@ function supabaseGet(url, key) {
   });
 }
 
-// Returns a list of human-readable descriptions of sold-out cart lines.
-// Carts saved before this change carry no product id, so fall back to name.
-function findSoldOut(items, products) {
+// Resolves each cart line against the database.
+//
+// Two jobs at once:
+//   * flag sold-out variants
+//   * pin the price to the database row, because item.price arrives from
+//     the browser and cannot be trusted
+//
+// Carts saved before the id was added carry only a name, so fall back to it.
+// A line with no matching row keeps its posted price - index.html sells a
+// hardcoded featured shirt, and both listings fall back to a built-in
+// PRODUCTS array when Supabase is unreachable, so refusing unknown names
+// would break real sales.
+function resolveCart(items, products) {
   const byId   = new Map(products.map(p => [String(p.id), p]));
   const byName = new Map(products.map(p => [String(p.name).trim().toLowerCase(), p]));
 
-  const bad = [];
-  for (const item of items) {
+  const soldOut = [];
+  const prices  = [];
+
+  items.forEach((item, i) => {
     const p = (item.id && byId.get(String(item.id)))
            || byName.get(String(item.name || '').trim().toLowerCase());
 
-    // Unknown product: leave it alone rather than block a legitimate sale.
-    if (!p) continue;
+    if (!p) { prices[i] = null; return; }
 
     const hasSizes = Array.isArray(p.sizes) && p.sizes.length;
     if (!isAvailable(p, item.color || '', hasSizes ? (item.size || '') : '')) {
-      bad.push([p.name, item.color, item.size].filter(Boolean).join(' · '));
+      soldOut.push([p.name, item.color, item.size].filter(Boolean).join(' · '));
     }
-  }
-  return bad;
+
+    const dbPrice = Number(p.price);
+    prices[i] = Number.isFinite(dbPrice) && dbPrice >= 0 ? dbPrice : null;
+  });
+
+  return { soldOut, prices };
+}
+
+// The posted price is only ever a fallback, and never a negative or
+// nonsensical one.
+function safePrice(posted) {
+  const n = Number(posted);
+  return Number.isFinite(n) && n >= 0 ? n : 0;
+}
+
+function safeQty(posted) {
+  const n = parseInt(posted, 10);
+  if (!Number.isFinite(n) || n < 1) return 1;
+  return Math.min(n, 99);
 }
 
 function stripeRequest(secretKey, bodyStr) {
@@ -118,15 +146,20 @@ exports.handler = async (event) => {
     // Re-check availability against the database before taking any money.
     // If Supabase is unreachable we let the sale through rather than block
     // every customer on an outage - the admin panel stays the source of truth.
+    // Prices resolved from the database, by cart index. A null entry means
+    // the line had no matching row and keeps its posted price.
+    let dbPrices = [];
+
     const sbUrl = process.env.SUPABASE_URL;
     const sbKey = process.env.SUPABASE_ANON_KEY;
     if (sbUrl && sbKey) {
       try {
         const products = await supabaseGet(
-          sbUrl + '/rest/v1/products?select=id,name,sizes,variants', sbKey
+          sbUrl + '/rest/v1/products?select=id,name,price,sizes,variants', sbKey
         );
         if (Array.isArray(products)) {
-          const soldOut = findSoldOut(items, products);
+          const { soldOut, prices } = resolveCart(items, products);
+          dbPrices = prices;
           if (soldOut.length) {
             return {
               statusCode: 409,
@@ -159,11 +192,15 @@ exports.handler = async (event) => {
     });
 
     items.forEach((item, i) => {
+      // Database price wins; the posted one is only used for lines with no
+      // matching row, so a tampered cart cannot set its own price.
+      const unitPrice = dbPrices[i] != null ? dbPrices[i] : safePrice(item.price);
+
       params['line_items[' + i + '][price_data][currency]'] = 'thb';
       params['line_items[' + i + '][price_data][product_data][name]'] = item.name;
       params['line_items[' + i + '][price_data][product_data][description]'] = 'Color: ' + item.color + ' | Size: ' + item.size;
-      params['line_items[' + i + '][price_data][unit_amount]'] = String(Math.round(item.price * 100));
-      params['line_items[' + i + '][quantity]'] = String(item.qty || item.quantity || 1);
+      params['line_items[' + i + '][price_data][unit_amount]'] = String(Math.round(unitPrice * 100));
+      params['line_items[' + i + '][quantity]'] = String(safeQty(item.qty || item.quantity));
       if (item.img) {
         params['line_items[' + i + '][price_data][product_data][images][0]'] = item.img;
       }

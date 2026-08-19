@@ -268,7 +268,7 @@ select.fc{cursor:pointer}
           <table>
             <thead><tr>
               <th>Image</th><th>Name</th><th>Category</th><th>Code</th>
-              <th>Price</th><th>Stock</th><th>Status</th><th>Actions</th>
+              <th>Price</th><th>Availability</th><th>Status</th><th>Actions</th>
             </tr></thead>
             <tbody id="prodBody">
               <tr><td colspan="8" class="loading-cell"><span class="spinner"></span>Loading products…</td></tr>
@@ -352,10 +352,6 @@ select.fc{cursor:pointer}
         <div class="fg">
           <label>Price (฿) *</label>
           <input class="fc" id="fPrice" type="number" min="0" placeholder="1190"/>
-        </div>
-        <div class="fg">
-          <label>Stock</label>
-          <input class="fc" id="fStock" type="number" min="0" placeholder="10"/>
         </div>
         <div class="fg">
           <label>Badge</label>
@@ -539,13 +535,37 @@ function switchTab(t) {
 
 // ── PRODUCTS TABLE ────────────────────────────────────────────────────
 
+// How many colour/size combinations of a product are ticked off.
+// Mirrors the storefront: a missing key means available.
+function soldOutCount(p) {
+  const sizes  = (Array.isArray(p.sizes)  && p.sizes.length)  ? p.sizes : [''];
+  const colors = (Array.isArray(p.colors) && p.colors.length) ? p.colors.map(c => c.name) : [''];
+  let n = 0;
+  colors.forEach(c => sizes.forEach(s => { if (!variantAvailable(p.variants, c, s)) n++; }));
+  return n;
+}
+function variantTotal(p) {
+  const sizes  = (Array.isArray(p.sizes)  && p.sizes.length)  ? p.sizes.length  : 1;
+  const colors = (Array.isArray(p.colors) && p.colors.length) ? p.colors.length : 1;
+  return sizes * colors;
+}
+
 function renderProdStats() {
-  const total  = products.length;
-  const active = products.filter(p => p.active).length;
-  const low    = products.filter(p => p.stock <= 3).length;
+  const total   = products.length;
+  const active  = products.filter(p => p.active).length;
+  const soldOut = products.filter(p => soldOutCount(p) >= variantTotal(p)).length;
+  const partial = products.filter(p => { const n = soldOutCount(p); return n > 0 && n < variantTotal(p); }).length;
   document.getElementById('pStats').innerHTML =
     stat('Total Products', total) + stat('Active', active) +
-    stat('Hidden', total - active) + stat('Low Stock (≤3)', low);
+    stat('Hidden', total - active) + stat('Partly Sold Out', partial) +
+    stat('Sold Out', soldOut);
+}
+
+function availCell(p) {
+  const gone = soldOutCount(p), all = variantTotal(p);
+  if (!gone)      return `<span style="color:#4ade80;font-size:11px;font-weight:600">All in stock</span>`;
+  if (gone >= all) return `<span style="color:#f87171;font-size:11px;font-weight:700">Sold out</span>`;
+  return `<span style="color:#fbbf24;font-size:11px;font-weight:600">${gone} of ${all} out</span>`;
 }
 
 function renderProds() {
@@ -563,7 +583,7 @@ function renderProds() {
       <td>${esc(CAT_LABELS[p.cat] || p.cat)}</td>
       <td style="font-size:11px;color:rgba(255,255,255,.32)">${esc(p.code || '—')}</td>
       <td>฿${p.price.toLocaleString()}</td>
-      <td>${p.stock}</td>
+      <td>${availCell(p)}</td>
       <td><span class="badge ${p.active ? 'badge-on' : 'badge-off'}">${p.active ? 'Active' : 'Hidden'}</span></td>
       <td><div class="td-actions">
         <button class="btn-ghost" onclick="openProdModal('${esc(p.id)}')">Edit</button>
@@ -584,7 +604,6 @@ function openProdModal(id) {
   document.getElementById('fCode').value   = p ? (p.code  || '') : '';
   document.getElementById('fCat').value    = p ? p.cat   : 'polo';
   document.getElementById('fPrice').value  = p ? p.price : '';
-  document.getElementById('fStock').value  = p ? p.stock : '';
   document.getElementById('fBadge').value  = p ? (p.badge || '') : '';
   document.getElementById('fDesc').value   = p ? (p.description || p.desc || '') : '';
   document.getElementById('fSizes').value  = p ? (p.sizes || []).join(', ') : '';
@@ -601,8 +620,9 @@ function openProdModal(id) {
 
   setActive(p ? p.active !== false : true);
   buildColorsList(p ? (p.colors || []) : [{name:'', hex:'#000000'}]);
-  // Clone so editing the grid cannot mutate the cached products array.
-  availState = p && p.variants ? JSON.parse(JSON.stringify(p.variants)) : {};
+  // Re-keyed onto the colour rows, and copied so editing the grid cannot
+  // mutate the cached products array.
+  availState = loadAvailState(p && p.variants);
   buildAvailGrid();
   document.getElementById('prodModal').classList.add('open');
   setTimeout(() => document.getElementById('fName').focus(), 100);
@@ -631,9 +651,15 @@ function colorImgHtml(imgUrl) {
     : `<span style="pointer-events:none">📷</span><input type="file" accept="image/*" onchange="uploadColorImg(this)"/>`;
 }
 
+// Each row carries a stable key so sold-out flags survive a rename. The key
+// only lives while the modal is open; getVariants() converts back to names.
+let vkSeq = 0;
+function nextVk() { return 'v' + (++vkSeq); }
+
 function buildColorsList(colors) {
+  vkSeq = 0;
   document.getElementById('colorsList').innerHTML = colors.map((c, i) => `
-    <div class="color-row">
+    <div class="color-row" data-vk="${nextVk()}">
       <input class="fc" type="text" placeholder="Color name (e.g. Navy)" value="${esc(c.name)}" id="cn${i}" oninput="buildAvailGrid()"/>
       <input type="color" value="${esc(c.hex || '#000000')}" id="ch${i}" oninput="buildAvailGrid()"/>
       <div class="color-img" data-img="${esc(c.img||'')}" title="Upload photo for this color">${colorImgHtml(c.img)}</div>
@@ -644,6 +670,7 @@ function buildColorsList(colors) {
 function addColorRow() {
   const div = document.createElement('div');
   div.className = 'color-row';
+  div.dataset.vk = nextVk();
   div.innerHTML = `
     <input class="fc" type="text" placeholder="Color name" oninput="buildAvailGrid()"/>
     <input type="color" value="#888888" oninput="buildAvailGrid()"/>
@@ -653,12 +680,19 @@ function addColorRow() {
   buildAvailGrid();
 }
 
-function getColors() {
+// `vk` is the in-modal row key used by the availability grid. It is stripped
+// before saving - only name/hex/img are persisted.
+function getColorRows() {
   return Array.from(document.querySelectorAll('#colorsList .color-row')).map(row => ({
+    vk:   row.dataset.vk || '',
     name: row.querySelector('input[type=text]').value.trim(),
     hex:  row.querySelector('input[type=color]').value,
     img:  row.querySelector('.color-img').dataset.img || ''
   })).filter(c => c.name);
+}
+
+function getColors() {
+  return getColorRows().map(({ name, hex, img }) => ({ name, hex, img }));
 }
 
 async function uploadColorImg(input) {
@@ -695,7 +729,26 @@ function getSizes() {
 // sizes use "" as the size key. getColors()/getSizes() both drop blank
 // entries, so "" can never collide with a real name.
 
-let availState = {};   // working copy while the modal is open
+let availState = {};   // working copy while the modal is open, keyed by row
+
+// Stored variants are keyed by colour name; the grid works on row keys, so
+// translate on the way in. Call after buildColorsList has created the rows.
+function loadAvailState(variants) {
+  const out = {};
+  if (!variants || typeof variants !== 'object') return out;
+
+  const rows = getColorRows();
+  if (!rows.length) {
+    // No colours - the "" bucket maps straight through.
+    if (variants[''] && typeof variants[''] === 'object') out[''] = { ...variants[''] };
+    return out;
+  }
+  rows.forEach(r => {
+    const src = variants[r.name];
+    if (src && typeof src === 'object') out[r.vk] = { ...src };
+  });
+  return out;
+}
 
 function variantAvailable(variants, color, size) {
   if (!variants || typeof variants !== 'object') return true;
@@ -707,7 +760,7 @@ function variantAvailable(variants, color, size) {
 function buildAvailGrid() {
   const grid    = document.getElementById('availGrid');
   const actions = document.getElementById('availActions');
-  const colors  = getColors();
+  const colors  = getColorRows();
   const sizes   = getSizes();
 
   // Nothing to lay out against yet.
@@ -719,16 +772,16 @@ function buildAvailGrid() {
 
   // A product may have only one of the two axes. Use a single unnamed
   // row/column in that case so the grid still works.
-  const rows = colors.length ? colors : [{ name: '', hex: '' }];
+  const rows = colors.length ? colors : [{ vk: '', name: '', hex: '' }];
   const cols = sizes.length  ? sizes  : [''];
 
   const head = cols.map(s => `<th>${esc(s || 'One Size')}</th>`).join('');
   const body = rows.map(c => {
     const cells = cols.map(s => {
-      const on = variantAvailable(availState, c.name, s);
+      const on = variantAvailable(availState, c.vk, s);
       return `<td class="${on ? '' : 'off'}">
         <input type="checkbox" ${on ? 'checked' : ''}
-          data-color="${esc(c.name)}" data-size="${esc(s)}"
+          data-vk="${esc(c.vk)}" data-size="${esc(s)}"
           onchange="onAvailToggle(this)"/>
       </td>`;
     }).join('');
@@ -745,12 +798,12 @@ function buildAvailGrid() {
 }
 
 function onAvailToggle(box) {
-  writeAvail(box.dataset.color, box.dataset.size, box.checked);
+  writeAvail(box.dataset.vk, box.dataset.size, box.checked);
   box.closest('td').classList.toggle('off', !box.checked);
 }
 
-function writeAvail(color, size, on) {
-  const c = color || '', s = size || '';
+function writeAvail(vk, size, on) {
+  const c = vk || '', s = size || '';
   if (on) {
     // Available is the default - drop the key rather than storing true.
     if (availState[c]) {
@@ -770,19 +823,22 @@ function setAllAvail(on) {
   });
 }
 
-// Drop entries for colours/sizes that no longer exist, so a renamed or
-// deleted option cannot leave an orphaned sold-out flag behind.
+// Converts the in-modal row keys back to colour names for storage, and drops
+// entries for colours/sizes that no longer exist so a deleted option cannot
+// leave an orphaned sold-out flag behind. Because the flags are held against
+// the row rather than the name, renaming a colour carries them across.
 function getVariants() {
-  const colors = getColors().map(c => c.name);
-  const sizes  = getSizes();
-  const validC = colors.length ? colors : [''];
-  const validS = sizes.length  ? sizes  : [''];
+  const rows  = getColorRows();
+  const sizes = getSizes();
+  const validC = rows.length ? rows : [{ vk: '', name: '' }];
+  const validS = sizes.length ? sizes : [''];
   const out = {};
   validC.forEach(c => {
     validS.forEach(s => {
-      if (!variantAvailable(availState, c, s)) {
-        if (!out[c]) out[c] = {};
-        out[c][s] = false;
+      if (!variantAvailable(availState, c.vk, s)) {
+        const key = c.name || '';
+        if (!out[key]) out[key] = {};
+        out[key][s] = false;
       }
     });
   });
@@ -876,7 +932,6 @@ async function saveProduct() {
       description: document.getElementById('fDesc').value.trim(),
       cat:    document.getElementById('fCat').value,
       img:    imgUrl,
-      stock:  parseInt(document.getElementById('fStock').value) || 0,
       active: document.getElementById('fActive').value === 'true',
       code:   document.getElementById('fCode').value.trim(),
       colors:   getColors(),
