@@ -408,8 +408,8 @@ src="https://www.facebook.com/tr?id=1016610101191905&ev=PageView&noscript=1"
 <div class="toast" id="toast"><span id="toastMsg"></span></div>
 
 <script>
-const SUPABASE_URL = 'https://fwhczruomutdgelmwcly.supabase.co';
-const SUPABASE_KEY = 'sb_publishable_RR_Kxpb0HBiVdt3YJkBo7A_lo8RYiPW';
+// No database URL or key here - this page is public. Product data comes
+// from the get-products function, which holds the credentials server side.
 const CAT_LABELS   = {polo:'Polo Shirt',tshirt:'T-Shirt',pants:'Linen Pants',jeans:'Jeans',jacket:'Jacket',shirt:'Shirt',chino:'Chino Pant',undergarments:'Undergarments'};
 
 let product = null;
@@ -432,12 +432,13 @@ if (!productId) {
 
 async function loadProduct(id) {
   try {
-    const res  = await fetch(`${SUPABASE_URL}/rest/v1/products?id=eq.${id}&select=*`, {
-      headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY }
-    });
+    // get-products already returns only active products.
+    const res  = await fetch('/.netlify/functions/get-products');
     const data = await res.json();
-    if (!data.length || !data[0].active) { showNotFound(); return; }
-    product = data[0];
+    if (!Array.isArray(data)) { showNotFound(); return; }
+    const hit = data.find(p => String(p.id) === String(id));
+    if (!hit || hit.active === false) { showNotFound(); return; }
+    product = hit;
     renderProduct();
   } catch(e) {
     showNotFound();

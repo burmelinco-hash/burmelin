@@ -229,7 +229,7 @@ select.fc{cursor:pointer}
       <input type="password" id="keyInput" placeholder="Enter your admin key"
         onkeydown="if(event.key==='Enter')doLogin()"/>
     </div>
-    <button class="login-btn" onclick="doLogin()">Sign In</button>
+    <button class="login-btn" id="loginBtn" onclick="doLogin()">Sign In</button>
     <div class="login-error" id="loginError">Incorrect admin key — please try again.</div>
   </div>
 </div>
@@ -444,11 +444,12 @@ select.fc{cursor:pointer}
 
 <script>
 // ─── CONFIG ────────────────────────────────────────────────────────────
-const SUPABASE_URL         = 'https://fwhczruomutdgelmwcly.supabase.co';
-const SUPABASE_SERVICE_KEY = 'sb_publishable_RR_Kxpb0HBiVdt3YJkBo7A_lo8RYiPW';
+// No database URL, database key or password lives here any more. This file
+// is served publicly, so anything in it is readable by anyone. All database
+// access goes through /api/admin-api, which holds the credentials server
+// side and checks the password there.
 const CLOUDINARY_CLOUD     = 'dtpvflgt1';                 // your existing Cloudinary account
 const CLOUDINARY_PRESET    = 'burmelin_products';         // unsigned preset you create in Cloudinary
-const ADMIN_KEY            = 'burmelin-admin-2026';       // login password for this panel
 // ───────────────────────────────────────────────────────────────────────
 
 const CAT_LABELS = {polo:'Polo Shirt',tshirt:'T-Shirt',pants:'Linen Pants',jeans:'Jeans',jacket:'Jacket',shirt:'Shirt',chino:'Chino Pant',undergarments:'Undergarments'};
@@ -458,14 +459,46 @@ let pendingImg = null; // {base64, filename, isNew} | {existingUrl} | null
 
 // ── AUTH ──────────────────────────────────────────────────────────────
 
-function doLogin() {
-  const v = document.getElementById('keyInput').value.trim();
-  if (v === ADMIN_KEY) {
+// The password is no longer checked here - there is nothing to compare it
+// against in this file. It is sent to the server, which decides.
+async function doLogin() {
+  const v   = document.getElementById('keyInput').value.trim();
+  const err = document.getElementById('loginError');
+  if (!v) { err.textContent = 'Enter the admin key.'; err.classList.add('show'); return; }
+
+  const btn = document.getElementById('loginBtn');
+  if (btn) { btn.disabled = true; btn.textContent = 'Checking…'; }
+  err.classList.remove('show');
+
+  const outcome = await probeKey(v);
+  if (btn) { btn.disabled = false; btn.textContent = 'Sign In'; }
+
+  if (outcome === 'ok') {
     sessionStorage.setItem('ak', v);
     showApp();
-  } else {
-    document.getElementById('loginError').classList.add('show');
-    document.getElementById('keyInput').focus();
+    return;
+  }
+  err.textContent = outcome === 'bad'
+    ? 'Incorrect admin key — please try again.'
+    : 'Cannot reach the admin API. Check that ADMIN_PASSWORD and SUPABASE_SERVICE_KEY are set in Netlify.';
+  err.classList.add('show');
+  document.getElementById('keyInput').focus();
+}
+
+// 'ok' | 'bad' | 'error' - distinguishes a wrong password from a server that
+// is not configured yet, so a misconfiguration does not look like a typo.
+async function probeKey(key) {
+  try {
+    const res = await fetch('/api/admin-api', {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json', 'x-admin-key': key },
+      body:    JSON.stringify({ path: 'products?select=id&limit=1', method: 'GET' })
+    });
+    if (res.ok)             return 'ok';
+    if (res.status === 401) return 'bad';
+    return 'error';
+  } catch (e) {
+    return 'error';
   }
 }
 
@@ -477,28 +510,44 @@ function showApp() {
   loadAll();
 }
 
-function checkSession() {
+async function checkSession() {
   const urlKey = new URLSearchParams(location.search).get('key');
-  if (urlKey === ADMIN_KEY) sessionStorage.setItem('ak', urlKey);
-  if (sessionStorage.getItem('ak') === ADMIN_KEY) showApp();
+  const key    = urlKey || sessionStorage.getItem('ak');
+  if (!key) return;
+
+  // Verified against the server, not against a constant in this file.
+  if (await probeKey(key) === 'ok') {
+    sessionStorage.setItem('ak', key);
+    // Don't leave the password sitting in the address bar or browser history.
+    if (urlKey) history.replaceState(null, '', location.pathname);
+    showApp();
+  } else {
+    sessionStorage.removeItem('ak');
+  }
 }
 
-// ── SUPABASE HELPER ───────────────────────────────────────────────────
+// ── DATA HELPER ───────────────────────────────────────────────────────
+//
+// Same call shape as before, but routed through /api/admin-api so the
+// database credentials stay on the server. The password travels in a
+// header and is never stored anywhere but this tab's sessionStorage.
 
 async function sb(path, method = 'GET', body = null) {
-  const opts = {
-    method,
-    headers: {
-      'apikey':        SUPABASE_SERVICE_KEY,
-      'Authorization': 'Bearer ' + SUPABASE_SERVICE_KEY,
-      'Content-Type':  'application/json',
-      'Prefer':        'return=representation'
-    }
-  };
-  if (body) opts.body = JSON.stringify(body);
-  const res  = await fetch(SUPABASE_URL + '/rest/v1/' + path, opts);
+  const key = sessionStorage.getItem('ak') || '';
+  const res = await fetch('/api/admin-api', {
+    method:  'POST',
+    headers: { 'Content-Type': 'application/json', 'x-admin-key': key },
+    body:    JSON.stringify({ path, method, body })
+  });
+
   const text = await res.text();
-  if (!res.ok) throw new Error(text || 'Supabase error ' + res.status);
+  if (res.status === 401) {
+    // Password changed or session went stale - back to the login screen.
+    sessionStorage.removeItem('ak');
+    location.reload();
+    throw new Error('Session expired');
+  }
+  if (!res.ok) throw new Error(text || 'Request failed (' + res.status + ')');
   return text ? JSON.parse(text) : [];
 }
 

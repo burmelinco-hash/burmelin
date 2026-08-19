@@ -35,6 +35,12 @@
   force = true
 
 [[redirects]]
+  from = "/supabase-lockdown.sql"
+  to = "/index.html"
+  status = 404
+  force = true
+
+[[redirects]]
   from = "/Code.gs"
   to = "/index.html"
   status = 404

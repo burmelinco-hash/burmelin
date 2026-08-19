@@ -151,7 +151,9 @@ exports.handler = async (event) => {
     let dbPrices = [];
 
     const sbUrl = process.env.SUPABASE_URL;
-    const sbKey = process.env.SUPABASE_ANON_KEY;
+    // Service key so the price check still sees every product once RLS is on
+    // (the public policy exposes active products only). Falls back to anon.
+    const sbKey = process.env.SUPABASE_SERVICE_KEY || process.env.SUPABASE_ANON_KEY;
     if (sbUrl && sbKey) {
       try {
         const products = await supabaseGet(

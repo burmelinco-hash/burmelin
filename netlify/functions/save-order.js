@@ -33,7 +33,9 @@ exports.handler = async (event) => {
   }
 
   const url = process.env.SUPABASE_URL;
-  const key = process.env.SUPABASE_ANON_KEY;
+  // Prefer the service key: once RLS is on, the anon key has no insert
+  // policy on orders. Falls back to anon so nothing breaks before then.
+  const key = process.env.SUPABASE_SERVICE_KEY || process.env.SUPABASE_ANON_KEY;
 
   if (!url || !key) {
     return { statusCode: 500, body: JSON.stringify({ error: 'Supabase env vars not set' }) };

@@ -1058,12 +1058,29 @@ async function loadHomeProducts() {
 
 loadHomeProducts();
 
-// The featured banner is hardcoded markup, but it is the same garment as the
-// "Long Sleeve Linen Shirt" row - same price, same 48-66 size run. Resolving
-// it means its sold-out flags apply here too, instead of the banner being a
-// way to buy something the rest of the site has marked unavailable.
+// The featured banner is hardcoded markup selling the same garment as this
+// catalogue row. Resolving it means the row's sold-out flags and price apply
+// to the banner too, instead of the banner being a way to buy something the
+// rest of the site has marked unavailable.
+//
+// This must match the product's `name` in the admin panel exactly. If you
+// rename the product there, change it here too - a mismatch is reported in
+// the browser console and leaves the banner unrestricted.
+const FEAT_PRODUCT_NAME = 'Long Sleeve Linen Shirt';
+
+let featWarned = false;
 function featProduct() {
-  return PRODUCTS.find(p => /long\s*sleeve/i.test(p.name || '') && /linen/i.test(p.name || '')) || null;
+  const norm = s => String(s || '').trim().toLowerCase();
+  const hit  = PRODUCTS.find(p => norm(p.name) === norm(FEAT_PRODUCT_NAME)) || null;
+  if (!hit && PRODUCTS.length && !featWarned) {
+    featWarned = true;
+    console.warn(
+      `[BURMELIN] Featured banner is not linked to a product. Expected a product named ` +
+      `"${FEAT_PRODUCT_NAME}" but the catalogue has: ${PRODUCTS.map(p => p.name).join(', ')}. ` +
+      `Availability and price cannot be enforced on the banner until these match.`
+    );
+  }
+  return hit;
 }
 
 // Grey out the hardcoded size buttons that are sold out in the chosen colour.
@@ -1306,8 +1323,17 @@ function featAddToCart(){
     syncFeatAvailability();
     return;
   }
-  // Carry the database id so checkout can pin the price and re-check stock.
-  addToCart({id:p?p.id:undefined,name:'100% Linen Long Sleeve Shirt',price:1450,color:colorName,size:featSelectedSize,img:featColorImg});
+  // Use the catalogue row's own id, name and price when it resolves, so the
+  // cart, Stripe and the orders table all describe the same product. Falls
+  // back to the banner's hardcoded copy if no row matched.
+  addToCart({
+    id:    p ? p.id    : undefined,
+    name:  p ? p.name  : '100% Linen Long Sleeve Shirt',
+    price: p ? p.price : 1450,
+    color: colorName,
+    size:  featSelectedSize,
+    img:   featColorImg
+  });
 }
 async function goToCheckout(){
   if(!cart.length)return;
