@@ -13,35 +13,12 @@
   to = "/.netlify/functions/:splat"
   status = 200
 
-# publish = "." serves the whole repo root, which exposed the schema files,
-# the Apps Script backend and the banner generator at the site root.
+# publish = "." serves the whole repo root, so anything committed here is
+# reachable at the site root unless it is blocked. One rule per non-web file
+# that still exists; the rest were deleted rather than hidden.
 # force = true is required: without it an existing file wins over a redirect.
 [[redirects]]
-  from = "/supabase-setup.sql"
-  to = "/index.html"
-  status = 404
-  force = true
-
-[[redirects]]
-  from = "/supabase-fix.sql"
-  to = "/index.html"
-  status = 404
-  force = true
-
-[[redirects]]
-  from = "/supabase-variants.sql"
-  to = "/index.html"
-  status = 404
-  force = true
-
-[[redirects]]
-  from = "/supabase-lockdown.sql"
-  to = "/index.html"
-  status = 404
-  force = true
-
-[[redirects]]
-  from = "/Code.gs"
+  from = "/supabase-schema.sql"
   to = "/index.html"
   status = 404
   force = true
