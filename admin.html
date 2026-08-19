@@ -148,6 +148,9 @@ select.fc{cursor:pointer}
 .avail-tbl input[type=checkbox]{width:17px;height:17px;accent-color:#22c55e;cursor:pointer;margin:0}
 .avail-tbl td.off{background:rgba(239,68,68,.07)}
 .avail-rowbtn{font-size:10px;color:#60a5fa;background:none;border:none;cursor:pointer;text-decoration:underline;padding:0}
+.avail-hdr{cursor:pointer;user-select:none;transition:background .15s,color .15s}
+.avail-hdr:hover{background:rgba(96,165,250,.12);color:#93c5fd}
+.avail-tbl th.avail-hdr:hover{color:#93c5fd}
 .avail-actions{display:flex;gap:14px;margin-top:8px}
 
 /* TOGGLE */
@@ -377,7 +380,7 @@ select.fc{cursor:pointer}
         </div>
         <div class="fg span2">
           <label>Availability</label>
-          <div class="avail-hint">Tick a box to keep that colour and size on sale. Untick it to show the customer &ldquo;Sold Out&rdquo;. Anything you add later starts ticked.</div>
+          <div class="avail-hint">Tick a box to keep that colour and size on sale. Untick it to show the customer &ldquo;Sold Out&rdquo;. Anything you add later starts ticked.<br/>Click a <strong>colour name</strong> to sell out that whole colour, or a <strong>size heading</strong> to sell out that size in every colour. Click it again to put it back.</div>
           <div id="availGrid"></div>
           <div class="avail-actions" id="availActions" style="display:none">
             <button class="avail-rowbtn" type="button" onclick="setAllAvail(true)">Tick all</button>
@@ -779,6 +782,8 @@ function getSizes() {
 // entries, so "" can never collide with a real name.
 
 let availState = {};   // working copy while the modal is open, keyed by row
+let availRows  = [];   // current grid rows (colours), for the row toggle
+let availCols  = [];   // current grid columns (sizes), for the column toggle
 
 // Stored variants are keyed by colour name; the grid works on row keys, so
 // translate on the way in. Call after buildColorsList has created the rows.
@@ -824,8 +829,16 @@ function buildAvailGrid() {
   const rows = colors.length ? colors : [{ vk: '', name: '', hex: '' }];
   const cols = sizes.length  ? sizes  : [''];
 
-  const head = cols.map(s => `<th>${esc(s || 'One Size')}</th>`).join('');
-  const body = rows.map(c => {
+  // Kept so the row/column toggles can look names up by index. Passing the
+  // names through the onclick attribute would break on a size or colour
+  // containing a quote.
+  availRows = rows;
+  availCols = cols;
+
+  const head = cols.map((s, ci) =>
+    `<th class="avail-hdr" title="Click to mark this size sold out in every colour"
+       onclick="toggleAvailCol(${ci})">${esc(s || 'One Size')}</th>`).join('');
+  const body = rows.map((c, ri) => {
     const cells = cols.map(s => {
       const on = variantAvailable(availState, c.vk, s);
       return `<td class="${on ? '' : 'off'}">
@@ -837,7 +850,8 @@ function buildAvailGrid() {
     const swatch = colors.length
       ? `<span class="avail-sw" style="background:${esc(c.hex || '#888')}"></span>`
       : '';
-    return `<tr><td class="avail-col">${swatch}${esc(c.name || 'All')}</td>${cells}</tr>`;
+    return `<tr><td class="avail-col avail-hdr" title="Click to mark this colour sold out in every size"
+      onclick="toggleAvailRow(${ri})">${swatch}${esc(c.name || 'All')}</td>${cells}</tr>`;
   }).join('');
 
   grid.innerHTML = `<div class="avail-scroll"><table class="avail-tbl">
@@ -849,6 +863,39 @@ function buildAvailGrid() {
 function onAvailToggle(box) {
   writeAvail(box.dataset.vk, box.dataset.size, box.checked);
   box.closest('td').classList.toggle('off', !box.checked);
+}
+
+// ── ROW / COLUMN TOGGLES ──────────────────────────────────────────────
+//
+// Clicking a colour name clears that whole colour; clicking a size heading
+// clears that size across every colour. Clicking again puts it back, so the
+// same control both marks sold out and restores.
+//
+// Looked up by index rather than by name: sizes and colours are free text
+// and a value containing a quote would break an inline handler.
+
+function availBoxes(match) {
+  return Array.from(document.querySelectorAll('#availGrid input[type=checkbox]')).filter(match);
+}
+
+// If anything here is still ticked, clear the lot. If it is already all
+// clear, tick it all back on.
+function applyBulk(boxes) {
+  if (!boxes.length) return;
+  const target = !boxes.some(b => b.checked);
+  boxes.forEach(b => { b.checked = target; onAvailToggle(b); });
+}
+
+function toggleAvailRow(i) {
+  const row = availRows[i];
+  if (!row) return;
+  applyBulk(availBoxes(b => b.dataset.vk === (row.vk || '')));
+}
+
+function toggleAvailCol(i) {
+  const size = availCols[i];
+  if (size == null) return;
+  applyBulk(availBoxes(b => b.dataset.size === size));
 }
 
 function writeAvail(vk, size, on) {
