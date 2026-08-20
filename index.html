@@ -119,6 +119,8 @@ button{cursor:pointer;font-family:inherit}
 .modal-soldnote{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#b45309;background:#fef3c7;border-radius:6px;padding:7px 11px;margin:10px 0;display:none}
 #modalAddBtn:disabled,.feat-add:disabled{opacity:.42;cursor:not-allowed;pointer-events:none}
 .feat-size-btn.sold{opacity:.35;cursor:not-allowed;pointer-events:none;text-decoration:line-through;border-style:dashed}
+.feat-swatch.sold{opacity:.3;cursor:not-allowed;pointer-events:none;position:relative}
+.feat-swatch.sold::after{content:'';position:absolute;inset:-2px;background:linear-gradient(to bottom right,transparent 44%,rgba(0,0,0,.6) 44%,rgba(0,0,0,.6) 56%,transparent 56%);border-radius:50%}
 .product-wish{position:absolute;top:10px;right:10px;width:34px;height:34px;background:white;border:none;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:var(--shadow-sm);opacity:0;transition:opacity .2s,transform .2s;transform:scale(.9);color:var(--muted)}
 .product-card:hover .product-wish{opacity:1;transform:scale(1)}
 .product-wish:hover{transform:scale(1.1)!important}
@@ -487,7 +489,7 @@ src="https://www.facebook.com/tr?id=1016610101191905&ev=PageView&noscript=1"
         <!-- Light Colors -->
         <div style="margin-bottom:14px">
           <div style="font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:8px">Light Colors</div>
-          <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <div id="featColorsLight" style="display:flex;gap:8px;flex-wrap:wrap">
             <button class="feat-swatch active" style="background:#F5F3EE;outline:2px solid rgba(0,0,0,.2)" onclick="featSwatch(this,'https://res.cloudinary.com/dtpvflgt1/image/upload/v1775697533/E72AE919-6A79-4D75-8E9C-545770499B7E_wsahiw.png','White')" title="White — No. 2"></button>
             <button class="feat-swatch" style="background:#9FB89A" onclick="featSwatch(this,'https://res.cloudinary.com/dtpvflgt1/image/upload/v1775697533/FD0D549E-580D-45B7-B165-932BD85DBF5E_fb1ftk.png','Soft Green')" title="Soft Green — No. 91"></button>
             <button class="feat-swatch" style="background:#E0B8B2" onclick="featSwatch(this,'https://res.cloudinary.com/dtpvflgt1/image/upload/v1775697533/679571FF-0B05-486B-A627-493A3C4E4FF2_q7dgf5.png','Light Pink')" title="Light Pink — No. 44"></button>
@@ -498,7 +500,7 @@ src="https://www.facebook.com/tr?id=1016610101191905&ev=PageView&noscript=1"
         <!-- Dark Colors -->
         <div style="margin-bottom:14px">
           <div style="font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:8px">Dark Colors</div>
-          <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <div id="featColorsDark" style="display:flex;gap:8px;flex-wrap:wrap">
             <button class="feat-swatch" style="background:#1B3D6E" onclick="featSwatch(this,'https://res.cloudinary.com/dtpvflgt1/image/upload/v1775697530/641F2508-1808-41EC-B28F-4F0D8DFB954C_kbpbfu.png','Dark Blue')" title="Dark Blue — No. 50"></button>
             <button class="feat-swatch" style="background:#1A2B4A" onclick="featSwatch(this,'https://res.cloudinary.com/dtpvflgt1/image/upload/v1775697530/E1653697-09E3-42DD-B4BB-98077F9CBE15_z548dc.png','Navy Blue')" title="Navy Blue — No. 127"></button>
             <button class="feat-swatch" style="background:#1A5A58" onclick="featSwatch(this,'https://res.cloudinary.com/dtpvflgt1/image/upload/v1775697531/E879F6C3-6479-4BDA-8360-CB5D2D49EBA9_iatf7o.png','Deep Teal')" title="Deep Teal — No. 101"></button>
@@ -509,7 +511,7 @@ src="https://www.facebook.com/tr?id=1016610101191905&ev=PageView&noscript=1"
         <!-- Natural Colors -->
         <div style="margin-bottom:16px">
           <div style="font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:8px">Natural Tones</div>
-          <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <div id="featColorsNatural" style="display:flex;gap:8px;flex-wrap:wrap">
             <button class="feat-swatch" style="background:#5F7033" onclick="featSwatch(this,'https://res.cloudinary.com/dtpvflgt1/image/upload/v1775697541/DFA8F8CE-B752-4B4A-9C27-3481DC6332D3_m8iruu.png','Olive Green')" title="Olive Green — No. 59"></button>
             <button class="feat-swatch" style="background:#8A7150" onclick="featSwatch(this,'https://res.cloudinary.com/dtpvflgt1/image/upload/v1775697533/F0758DF9-CA1F-425E-8A7D-DAB4C843A670_cjdfng.png','Olive Earth')" title="Olive Earth — No. 127"></button>
             <button class="feat-swatch" style="background:#9A7860" onclick="featSwatch(this,'https://res.cloudinary.com/dtpvflgt1/image/upload/v1775697532/B385A28F-7676-4A8A-92D1-659B6D95D28C_rxzixm.png','Taupe Brown')" title="Taupe Brown — No. 123"></button>
@@ -525,7 +527,7 @@ src="https://www.facebook.com/tr?id=1016610101191905&ev=PageView&noscript=1"
             <div style="font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)">Select Size</div>
             <button onclick="openSizeGuide('sg-shirt-ls')" style="display:flex;align-items:center;gap:5px;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--navy);background:none;border:none;cursor:pointer;padding:0;text-decoration:underline;text-underline-offset:3px"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16H3a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h18a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2z"/><line x1="7" y1="8" x2="7" y2="12"/><line x1="11" y1="8" x2="11" y2="10"/><line x1="15" y1="8" x2="15" y2="12"/><line x1="19" y1="8" x2="19" y2="10"/></svg>Size Guide</button>
           </div>
-          <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <div id="featSizes" style="display:flex;gap:8px;flex-wrap:wrap">
             <button class="feat-size-btn active" onclick="featSize(this,'48')">48</button>
             <button class="feat-size-btn" onclick="featSize(this,'50')">50</button>
             <button class="feat-size-btn" onclick="featSize(this,'52')">52</button>
@@ -1053,7 +1055,7 @@ async function loadHomeProducts() {
   const loader = document.getElementById('gridLoader');
   if (loader) loader.remove();
   grid.innerHTML = PRODUCTS.map((p, i) => renderHomeCard(p, i)).join('');
-  syncFeatAvailability();
+  renderFeatured();
 }
 
 loadHomeProducts();
@@ -1083,7 +1085,67 @@ function featProduct() {
   return hit;
 }
 
-// Grey out the hardcoded size buttons that are sold out in the chosen colour.
+// Which visual group each colour belongs to, keyed by hex.
+//
+// Keyed by hex rather than name on purpose: the catalogue names carry codes
+// ("White 2#", "Soft Green 91#") and get edited, while the hex values are
+// stable. Any colour added in the admin panel whose hex is not listed here
+// still appears, in the natural group.
+const FEAT_COLOR_GROUPS = {
+  '#f5f3ee':'light','#9fb89a':'light','#e0b8b2':'light','#82b5cb':'light','#c8a87a':'light',
+  '#1b3d6e':'dark','#1a2b4a':'dark','#1a5a58':'dark','#1c1c1c':'dark','#6b1a2a':'dark',
+  '#5f7033':'natural','#8a7150':'natural','#9a7860':'natural','#8c8680':'natural',
+  '#a05a32':'natural','#788075':'natural',
+};
+
+// Renders the Signature banner's swatches and sizes from the catalogue row.
+//
+// The banner used to hardcode both. That silently broke availability: the
+// markup said "White" while the catalogue says "White 2#", so every lookup
+// missed and nothing ever greyed out. Rendering from the row means the names
+// always match, and colours added or removed in the admin panel show up here.
+//
+// If the catalogue row cannot be found the hardcoded markup is left exactly
+// as it is, so an outage degrades to the old behaviour rather than a blank
+// section.
+function renderFeatured() {
+  const p = featProduct();
+  if (!p || !Array.isArray(p.colors) || !p.colors.length) return;
+
+  const rows = { light:[], dark:[], natural:[] };
+  p.colors.forEach((c, i) => {
+    const g = FEAT_COLOR_GROUPS[String(c.hex || '').toLowerCase()] || 'natural';
+    rows[g].push({ c, i });
+  });
+
+  let firstLiveEl = null;
+  Object.keys(rows).forEach(g => {
+    const el = document.getElementById('featColors' + g.charAt(0).toUpperCase() + g.slice(1));
+    if (!el) return;
+    el.innerHTML = rows[g].map(({ c }) => {
+      const dead   = colorSoldOut(p, c.name);
+      const light  = String(c.hex||'').toLowerCase() === '#f5f3ee';
+      const outline = light ? ';outline:2px solid rgba(0,0,0,.2)' : '';
+      return `<button class="feat-swatch${dead?' sold':''}" style="background:${esc(c.hex||'#ccc')}${outline}"
+        title="${esc(c.name)}${dead?' — sold out':''}"
+        ${dead?'disabled':`onclick="featSwatch(this,'${esc(c.img||'')}','${esc(c.name)}')"`}></button>`;
+    }).join('');
+    if (!firstLiveEl) firstLiveEl = el.querySelector('.feat-swatch:not(.sold)');
+  });
+
+  // Sizes come from the row too, so a size added in admin appears here.
+  const sizeEl = document.getElementById('featSizes');
+  if (sizeEl && Array.isArray(p.sizes) && p.sizes.length) {
+    sizeEl.innerHTML = p.sizes.map(sz =>
+      `<button class="feat-size-btn" onclick="featSize(this,'${esc(sz)}')">${esc(sz)}</button>`).join('');
+  }
+
+  // Open on a colour that is actually for sale.
+  if (firstLiveEl) firstLiveEl.click();
+  else syncFeatAvailability();
+}
+
+// Greys out the sizes sold out in the currently selected colour.
 function syncFeatAvailability() {
   const p = featProduct();
   const btns = document.querySelectorAll('.feat-size-btn');
@@ -1108,9 +1170,9 @@ function syncFeatAvailability() {
   // If the selected size just went away, move to the first live one.
   if (!isAvailable(p, colorName, featSelectedSize)) {
     const live = Array.from(btns).find(b => !b.classList.contains('sold'));
+    btns.forEach(b => b.classList.remove('active'));
     if (live) {
       featSelectedSize = (live.textContent || '').trim();
-      btns.forEach(b => b.classList.remove('active'));
       live.classList.add('active');
     }
   }
@@ -1306,7 +1368,9 @@ function featSwatch(el,imgUrl,colorName){
   featColorImg=imgUrl;
   document.querySelectorAll('.feat-swatch').forEach(s=>s.classList.remove('active'));
   el.classList.add('active');
-  // Availability is per colour, so re-check the size row.
+  // Only the size row changes when the colour does. Calling renderFeatured
+  // here would rebuild the swatches and re-click the first live one, which
+  // would fight the click that got us here.
   syncFeatAvailability();
 }
 function featSize(btn,size){
