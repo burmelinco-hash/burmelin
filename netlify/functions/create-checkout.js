@@ -17,7 +17,8 @@ const SHIPPING_OPTIONS = [
 // Every destination Stripe accepts for shipping_address_collection.
 // Stripe rejects the whole session if any code is unsupported, so the
 // handful it excludes (sanctioned and a few US minor territories) are
-// deliberately left out: AS CC CX CU HM IR KP MH FM NF MP PW SD SY UM VI.
+// deliberately left out: AS CC CX CU HM IR KP MH FM NF MP PW SY UM VI.
+// Verified against Stripe's allowed_countries enum - this is all 238.
 // Known-good subset, used only if Stripe rejects the full list above.
 const CORE_COUNTRIES = ['TH','US','GB','AU','SG','MY','DE','FR','JP','HK','TW','KR',
   'AE','SA','CN','NL','IT','ES','CA','NZ','SE','CH','DK','NO'];
@@ -35,7 +36,7 @@ const SHIPPING_COUNTRIES = [
   'MU','MV','MW','MX','MY','MZ','NA','NC','NE','NG','NI','NL','NO','NP','NR','NU',
   'NZ','OM','PA','PE','PF','PG','PH','PK','PL','PM','PN','PR','PS','PT','PY','QA',
   'RE','RO','RS','RU','RW','SA','SB','SC','SE','SG','SH','SI','SJ','SK','SL','SM',
-  'SN','SO','SR','SS','ST','SV','SX','SZ','TA','TC','TD','TF','TG','TH','TJ','TK',
+  'SD','SN','SO','SR','SS','ST','SV','SX','SZ','TA','TC','TD','TF','TG','TH','TJ','TK',
   'TL','TM','TN','TO','TR','TT','TV','TW','TZ','UA','UG','US','UY','UZ','VA','VC',
   'VE','VG','VN','VU','WF','WS','XK','YE','YT','ZA','ZM','ZW','ZZ',
 ];
