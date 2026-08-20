@@ -1,5 +1,45 @@
 const https = require('https');
 
+// ── SHIPPING ───────────────────────────────────────────
+//
+// Shipping is free, in Thailand and worldwide.
+//
+// Both options cost 0. They exist as two entries so the customer sees a
+// realistic delivery window for where they are, and so the name they pick
+// is recorded on the order. Hosted Checkout fixes these when the session is
+// created and cannot vary them by the address typed inside Checkout, so the
+// customer self-selects.
+const SHIPPING_OPTIONS = [
+  { name: 'Free Shipping — Thailand',      min: 1, max: 3  },
+  { name: 'Free Shipping — International', min: 7, max: 21 },
+];
+
+// Every destination Stripe accepts for shipping_address_collection.
+// Stripe rejects the whole session if any code is unsupported, so the
+// handful it excludes (sanctioned and a few US minor territories) are
+// deliberately left out: AS CC CX CU HM IR KP MH FM NF MP PW SD SY UM VI.
+// Known-good subset, used only if Stripe rejects the full list above.
+const CORE_COUNTRIES = ['TH','US','GB','AU','SG','MY','DE','FR','JP','HK','TW','KR',
+  'AE','SA','CN','NL','IT','ES','CA','NZ','SE','CH','DK','NO'];
+
+const SHIPPING_COUNTRIES = [
+  'AC','AD','AE','AF','AG','AI','AL','AM','AO','AQ','AR','AT','AU','AW','AX','AZ',
+  'BA','BB','BD','BE','BF','BG','BH','BI','BJ','BL','BM','BN','BO','BQ','BR','BS',
+  'BT','BV','BW','BY','BZ','CA','CD','CF','CG','CH','CI','CK','CL','CM','CN','CO',
+  'CR','CV','CW','CY','CZ','DE','DJ','DK','DM','DO','DZ','EC','EE','EG','EH','ER',
+  'ES','ET','FI','FJ','FK','FO','FR','GA','GB','GD','GE','GF','GG','GH','GI','GL',
+  'GM','GN','GP','GQ','GR','GS','GT','GU','GW','GY','HK','HN','HR','HT','HU','ID',
+  'IE','IL','IM','IN','IO','IQ','IS','IT','JE','JM','JO','JP','KE','KG','KH','KI',
+  'KM','KN','KR','KW','KY','KZ','LA','LB','LC','LI','LK','LR','LS','LT','LU','LV',
+  'LY','MA','MC','MD','ME','MF','MG','MK','ML','MM','MN','MO','MQ','MR','MS','MT',
+  'MU','MV','MW','MX','MY','MZ','NA','NC','NE','NG','NI','NL','NO','NP','NR','NU',
+  'NZ','OM','PA','PE','PF','PG','PH','PK','PL','PM','PN','PR','PS','PT','PY','QA',
+  'RE','RO','RS','RU','RW','SA','SB','SC','SE','SG','SH','SI','SJ','SK','SL','SM',
+  'SN','SO','SR','SS','ST','SV','SX','SZ','TA','TC','TD','TF','TG','TH','TJ','TK',
+  'TL','TM','TN','TO','TR','TT','TV','TW','TZ','UA','UG','US','UY','UZ','VA','VC',
+  'VE','VG','VN','VU','WF','WS','XK','YE','YT','ZA','ZM','ZW','ZZ',
+];
+
 // ── AVAILABILITY ──────────────────────────────────────────────────────
 //
 // The browser already greys out sold-out sizes and colours, but that check
@@ -188,9 +228,24 @@ exports.handler = async (event) => {
     params['phone_number_collection[enabled]'] = 'true';
     if (orderId) params['metadata[order_id]'] = orderId;
 
-    const countries = ['TH','US','GB','AU','SG','MY','DE','FR','JP','HK','TW','KR','AE','SA','CN','NL','IT','ES','CA','NZ','SE','CH','DK','NO'];
-    countries.forEach((c, i) => {
+    SHIPPING_COUNTRIES.forEach((c, i) => {
       params['shipping_address_collection[allowed_countries][' + i + ']'] = c;
+    });
+
+    // Shipping is free everywhere. Two options rather than one so the
+    // customer sees an honest delivery estimate for where they are, and so
+    // the chosen name lands on the order to say which service to use.
+    // Stripe allows at most 5 shipping_options on a session.
+    SHIPPING_OPTIONS.forEach((opt, i) => {
+      const k = 'shipping_options[' + i + '][shipping_rate_data]';
+      params[k + '[type]']                     = 'fixed_amount';
+      params[k + '[fixed_amount][amount]']     = '0';
+      params[k + '[fixed_amount][currency]']   = 'thb';
+      params[k + '[display_name]']             = opt.name;
+      params[k + '[delivery_estimate][minimum][unit]']  = 'business_day';
+      params[k + '[delivery_estimate][minimum][value]'] = String(opt.min);
+      params[k + '[delivery_estimate][maximum][unit]']  = 'business_day';
+      params[k + '[delivery_estimate][maximum][value]'] = String(opt.max);
     });
 
     items.forEach((item, i) => {
@@ -208,11 +263,27 @@ exports.handler = async (event) => {
       }
     });
 
-    const bodyStr = Object.entries(params)
+    const encode = obj => Object.entries(obj)
       .map(([k, v]) => encodeURIComponent(k) + '=' + encodeURIComponent(v))
       .join('&');
 
-    const session = await stripeRequest(secretKey, bodyStr);
+    let session = await stripeRequest(secretKey, encode(params));
+
+    // The worldwide country list is long, and Stripe rejects the entire
+    // session if it does not recognise even one code. Rather than let that
+    // take checkout down, fall back to the short list that was in use before
+    // and try once more. A customer in a rare destination loses the option;
+    // everyone else still gets through.
+    if (session.error && /countr/i.test(session.error.message || '')) {
+      console.error('Falling back to core shipping countries:', session.error.message);
+      Object.keys(params)
+        .filter(k => k.startsWith('shipping_address_collection'))
+        .forEach(k => delete params[k]);
+      CORE_COUNTRIES.forEach((c, i) => {
+        params['shipping_address_collection[allowed_countries][' + i + ']'] = c;
+      });
+      session = await stripeRequest(secretKey, encode(params));
+    }
 
     if (session.error) {
       throw new Error(session.error.message);
