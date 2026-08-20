@@ -2,43 +2,21 @@ const https = require('https');
 
 // ── SHIPPING ───────────────────────────────────────────
 //
-// Shipping is free, in Thailand and worldwide.
+// Thailand only, shipping free.
 //
-// Both options cost 0. They exist as two entries so the customer sees a
-// realistic delivery window for where they are, and so the name they pick
-// is recorded on the order. Hosted Checkout fixes these when the session is
-// created and cannot vary them by the address typed inside Checkout, so the
-// customer self-selects.
+// Deliberately not offering international. Hosted Checkout fixes the
+// shipping options when the session is created and shows all of them to
+// every customer, so a paid international option sitting next to a free
+// domestic one is unenforceable - a buyer abroad would simply pick the free
+// one. Charging for international requires knowing the destination before
+// the session exists, which means collecting it in the cart first.
+//
+// If international comes back later: add a country step to the cart, have
+// this function pick the single rate that applies, and pass only that one.
+const SHIPPING_COUNTRIES = ['TH'];
+
 const SHIPPING_OPTIONS = [
-  { name: 'Free Shipping — Thailand',      min: 1, max: 3  },
-  { name: 'Free Shipping — International', min: 7, max: 21 },
-];
-
-// Every destination Stripe accepts for shipping_address_collection.
-// Stripe rejects the whole session if any code is unsupported, so the
-// handful it excludes (sanctioned and a few US minor territories) are
-// deliberately left out: AS CC CX CU HM IR KP MH FM NF MP PW SY UM VI.
-// Verified against Stripe's allowed_countries enum - this is all 238.
-// Known-good subset, used only if Stripe rejects the full list above.
-const CORE_COUNTRIES = ['TH','US','GB','AU','SG','MY','DE','FR','JP','HK','TW','KR',
-  'AE','SA','CN','NL','IT','ES','CA','NZ','SE','CH','DK','NO'];
-
-const SHIPPING_COUNTRIES = [
-  'AC','AD','AE','AF','AG','AI','AL','AM','AO','AQ','AR','AT','AU','AW','AX','AZ',
-  'BA','BB','BD','BE','BF','BG','BH','BI','BJ','BL','BM','BN','BO','BQ','BR','BS',
-  'BT','BV','BW','BY','BZ','CA','CD','CF','CG','CH','CI','CK','CL','CM','CN','CO',
-  'CR','CV','CW','CY','CZ','DE','DJ','DK','DM','DO','DZ','EC','EE','EG','EH','ER',
-  'ES','ET','FI','FJ','FK','FO','FR','GA','GB','GD','GE','GF','GG','GH','GI','GL',
-  'GM','GN','GP','GQ','GR','GS','GT','GU','GW','GY','HK','HN','HR','HT','HU','ID',
-  'IE','IL','IM','IN','IO','IQ','IS','IT','JE','JM','JO','JP','KE','KG','KH','KI',
-  'KM','KN','KR','KW','KY','KZ','LA','LB','LC','LI','LK','LR','LS','LT','LU','LV',
-  'LY','MA','MC','MD','ME','MF','MG','MK','ML','MM','MN','MO','MQ','MR','MS','MT',
-  'MU','MV','MW','MX','MY','MZ','NA','NC','NE','NG','NI','NL','NO','NP','NR','NU',
-  'NZ','OM','PA','PE','PF','PG','PH','PK','PL','PM','PN','PR','PS','PT','PY','QA',
-  'RE','RO','RS','RU','RW','SA','SB','SC','SE','SG','SH','SI','SJ','SK','SL','SM',
-  'SD','SN','SO','SR','SS','ST','SV','SX','SZ','TA','TC','TD','TF','TG','TH','TJ','TK',
-  'TL','TM','TN','TO','TR','TT','TV','TW','TZ','UA','UG','US','UY','UZ','VA','VC',
-  'VE','VG','VN','VU','WF','WS','XK','YE','YT','ZA','ZM','ZW','ZZ',
+  { name: 'Free Shipping', min: 1, max: 3 },
 ];
 
 // ── AVAILABILITY ──────────────────────────────────────────────────────
@@ -268,23 +246,7 @@ exports.handler = async (event) => {
       .map(([k, v]) => encodeURIComponent(k) + '=' + encodeURIComponent(v))
       .join('&');
 
-    let session = await stripeRequest(secretKey, encode(params));
-
-    // The worldwide country list is long, and Stripe rejects the entire
-    // session if it does not recognise even one code. Rather than let that
-    // take checkout down, fall back to the short list that was in use before
-    // and try once more. A customer in a rare destination loses the option;
-    // everyone else still gets through.
-    if (session.error && /countr/i.test(session.error.message || '')) {
-      console.error('Falling back to core shipping countries:', session.error.message);
-      Object.keys(params)
-        .filter(k => k.startsWith('shipping_address_collection'))
-        .forEach(k => delete params[k]);
-      CORE_COUNTRIES.forEach((c, i) => {
-        params['shipping_address_collection[allowed_countries][' + i + ']'] = c;
-      });
-      session = await stripeRequest(secretKey, encode(params));
-    }
+    const session = await stripeRequest(secretKey, encode(params));
 
     if (session.error) {
       throw new Error(session.error.message);
