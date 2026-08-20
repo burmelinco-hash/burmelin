@@ -35,3 +35,9 @@
   status = 404
   force = true
 
+# Belt and braces alongside the noindex meta tag in admin.html: the header
+# applies even when a crawler does not parse the HTML.
+[[headers]]
+  for = "/admin.html"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow, noarchive, nosnippet"

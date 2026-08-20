@@ -1,0 +1,17 @@
+# BURMELIN
+
+# The admin panel is a login page. It has nothing useful for search results
+# and should never appear in them.
+User-agent: *
+Disallow: /admin.html
+Disallow: /success.html
+
+# Non-web files. These already return 404 via netlify.toml, but say so here
+# too so crawlers do not probe for them.
+Disallow: /supabase-schema.sql
+Disallow: /generate_banners.py
+Disallow: /package.json
+Disallow: /netlify/
+
+# Everything else is the shop, and is welcome.
+Allow: /
