@@ -1178,12 +1178,15 @@ function syncFeatAvailability() {
   // If the selected size just went away, move to the first live one.
   if (!isAvailable(p, colorName, featSelectedSize)) {
     const live = Array.from(btns).find(b => !b.classList.contains('sold'));
-    btns.forEach(b => b.classList.remove('active'));
-    if (live) {
-      featSelectedSize = (live.textContent || '').trim();
-      live.classList.add('active');
-    }
+    featSelectedSize = live ? (live.textContent || '').trim() : '';
   }
+
+  // Always mark the selection. The size row is rebuilt from the catalogue
+  // with no active class, so without this nothing looks selected even though
+  // a size is - and Add to Cart would quietly use a size the customer never
+  // saw highlighted.
+  btns.forEach(b => b.classList.toggle('active',
+    !b.classList.contains('sold') && (b.textContent || '').trim() === featSelectedSize));
   if (addBtn) addBtn.disabled = colorSoldOut(p, colorName);
 }
 
