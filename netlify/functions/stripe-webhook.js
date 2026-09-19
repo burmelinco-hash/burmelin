@@ -1,4 +1,4 @@
-const https = require('https');
+﻿const https = require('https');
 
 function stripeGet(secretKey, sessionId) {
   return new Promise((resolve, reject) => {
@@ -156,7 +156,7 @@ function sendCustomerEmail(resendKey, order) {
         <div style="background:#fff;margin-top:2px;padding:28px 32px">
           <div style="font-size:11px;letter-spacing:2px;color:#999;text-transform:uppercase;margin-bottom:14px">Need Help?</div>
           <p style="color:#555;font-size:14px;margin:0 0 10px">We're here for you — reach out anytime.</p>
-          <a href="https://wa.me/66835398811" style="display:inline-block;background:#25D366;color:#fff;padding:10px 22px;border-radius:6px;text-decoration:none;font-size:13px;font-weight:600;margin-right:10px">WhatsApp Us</a>
+          <a href="https://wa.me/66642071080" style="display:inline-block;background:#25D366;color:#fff;padding:10px 22px;border-radius:6px;text-decoration:none;font-size:13px;font-weight:600;margin-right:10px">WhatsApp Us</a>
           <a href="mailto:burmelinco@gmail.com" style="display:inline-block;background:#f0f0f0;color:#333;padding:10px 22px;border-radius:6px;text-decoration:none;font-size:13px;font-weight:600">Email Us</a>
         </div>
 
@@ -320,3 +320,4 @@ exports.handler = async (event) => {
     return { statusCode: 500, body: JSON.stringify({ error: err.message }) };
   }
 };
+

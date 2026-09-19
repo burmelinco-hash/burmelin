@@ -295,7 +295,7 @@ src="https://www.facebook.com/tr?id=1016610101191905&ev=PageView&noscript=1"
     <button class="side-menu-link" onclick="window.location.href='about.html'">About Us</button>
   </div>
   <div class="side-menu-footer">
-    <a href="https://wa.me/66835398811" class="btn btn-navy" style="width:100%;justify-content:center;font-size:11px">WhatsApp Us</a>
+    <a href="https://wa.me/66642071080" class="btn btn-navy" style="width:100%;justify-content:center;font-size:11px">WhatsApp Us</a>
   </div>
 </div>
 
@@ -596,7 +596,7 @@ function orderWhatsApp(){
   msg+='Name:\n';
   msg+='Phone:\n';
   msg+='Delivery Address:';
-  window.open('https://wa.me/66835398811?text='+encodeURIComponent(msg),'_blank');
+  window.open('https://wa.me/66642071080?text='+encodeURIComponent(msg),'_blank');
   const d=new Date().toLocaleString('en-GB',{timeZone:'Asia/Bangkok'});
   fetch('/.netlify/functions/save-order',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({order_id:'ORD-'+Date.now(),customer_name:'WhatsApp',items:cart,total,status:'Pending',date:d})}).catch(()=>{});
 }
@@ -657,7 +657,7 @@ function openModal(index){
     msg+='Name:\n';
     msg+='Phone:\n';
     msg+='Delivery Address:';
-    window.open('https://wa.me/66835398811?text='+encodeURIComponent(msg),'_blank');
+    window.open('https://wa.me/66642071080?text='+encodeURIComponent(msg),'_blank');
   };
   document.getElementById('modalOverlay').classList.add('open');
 }
@@ -829,7 +829,7 @@ loadProducts();
       </div>
       <div><div class="footer-heading">Shop</div><div class="footer-links"><button class="footer-link" onclick="filterCat(document.querySelector('.cat-bar .pill[data-cat=polo]'),'polo')">Polo Shirts</button><button class="footer-link" onclick="filterCat(document.querySelector('.cat-bar .pill[data-cat=tshirt]'),'tshirt')">T-Shirts</button><button class="footer-link" onclick="filterCat(document.querySelector('.cat-bar .pill[data-cat=pants]'),'pants')">Linen Pants</button><button class="footer-link" onclick="filterCat(document.querySelector('.cat-bar .pill[data-cat=jeans]'),'jeans')">Jeans</button><button class="footer-link" onclick="filterCat(document.querySelector('.cat-bar .pill[data-cat=jacket]'),'jacket')">Jackets</button></div></div>
       <div><div class="footer-heading">Company</div><div class="footer-links"><button class="footer-link" onclick="window.location.href='about.html'">About Us</button><button class="footer-link" onclick="window.location.href='stores.html'">Store Locations</button><a href="#" class="footer-link">Wholesale</a></div></div>
-      <div><div class="footer-heading">Help</div><div class="footer-links"><a href="javascript:void(0)" class="footer-link" onclick="openSizeGuide()">Size Guide</a><a href="terms.html" class="footer-link">Exchange Policy</a><a href="javascript:void(0)" class="footer-link" onclick="openSizeGuide()">Care Instructions</a><a href="https://wa.me/66835398811" class="footer-link">Contact Us</a><a href="#" class="footer-link">FAQ</a></div></div>
+      <div><div class="footer-heading">Help</div><div class="footer-links"><a href="javascript:void(0)" class="footer-link" onclick="openSizeGuide()">Size Guide</a><a href="terms.html" class="footer-link">Exchange Policy</a><a href="javascript:void(0)" class="footer-link" onclick="openSizeGuide()">Care Instructions</a><a href="https://wa.me/66642071080" class="footer-link">Contact Us</a><a href="#" class="footer-link">FAQ</a></div></div>
     </div>
     <div class="footer-bottom">
       <div class="footer-copy">© <span id="year"></span> BURMELIN. All rights reserved. Bangkok, Thailand. · All prices include VAT 7%</div>
@@ -951,6 +951,7 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape')closeSizeGuide();});
 </script>
 </body>
 </html>
+
 
 
 
